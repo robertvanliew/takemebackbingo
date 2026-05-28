@@ -2425,7 +2425,17 @@ let nextPrefetch = null;          // {song, cardIndex} the picker reserved for t
 
 decks.forEach(d => {
   d.addEventListener('ended', e => { if (e.target === activeDeck() && !crossfading) skipToNext(); });
-  d.addEventListener('error', e => { if (e.target === activeDeck()) skipToNext('Audio failed - skipping.'); });
+  d.addEventListener('error', e => {
+    if (e.target !== activeDeck()) return;
+    // Only treat this as a real failure once the game is running AND the deck
+    // is actually pointed at a loaded preview (an http(s) URL). The iOS audio
+    // unlock briefly loads a silent `data:` WAV; on iOS that can fire `error`,
+    // and without this guard it falsely triggered "Audio failed - skipping"
+    // before the first song ever played, stalling the game at 0/15.
+    var src = e.target.currentSrc || e.target.src || '';
+    if (!gameStarted || !/^https?:/i.test(src)) return;
+    skipToNext('Audio failed - skipping.');
+  });
 });
 
 /* ---------- Web Audio: bass-swap filter + per-song loudness normalize ----
