@@ -6,6 +6,10 @@ Video/hero-reel.mp4
 Video/hero.mp4
 Animation Logo/Logo animation 1.mp4
 
+# Impeccable design-context docs — kept local, not deployed publicly
+PRODUCT.md
+DESIGN.md
+
 # OS / editor junk
 .DS_Store
 Thumbs.db

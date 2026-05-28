@@ -1419,10 +1419,14 @@
       if (!v || !heroMediaEl) return;
       function apply() {
         if (!v.videoWidth || !v.videoHeight) return;
-        // Clamp aspect ratio: never narrower than 16:9 (don't get too tall on
-        // portrait clips) and never wider than 21:9 (don't get too letterboxed).
         var raw = v.videoWidth / v.videoHeight;
-        var clamped = Math.max(16/9, Math.min(21/9, raw));
+        // The source reel is portrait. On phones, give it a tall 4:5 frame so
+        // the dancers fill the hero instead of a cropped 16:9 sliver; on larger
+        // screens keep a cinematic 16:9–21:9 band.
+        var mobile = window.matchMedia('(max-width: 768px)').matches;
+        var minAR = mobile ? 0.8 : 16 / 9;
+        var maxAR = mobile ? 16 / 9 : 21 / 9;
+        var clamped = Math.max(minAR, Math.min(maxAR, raw));
         heroMediaEl.style.aspectRatio = clamped.toFixed(4) + ' / 1';
       }
       if (v.readyState >= 1) apply();
