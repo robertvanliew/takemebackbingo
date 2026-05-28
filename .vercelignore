@@ -1,10 +1,10 @@
 # Files/folders to exclude from the Vercel deployment.
 # Vercel free tier limits: 100MB per file, 1GB total deploy size.
 
-# The hero MP4 is 3GB — way over Vercel limits. Excluding it means the
-# hero <video> element falls back to its poster image until the video is
-# re-encoded smaller OR hosted on a CDN (Cloudflare Stream / Mux / Vimeo).
-Video/
+# Note: the only video committed to the repo is the web-optimized 94MB
+# Video/hero.mp4 (under Vercel's 100MB/file limit), so Video/ is NOT
+# excluded — it must deploy for the hero reel to play. The 3GB source and
+# 327MB full-length versions are kept local via .gitignore (never in repo).
 
 # Mac/editor junk
 .DS_Store
