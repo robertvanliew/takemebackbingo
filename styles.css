@@ -662,7 +662,14 @@ ul, ol { list-style: none; padding: 0; margin: 0; }
   inset: 0;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  /* iOS Safari intermittently ignores backface-visibility on 3D flips, which
+     lets the bingo grid bleed through the photo. Belt-and-suspenders: hard-hide
+     the inactive face with opacity, swapped instantly at the flip midpoint
+     (~half of the 900ms rotate) so neither face ever shows through the other. */
+  transition: opacity 0s linear 450ms;
 }
+.bingocard:not([data-flipped="true"]) .bingocard__face--back { opacity: 0; }
+.bingocard[data-flipped="true"] .bingocard__face--front { opacity: 0; }
 .bingocard__face--front { display: flex; }
 .bingocard__face--front .bingocard__paper {
   width: 100%;
@@ -3351,6 +3358,22 @@ html.js ul.meta-strip[data-reveal].is-in > li {
     padding: 4px 3px;
   }
   .sq--free { font-size: clamp(10px, 3vw, 14px); }
+
+  /* Flip controls shrink on phones: the "Click to flip" hint and the back
+     "Flip back" button were sized for desktop and read as oversized on a
+     full-width mobile card. */
+  .bingocard__hint {
+    bottom: 10px;
+    right: 10px;
+    padding: 4px 7px 4px 6px;
+    gap: 4px;
+    font-size: 8px;
+    letter-spacing: .1em;
+  }
+  .bingocard__hint svg { width: 11px; height: 11px; }
+  .bingocard__back-overlay { padding: var(--s-5) var(--s-4) var(--s-4); }
+  .bingocard__back-cta-row .btn--lg { padding: 11px 20px; }
+  .bingocard__back-cta-row [data-flip-back] { font-size: var(--fs-12); }
 }
 @media (max-width: 480px) {
   .bingocard__face--front .sq {
