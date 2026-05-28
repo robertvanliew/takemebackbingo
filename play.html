@@ -2405,7 +2405,7 @@ let nextPrefetch = null;          // {song, cardIndex} the picker reserved for t
 
 decks.forEach(d => {
   d.addEventListener('ended', e => { if (e.target === activeDeck() && !crossfading) skipToNext(); });
-  d.addEventListener('error', e => { if (e.target === activeDeck()) skipToNext('Audio failed Ã¢â‚¬â€ skipping.'); });
+  d.addEventListener('error', e => { if (e.target === activeDeck()) skipToNext('Audio failed - skipping.'); });
 });
 
 /* ---------- Web Audio: bass-swap filter + per-song loudness normalize ----
@@ -2872,7 +2872,7 @@ async function startCrossfade() {
       playP.then(beginFadeIn).catch(err => {
         console.warn('Incoming play blocked at phase 2:', err.name);
         crossfading = false;
-        skipToNext('Audio failed â€” skipping.');
+        skipToNext('Audio failed - skipping.');
       });
     } else {
       beginFadeIn();
