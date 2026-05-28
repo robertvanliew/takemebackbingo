@@ -3644,3 +3644,13 @@ html.js ul.meta-strip[data-reveal].is-in > li {
     word-break: break-word;
   }
 }
+
+/* ── 25. INTERACTION POLISH (design-eng pass) ──
+   Tactile press feedback + no sticky hover on touch. */
+.btn:active { transform: scale(0.97); }
+@media (hover: none) {
+  /* On touch, :hover fires on tap and sticks — kill the hover lift so buttons
+     settle cleanly after a tap (press feedback comes from :active above). */
+  .btn--primary:hover,
+  .btn--ghost:hover { transform: none; }
+}
