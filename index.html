@@ -1372,8 +1372,8 @@
     // === Hero sizzle reel · respect reduced motion + sound toggle ===
     // Skip the flyer intro on every loop. Tweak this number if the flyer is
     // longer or shorter than ~4s in your video.
-    var HERO_REEL_INTRO_SKIP = 102.0; // seconds, start on the DJ frame (1:42)
-    var HERO_REEL_OUTRO_TRIM = 10.0;  // seconds, chop the WizTV promo off the tail
+    var HERO_REEL_INTRO_SKIP = 0;   // clip is pre-trimmed to start on the DJ frame
+    var HERO_REEL_OUTRO_TRIM = 0;   // clip is pre-trimmed; no tail to chop
     var heroReel = document.querySelector('[data-hero-reel]');
     var heroReelBg = document.querySelector('.hero-reel__bg');
     var heroReelSound = document.querySelector('[data-hero-reel-sound]');
