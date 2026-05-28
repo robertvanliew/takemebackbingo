@@ -2616,7 +2616,10 @@ async function fetchPreviewUrl(song) {
   if (song.previewUrl) return song.previewUrl;
   if (song.previewFailed) return null;
   const q = encodeURIComponent(`${song.title} ${song.artist}`);
-  const url = `https://itunes.apple.com/search?term=${q}&media=music&entity=song&limit=10`;
+  // Same-origin proxy (see api/itunes.js) — iOS Safari blocks the direct
+  // cross-site call to itunes.apple.com, so we route the search through our
+  // own server.
+  const url = `/api/itunes?term=${q}`;
   try {
     const res = await fetch(url);
     if (!res.ok) throw new Error('iTunes status ' + res.status);
