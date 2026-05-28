@@ -2434,7 +2434,8 @@ decks.forEach(d => {
     // before the first song ever played, stalling the game at 0/15.
     var src = e.target.currentSrc || e.target.src || '';
     if (!gameStarted || !/^https?:/i.test(src)) return;
-    skipToNext('Audio failed - skipping.');
+    var code = (e.target.error && e.target.error.code) || '?';
+    skipToNext('Audio error ' + code + ' - skipping.');
   });
 });
 
@@ -2689,7 +2690,7 @@ async function playSongAt(cardIndex) {
     gameStarted = false;       // re-open the start path
     showDjStartBtn();          // primary recovery affordance (top of bingo)
     showTapPrime();            // legacy fallback at the bottom
-    setBoothLabel('Hit Start the DJ to begin audio');
+    setBoothLabel('Tap “Start the DJ” to begin audio · ' + (err && err.name ? err.name : 'blocked'));
     return false;
   }
 
@@ -3030,7 +3031,10 @@ function primeAudio() {
   // a user gesture. We swap to a silent WAV briefly so the play actually
   // starts and the gesture is "consumed" — after this, programmatic
   // play() calls in any context will work.
-  const silentSrc = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+  // Valid ~0.2s silent WAV (real PCM samples). The old zero-sample data: URI
+  // could fail to "play" on iOS, so the gesture never unlocked audio. A real
+  // file reliably unlocks both decks.
+  const silentSrc = 'silent.wav';
   // Prime BOTH decks in the same gesture — otherwise the idle deck's
   // first .play() during a crossfade gets blocked on mobile.
   const primeOne = (el) => {
