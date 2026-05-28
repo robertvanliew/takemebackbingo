@@ -574,7 +574,7 @@
         })
           .then(function (res) {
             if (!res.ok) throw new Error('Formspree ' + res.status);
-            inquiryStatus.textContent = 'Thanks, we got it. We'll be back within one business day.';
+            inquiryStatus.textContent = 'Thanks, we got it. We\'ll be back within one business day.';
             inquiryForm.reset();
             setTimeout(function () { if (!inquiryModal.hidden) closeInquiry(); }, 2000);
           })
@@ -614,12 +614,12 @@
         })
           .then(function (res) {
             if (!res.ok) throw new Error('Formspree ' + res.status);
-            setNewsletterStatus('Thanks, you're on the list.', false);
+            setNewsletterStatus('Thanks, you\'re on the list.', false);
             newsletterForm.reset();
             if (newsletterBtn) newsletterBtn.innerHTML = newsletterBtnDefault;
           })
           .catch(function () {
-            setNewsletterStatus('Couldn't subscribe. Try again or email info@takemebackbingo.com.', true);
+            setNewsletterStatus('Couldn\'t subscribe. Try again or email info@takemebackbingo.com.', true);
             if (newsletterBtn) newsletterBtn.innerHTML = newsletterBtnDefault;
           })
           .then(function () { if (newsletterBtn) newsletterBtn.disabled = false; });
@@ -692,15 +692,6 @@
       var imgUrl = img ? new URL(img, location.href).href : null;
       var imgName = card.getAttribute('data-share-image-name') || (img ? img.split('/').pop() : null);
       return { title: title, text: text, url: url, imageUrl: imgUrl, imageName: imgName };
-    }
-
-    // Fetch flyer as a File so it can be passed to navigator.share({ files })
-    function fetchShareFile(data) {
-      if (!data.imageUrl) return Promise.resolve(null);
-      return fetch(data.imageUrl)
-        .then(function (r) { if (!r.ok) throw new Error('flyer fetch ' + r.status); return r.blob(); })
-        .then(function (blob) { return new File([blob], data.imageName || 'flyer.jpg', { type: blob.type || 'image/jpeg' }); })
-        .catch(function () { return null; });
     }
 
     function closeAllShares(except) {
@@ -795,21 +786,23 @@
           return;
         }
 
-        // Build the payload — attach the flyer file if the browser can share files
-        var buildPayload = (data.imageUrl && navigator.canShare)
-          ? fetchShareFile(data).then(function (file) {
-              var base = { title: data.title, text: data.text, url: data.url };
-              if (!file) return base;
-              var withFile = { title: data.title, text: data.text, url: data.url, files: [file] };
-              return navigator.canShare(withFile) ? withFile : base;
-            })
-          : Promise.resolve({ title: data.title, text: data.text, url: data.url });
-
+        // Native share (mobile). CRITICAL: navigator.share() must be called
+        // SYNCHRONOUSLY inside this click handler. iOS Safari only permits it
+        // while the tap's user-activation is live — awaiting a fetch first (to
+        // attach a flyer file) consumed that activation and made share() throw
+        // NotAllowedError, so the button silently did nothing. Sharing the
+        // title/text/url is reliable; the flyer stays available via the
+        // popover's "Download flyer" item on desktop.
         btn.setAttribute('aria-busy', 'true');
-        buildPayload
-          .then(function (payload) { return navigator.share(payload); })
-          .catch(function () { /* user cancelled or share unavailable — stay silent */ })
-          .then(function () { btn.removeAttribute('aria-busy'); });
+        var clearBusy = function () { btn.removeAttribute('aria-busy'); };
+        try {
+          var p = navigator.share({ title: data.title, text: data.text, url: data.url });
+          if (p && typeof p.then === 'function') p.then(clearBusy, clearBusy);
+          else clearBusy();
+        } catch (err) {
+          clearBusy();
+          openShare(share); // last-resort fallback if share() throws synchronously
+        }
       });
     });
 

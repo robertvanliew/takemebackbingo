@@ -204,6 +204,13 @@
      under it instead of leaving a black band before the meta-strip */
   @media (max-width: 768px) {
     .logo-anim__video { aspect-ratio: 3 / 4; }
+    /* The cassette is hidden (experimental block above), but .tape-stage is a
+       grid with `grid-template-rows: auto 1fr` + row-gap — the now-empty 1fr
+       row and its gap leave a dead band below the animation video. Collapse
+       to a single auto row and pull the meta-strip flush so the video reaches
+       all the way down to the J-card spine line with no gap. */
+    .tape-stage { grid-template-rows: auto; row-gap: 0; }
+    .hero > .meta-strip { margin-top: 0; }
   }
 </style>
 
@@ -257,8 +264,8 @@
          foreground gets cinematic letterbox bars instead of a hard crop. -->
     <video
       class="hero-reel__bg"
-      src="Video/hero.mp4"
-      poster="photos/hero-poster.jpg"
+      src="Video/hero-v2.mp4"
+      poster="photos/hero-poster-v2.jpg"
       autoplay muted loop playsinline preload="metadata"
       aria-hidden="true"
       tabindex="-1"
@@ -267,8 +274,8 @@
     <video
       class="hero-reel"
       data-hero-reel
-      src="Video/hero.mp4"
-      poster="photos/hero-poster.jpg"
+      src="Video/hero-v2.mp4"
+      poster="photos/hero-poster-v2.jpg"
       autoplay
       muted
       loop
@@ -357,16 +364,16 @@
             <div class="sq">Drop It Like It&rsquo;s Hot</div>
             <div class="sq is-daubed">Ignition</div>
           </div>
+          <span class="bingocard__hint" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            Click to flip
+          </span>
           <div class="bingocard__foot">
             <span>HIP-HOP &amp; R&amp;B</span>
             <span class="bingocard__foot-sep" aria-hidden="true">·</span>
             <span>21+</span>
           </div>
         </div>
-        <span class="bingocard__hint" aria-hidden="true">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-          Click to flip
-        </span>
         </div><!-- /face front -->
 
         <div class="bingocard__face bingocard__face--back">
@@ -622,7 +629,7 @@
         <div class="logo-anim" data-reveal>
           <video
             class="logo-anim__video"
-            src="Animation%20Logo/Logo%20animation%201.mp4"
+            src="Video/logo-anim-v2.mp4"
             autoplay
             muted
             loop

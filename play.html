@@ -998,6 +998,20 @@
     .sq:nth-child(odd) > span,
     .sq:nth-child(even) > span { transform: none; }
   }
+
+  /* MOBILE CARD LEGIBILITY — the container-query rule (.sq > span: 10.5cqi)
+     collapses song titles to ~5px in the ~61px cells on phones, which is
+     unreadable. Reclaim width (tighter page/card padding + grid gap) and give
+     the title text a real pixel floor via clamp so it stays legible. This
+     block sits last in the stylesheet so it wins over the earlier .sq padding
+     and the container-query font rule by source order. */
+  @media (max-width: 640px) {
+    .play { padding-left: 8px; padding-right: 8px; }
+    .bingo { padding: 8px; }
+    .bingo__grid { gap: 4px; }
+    .sq { padding: 3px 2px; line-height: 1.05; }
+    .sq > span { font-size: clamp(9px, 16cqi, 14px); }
+  }
 </style>
 </head>
 <body>

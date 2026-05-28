@@ -1,7 +1,10 @@
-# Oversized source / intermediate video — exceed GitHub's 100MB limit.
-# The web-ready 2-min Video/hero.mp4 IS tracked; these raw versions are not.
+# Oversized source / intermediate video. The shipped web versions are the
+# compressed Video/hero-v2.mp4 and Video/logo-anim-v2.mp4 (tracked). These
+# heavier originals stay local for re-trimming but are not deployed.
 Video/new bingo high class.MP4
 Video/hero-reel.mp4
+Video/hero.mp4
+Animation Logo/Logo animation 1.mp4
 
 # OS / editor junk
 .DS_Store
