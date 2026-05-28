@@ -11,3 +11,9 @@ Thumbs.db
 # Dependencies / tooling
 node_modules/
 .vercel/
+
+# Dev tooling for local screenshots (not part of the site)
+_*.png
+_*.mjs
+package.json
+package-lock.json

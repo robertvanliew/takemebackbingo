@@ -3251,3 +3251,322 @@ html.js ul.meta-strip[data-reveal].is-in > li {
     transition: none;
   }
 }
+
+/* =========================================================
+   MOBILE RESPONSIVE OVERHAUL (2026-05-28)
+   Systematic fix for all mobile layout breakages.
+   All rules are additive / override only what's broken.
+   ========================================================= */
+
+/* ── 1. GLOBAL: prevent any element from blowing past viewport ── */
+.hero, .how, .faq, .footer, .gallery, .events-page, .marquee {
+  overflow-x: hidden;
+}
+
+/* ── 2. HERO: reduce massive vertical padding on mobile ── */
+@media (max-width: 768px) {
+  .hero {
+    padding-top: var(--s-5);
+    padding-bottom: var(--s-5);
+  }
+}
+@media (max-width: 540px) {
+  .hero {
+    padding: var(--s-4) var(--s-3);
+  }
+}
+
+/* ── 3. HERO MEDIA: sensible aspect ratio on portrait phones ── */
+@media (max-width: 540px) {
+  .hero-media {
+    border-radius: 10px;
+    margin-bottom: var(--s-4);
+  }
+  .hero-media:has(video) {
+    aspect-ratio: 16 / 9;
+    border-radius: 12px;
+    margin-bottom: var(--s-5);
+  }
+}
+
+/* ── 4. SPEC-LINE: hide overflow items on tiny screens ── */
+@media (max-width: 600px) {
+  .spec-line {
+    gap: var(--s-2);
+    margin-bottom: var(--s-5);
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
+  .spec-line__item:nth-child(n+4) { display: none; }
+  .spec-line__rule:last-child { display: none; }
+}
+
+/* ── 5. HERO GRID: better single-column on tablet/mobile ── */
+@media (max-width: 1024px) {
+  .hero__grid {
+    gap: var(--s-5);
+  }
+}
+
+/* ── 6. TITLE: tame the giant text-shadow on small phones ── */
+@media (max-width: 480px) {
+  .jcard__title-block {
+    text-shadow:
+      3px 3px 0 var(--primary),
+      6px 6px 0 var(--primary-700);
+    -webkit-text-stroke: 1.5px var(--accent);
+  }
+  .jcard__title-script {
+    -webkit-text-stroke: 2px var(--accent);
+  }
+}
+
+/* ── 7. LEDE: let it breathe at full width on mobile ── */
+@media (max-width: 768px) {
+  .jcard__lede {
+    max-width: 100%;
+    font-size: var(--fs-18);
+  }
+}
+
+/* ── 8. BINGO CARD: full width, sane head font, bigger sq text ── */
+@media (max-width: 768px) {
+  .bingocard {
+    max-width: 100%;
+    perspective: 1000px;
+  }
+  .bingocard__head {
+    font-size: clamp(20px, 7vw, 32px);
+    gap: var(--s-1);
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+  }
+  .bingocard__grid { gap: 5px; }
+  .bingocard__face--front .sq {
+    font-size: clamp(9px, 2.8vw, 13px);
+    padding: 4px 3px;
+  }
+  .sq--free { font-size: clamp(10px, 3vw, 14px); }
+}
+@media (max-width: 480px) {
+  .bingocard__face--front .sq {
+    font-size: clamp(8px, 2.5vw, 12px);
+    padding: 3px 2px;
+  }
+  .bingocard__head {
+    font-size: clamp(18px, 6.5vw, 28px);
+  }
+  .bingocard__grid { gap: 4px; }
+}
+
+/* ── 9. CTA ROW: stack buttons on very small phones ── */
+@media (max-width: 400px) {
+  .jcard__cta-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .jcard__cta-row .btn {
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+/* ── 10. TAPE-STAGE / BIO: full-width on mobile, less top gap ── */
+@media (max-width: 1024px) {
+  .tape-stage {
+    width: 100%;
+    max-width: 100%;
+  }
+  .tape-bio {
+    width: 100%;
+    max-width: 100%;
+    padding-top: var(--s-4);
+  }
+}
+@media (max-width: 768px) {
+  .tape-bio__title {
+    font-size: clamp(var(--fs-18), 4vw, var(--fs-24));
+  }
+  .tape-bio__dek {
+    font-size: var(--fs-16);
+    max-width: 100%;
+  }
+  .tape-bio__quote {
+    font-size: var(--fs-18);
+    max-width: 100%;
+  }
+}
+
+/* ── 11. META STRIP: reduce enormous top margin on mobile ── */
+@media (max-width: 768px) {
+  .meta-strip {
+    margin-top: var(--s-5);
+  }
+}
+@media (max-width: 540px) {
+  .meta-strip {
+    margin-top: var(--s-4);
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--s-4);
+    padding-top: var(--s-4);
+  }
+  .meta-strip strong { font-size: var(--fs-30); }
+}
+
+/* ── 12. HOW SECTION: reduce padding and tighten layout ── */
+@media (max-width: 768px) {
+  .how {
+    padding: var(--s-7) var(--s-4);
+  }
+  .how__head { margin-bottom: var(--s-5); }
+  .how__intro { font-size: var(--fs-18); max-width: 100%; }
+  .how__steps { margin-top: var(--s-5); }
+  .how__details { margin-top: var(--s-5); padding-top: var(--s-4); }
+}
+@media (max-width: 520px) {
+  .how { padding: var(--s-6) var(--s-3); }
+  .how__title { font-size: var(--fs-20); }
+  .how__copy { font-size: var(--fs-16); }
+  .how__step { padding: var(--s-4) 0 var(--s-2); }
+}
+
+/* ── 13. FAQ: tighten on mobile ── */
+@media (max-width: 768px) {
+  .faq { padding: var(--s-7) var(--s-4); }
+  .faq__head { margin-bottom: var(--s-5); }
+  .faq__intro { font-size: var(--fs-18); max-width: 100%; }
+}
+
+/* ── 14. FOOTER: logo, lockup, columns, newsletter form ── */
+@media (max-width: 768px) {
+  .footer {
+    padding: var(--s-7) var(--s-4) var(--s-5);
+  }
+  .footer__lockup {
+    gap: var(--s-4);
+  }
+  .footer__logo { width: 180px; }
+  .footer__tagline-script {
+    font-size: clamp(var(--fs-24), 6vw, var(--fs-38));
+  }
+  .footer__tagline-block {
+    font-size: clamp(var(--fs-18), 4.5vw, var(--fs-30));
+  }
+  .footer__sub {
+    font-size: var(--fs-16);
+    max-width: 100%;
+  }
+}
+@media (max-width: 520px) {
+  .footer { padding: var(--s-6) var(--s-3) var(--s-4); }
+  .footer__lockup {
+    padding-bottom: var(--s-5);
+    grid-template-columns: 1fr;
+  }
+  .footer__cols { padding: var(--s-5) 0; }
+  .footer__newsletter { max-width: 100%; }
+}
+
+/* ── 15. EVENTS PAGE: better mobile padding ── */
+@media (max-width: 768px) {
+  .events-page {
+    padding: calc(var(--s-7) + var(--s-3)) var(--s-4) var(--s-7);
+  }
+  .events-page__head { margin-bottom: var(--s-6); }
+  .events-page__sub { font-size: var(--fs-18); max-width: 100%; }
+}
+@media (max-width: 540px) {
+  .events-page { padding: calc(var(--s-7)) var(--s-3) var(--s-6); }
+  .events-section { margin-bottom: var(--s-7); }
+  .event-card__title {
+    font-size: clamp(var(--fs-24), 6.5vw, var(--fs-38));
+  }
+  .event-card__meta dd { font-size: var(--fs-16); }
+  .event-card__copy { font-size: var(--fs-16); max-width: 100%; }
+}
+
+/* ── 16. EVENTS CTA STRIP: collapse properly on mobile ── */
+@media (max-width: 540px) {
+  .events-cta { padding: var(--s-4); }
+  .events-cta__title { font-size: var(--fs-24); }
+  .events-cta__copy { font-size: var(--fs-16); }
+}
+
+/* ── 17. GALLERY PAGE: better mobile layout ── */
+@media (max-width: 540px) {
+  .gallery { padding: var(--s-6) var(--s-3); }
+  .gallery--page { padding-top: calc(var(--s-7) + var(--s-2)); }
+  .gallery__head { margin-bottom: var(--s-5); }
+  .gallery__sub { font-size: var(--fs-16); }
+}
+
+/* ── 18. H2 headings: prevent overflow on very narrow screens ── */
+@media (max-width: 480px) {
+  .h2 {
+    font-size: clamp(var(--fs-30), 8.5vw, var(--fs-48));
+    max-width: 100%;
+  }
+}
+
+/* ── 19. MODAL: full-screen on tiny phones ── */
+@media (max-width: 400px) {
+  .modal { padding: var(--s-3) var(--s-2); }
+  .modal__panel { padding: var(--s-4); border-radius: 14px; }
+  .modal__title { font-size: var(--fs-24); }
+}
+
+/* ── 20. REEL SECTION: ensure proper scroll on mobile ── */
+@media (max-width: 768px) {
+  .reel__head { margin-bottom: var(--s-4); }
+  .reel__h2 { font-size: clamp(20px, 5vw, 30px); }
+}
+
+/* ── 21. WINNERS SECTION: spacing ── */
+@media (max-width: 768px) {
+  .winners__head { margin-bottom: var(--s-4); }
+  .winners__h2 { font-size: clamp(22px, 6vw, 36px); }
+}
+
+/* ── 22. NAV: reduce the Buy Tickets font size on very small ── */
+@media (max-width: 380px) {
+  .nav__cta {
+    padding: 10px 14px;
+    font-size: 11px;
+    letter-spacing: .10em;
+  }
+  .nav { padding: 4px var(--s-3); min-height: 56px; }
+  .nav__logo-img { height: 64px; margin: -4px 0 -2px; }
+}
+
+/* ── 23. HERO MEDIA REEL: hide chrome text overflow on tiny ── */
+@media (max-width: 400px) {
+  .hero-reel__chrome { gap: var(--s-2); }
+  .hero-reel__tag {
+    font-size: 9px;
+    padding: .4em .6em;
+    letter-spacing: .18em;
+  }
+  .hero-reel__logo {
+    height: clamp(36px, 9vw, 52px);
+  }
+  .hero-reel__sound {
+    width: 34px; height: 34px;
+    bottom: 10px; left: 10px;
+  }
+}
+
+/* ── 24. TEXT-WRAP everywhere ── */
+@media (max-width: 768px) {
+  .jcard__lede,
+  .tape-bio__dek,
+  .tape-bio__title,
+  .how__copy,
+  .how__intro,
+  .faq__a > p,
+  .event-card__copy,
+  .events-page__sub,
+  .footer__sub {
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+}

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Play Ã‚Â· Take Me Back Bingo Ã‚Â· Free Hip-Hop & R&B Music Bingo Demo</title>
+<title>Play · Take Me Back Bingo · Free Hip-Hop & R&B Music Bingo Demo</title>
 <meta name="description" content="Free in-browser demo of Take Me Back Bingo. Mark the throwback songs as they play, yell TAKE ME BACK to win." />
 <meta name="theme-color" content="#141111" />
 
@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="logos/logo-yellow.png" />
 
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Play Take Me Back Bingo Ã‚Â· Free Demo" />
+<meta property="og:title" content="Play Take Me Back Bingo · Free Demo" />
 <meta property="og:description" content="A free in-browser music bingo demo. Hit BINGO, yell the brand call, share your win card." />
 <meta property="og:image" content="https://takemebackbingo.com/logos/logo-yellow.png" />
 <meta name="twitter:card" content="summary_large_image" />
@@ -111,7 +111,7 @@
   .booth__mute.is-muted .icon-muted { display: inline; }
   .booth__mute.is-muted { color: #FF8A6E; border-color: #FF8A6E; }
 
-  /* Skip button â€” sits to the left of mute. Lets the player advance past
+  /* Skip button — sits to the left of mute. Lets the player advance past
      a silent/stuck preview without waiting out the clip. */
   .booth__skip {
     position: absolute;
@@ -170,7 +170,7 @@
     color: var(--text-muted);
     grid-column: 2;
   }
-  /* Round counter Ã¢â‚¬â€ "Song 7 / 15" - applies tension as the round runs out */
+  /* Round counter — "Song 7 / 15" - applies tension as the round runs out */
   .booth__counter {
     grid-column: 2;
     justify-self: end;
@@ -282,7 +282,7 @@
   }
   .sq--free:hover { transform: none; border-color: var(--primary-700); }
 
-  /* FREE square stays brand-purple even when auto-daubed Ã¢â‚¬â€ the yellow
+  /* FREE square stays brand-purple even when auto-daubed — the yellow
      tint + corner stamp from .is-daubed would otherwise override it. */
   .sq--free.is-daubed {
     background: var(--primary);
@@ -291,7 +291,7 @@
   }
   .sq--free.is-daubed::after { display: none; }
 
-  /* Round-over state Ã¢â‚¬â€ card dims so player knows the round ended without bingo */
+  /* Round-over state — card dims so player knows the round ended without bingo */
   .sq.is-roundover {
     opacity: .35;
     cursor: not-allowed;
@@ -312,9 +312,9 @@
     to   { box-shadow: 0 0 0 6px rgba(123,45,142,.0); }
   }
 
-  /* --- Round-over panel Ã¢â‚¬â€ appears when the 15-song cap is hit
+  /* --- Round-over panel — appears when the 15-song cap is hit
          without bingo. Hidden until .is-shown class added by JS. --- */
-  /* True modal overlay â€” full-screen scrim, centered card */
+  /* True modal overlay — full-screen scrim, centered card */
   .roundover {
     position: fixed;
     inset: 0;
@@ -399,7 +399,7 @@
     justify-content: center;
     margin-top: var(--s-6);
   }
-  /* Anti-cheat lock styling Ã¢â‚¬â€ "New Card" disabled mid-round */
+  /* Anti-cheat lock styling — "New Card" disabled mid-round */
   .play__cta-row .btn[disabled],
   .play__cta-row .btn.is-locked {
     opacity: .35;
@@ -589,7 +589,7 @@
   }
 
   /* --- Primary "Start the DJ" affordance, sits under the booth. Visible
-         whenever a round hasn't started â€” gives the player a guaranteed way
+         whenever a round hasn't started — gives the player a guaranteed way
          to begin without relying on scroll auto-start. Hidden once the
          first song plays. --- */
   .dj-start {
@@ -804,7 +804,7 @@
     border-bottom: 1px solid rgba(239,197,58,.4);
   }
 
-  /* --- One-line explainer Ã‚Â· all caps mono, sits above era selector --- */
+  /* --- One-line explainer · all caps mono, sits above era selector --- */
   .play__explainer {
     font-family: var(--font-mono);
     font-size: var(--fs-11);
@@ -869,6 +869,12 @@
       font-size: var(--fs-12);
       letter-spacing: .06em;
     }
+    /* Reclaim horizontal space so the bingo card + cell text are bigger
+       and more readable on phones */
+    .play { padding-left: 12px; padding-right: 12px; }
+    .bingo { padding: 12px; }
+    .bingo__grid { gap: 5px; }
+    .sq { padding: 4px 3px; }
   }
   .era-pill:hover { color: var(--accent); }
   .era-pill.is-active {
@@ -894,7 +900,7 @@
     opacity: .8;
     margin-top: 1px;
   }
-  /* Tooltip for coming-soon pills Ã¢â‚¬â€ appears below the selector strip */
+  /* Tooltip for coming-soon pills — appears below the selector strip */
   .era-tooltip {
     position: absolute;
     top: calc(100% + 8px);
@@ -954,7 +960,7 @@
   @container (max-width: 100px) {
     .sq > span { font-size: 10.5cqi; }
   }
-  /* Subtle Ã‚Â±1deg tilt on alternate cells Ã¢â‚¬â€ hand-stamped ticket feel.
+  /* Subtle ±1deg tilt on alternate cells — hand-stamped ticket feel.
      Keeps text balanced overall, never reads as chaotic. */
   .sq:nth-child(odd) > span  { display: inline-block; transform: rotate(-1deg); }
   .sq:nth-child(even) > span { display: inline-block; transform: rotate(1deg); }
@@ -984,7 +990,7 @@
     margin-top: -8px;
   }
 
-  /* Reduced motion Ã¢â‚¬â€ disable pulse + tilt animations */
+  /* Reduced motion — disable pulse + tilt animations */
   @media (prefers-reduced-motion: reduce) {
     .booth__pulse, .sq.is-win, .winm__mic-dot, .sq.is-daubed::after {
       animation: none !important;
@@ -1030,10 +1036,10 @@
       </p>
     </header>
 
-    <!-- One-line explainer Ã‚Â· sets expectations in 5 words -->
+    <!-- One-line explainer · sets expectations in 5 words -->
     <p class="play__explainer">Hear the song &middot; Mark your card &middot; Yell &ldquo;Take Me Back!&rdquo;</p>
 
-    <!-- Era selector Ã‚Â· 6 live pools (80s/90s/2000s Ãƒâ€” R&B/Hip-Hop) -->
+    <!-- Era selector · 6 live pools (80s/90s/2000s × R&B/Hip-Hop) -->
     <div class="era-selector" role="tablist" aria-label="Bingo era">
       <button type="button" class="era-pill is-active" role="tab" data-era="80s-rnb" aria-selected="true">
         <span class="era-pill__label">80&rsquo;s R&amp;B</span>
@@ -1060,7 +1066,7 @@
       </div>
     </div>
 
-    <!-- DJ booth Ã¢â‚¬â€ shows the currently playing artist + track -->
+    <!-- DJ booth — shows the currently playing artist + track -->
     <div class="booth is-idle" id="booth" aria-live="polite">
       <span class="booth__pulse" aria-hidden="true"></span>
       <span class="booth__label" id="boothLabel">DJ Booth</span>
@@ -1088,7 +1094,7 @@
       </button>
     </div>
 
-    <!-- Primary start affordance â€” visible whenever no round is in progress.
+    <!-- Primary start affordance — visible whenever no round is in progress.
          Click primes audio (counts as a user gesture) AND starts the game,
          so it works on first load, after a win, after a new card, and after
          switching eras. The scroll auto-start still works as a backup. -->
@@ -1110,7 +1116,7 @@
     <!-- Round-over panel: surfaces when player hits the 15-song cap without
          bingo. Hidden by default; .is-shown adds visibility. The CTAs give
          the player an obvious "try again" path AND convert losers into
-         ticket interest ("you almost had it Ã¢â‚¬â€ at the real night you get 8
+         ticket interest ("you almost had it — at the real night you get 8
          rounds"). -->
     <div class="roundover" id="roundover" hidden role="dialog" aria-modal="true" aria-labelledby="roundoverTitle">
       <div class="roundover__card">
@@ -1145,8 +1151,8 @@
 <!-- Two hidden audio elements form a dual-deck DJ rig so the next song
      can fade in while the current one fades out (no abrupt cut). Apple's
      preview CDN doesn't return CORS headers, so we can't route through
-     Web Audio GainNodes Ã¢â‚¬â€ we animate the elements' .volume directly.
-     NOTE: do NOT set crossorigin="anonymous" Ã¢â‚¬â€ any CORS attempt makes
+     Web Audio GainNodes — we animate the elements' .volume directly.
+     NOTE: do NOT set crossorigin="anonymous" — any CORS attempt makes
      these silently fail. -->
 <audio id="audioEl"  preload="none" aria-hidden="true"></audio>
 <audio id="audioElB" preload="none" aria-hidden="true"></audio>
@@ -1278,36 +1284,36 @@
 ================================================================ -->
 <script>
 /* ============================================================
-   TAKE ME BACK BINGO Ã‚Â· PLAY-PAGE LOGIC
+   TAKE ME BACK BINGO · PLAY-PAGE LOGIC
 
    Edit-friendly sections, in order:
-     1. POOLS                  Ã¢â‚¬â€ themed artist sets (live + coming-soon)
-     2. CONFIG                 Ã¢â‚¬â€ clip length, voice phrase, etc.
-     3. Card generation        Ã¢â‚¬â€ random 5x5 selection
-     4. YouTube audio player   Ã¢â‚¬â€ hidden iframe, audio-only
-     5. Audio priming          Ã¢â‚¬â€ defeats mobile autoplay block
-     6. Scroll auto-start      Ã¢â‚¬â€ IntersectionObserver
-     7. Mark / win detection   Ã¢â‚¬â€ click Ã¢â€ â€™ daub Ã¢â€ â€™ 5-in-a-row
-     8. Voice-win              Ã¢â‚¬â€ Web Speech API ("take me back")
-     9. Share card             Ã¢â‚¬â€ 1080x1920 Canvas Ã¢â€ â€™ download/share
+     1. POOLS                  — themed artist sets (live + coming-soon)
+     2. CONFIG                 — clip length, voice phrase, etc.
+     3. Card generation        — random 5x5 selection
+     4. YouTube audio player   — hidden iframe, audio-only
+     5. Audio priming          — defeats mobile autoplay block
+     6. Scroll auto-start      — IntersectionObserver
+     7. Mark / win detection   — click → daub → 5-in-a-row
+     8. Voice-win              — Web Speech API ("take me back")
+     9. Share card             — 1080x1920 Canvas → download/share
 ============================================================ */
 
 /* ---------- 1. POOLS (themed artist sets) -------------------------------
    This is the ONE place to edit the demo's content. Each pool has:
-     Ã¢â‚¬Â¢ label    Ã¢â‚¬â€ human-readable name shown in the era selector
-     Ã¢â‚¬Â¢ status   Ã¢â‚¬â€ "live" (playable) or "coming-soon" (selector shows
+     • label    — human-readable name shown in the era selector
+     • status   — "live" (playable) or "coming-soon" (selector shows
                   the pill but routes the user to the newsletter)
-     Ã¢â‚¬Â¢ artists  Ã¢â‚¬â€ array of { name, tracks: [{ title, bpm? }, ...] }
+     • artists  — array of { name, tracks: [{ title, bpm? }, ...] }
                   Each `tracks` entry needs a `title`. The iTunes Search
-                  API resolves `artist + title` Ã¢â€ â€™ 30s preview URL at
+                  API resolves `artist + title` → 30s preview URL at
                   runtime (no API key, no YouTube IDs to maintain).
                   Optional `bpm` (integer) enables the DJ's tempo nudge
-                  during crossfade Ã¢â‚¬â€ when both the outgoing and incoming
+                  during crossfade — when both the outgoing and incoming
                   tracks have a bpm, the incoming deck's playbackRate is
-                  pulled toward the outgoing tempo (clamped to Ã‚Â±6%) so
+                  pulled toward the outgoing tempo (clamped to ±6%) so
                   the blend feels beat-matched. Tracks without bpm just
                   play at normal speed. Source bpms from songbpm.com,
-                  GetSongBPM, or by ear Ã¢â‚¬â€ populate gradually.
+                  GetSongBPM, or by ear — populate gradually.
 
    Adding a new artist:
      { name: "Artist Name", tracks: [{ title: "Hit One", bpm: 102 }, { title: "Hit Two" }] }
@@ -1315,14 +1321,14 @@
    Populating a coming-soon pool:
      1. Fill in its `artists` array using the same shape
      2. Change its `status` from "coming-soon" to "live"
-     3. That's it Ã¢â‚¬â€ the selector becomes playable, no other code change.
+     3. That's it — the selector becomes playable, no other code change.
 
    Curation rules of thumb:
-   Ã¢â‚¬Â¢ Pick 3-5 of the artist's MOST recognizable tracks. Recognition matters
-     more than completeness Ã¢â‚¬â€ players need to know the song from a 30s clip.
-   Ã¢â‚¬Â¢ Use the exact studio title (no "Remastered", no "(feat. X)" unless
-     it's part of the canonical title) Ã¢â‚¬â€ closer match = better iTunes hit.
-   Ã¢â‚¬Â¢ If iTunes returns no preview for a title (rare), the player auto-skips
+   • Pick 3-5 of the artist's MOST recognizable tracks. Recognition matters
+     more than completeness — players need to know the song from a 30s clip.
+   • Use the exact studio title (no "Remastered", no "(feat. X)" unless
+     it's part of the canonical title) — closer match = better iTunes hit.
+   • If iTunes returns no preview for a title (rare), the player auto-skips
      to another track from the same artist; check console for "iTunes
      lookup failed" warnings and swap that title for a better-known one.
 -------------------------------------------------------------------------- */
@@ -1506,7 +1512,7 @@ const POOLS = {
         { title: "Children's Story" }, { title: "Mona Lisa" },
         { title: "Hey Young World" }, { title: "La Di Da Di" }
       ]},
-      { name: "Roxanne ShantÃƒÂ©", tracks: [
+      { name: "Roxanne Shanté", tracks: [
         { title: "Roxanne's Revenge" }, { title: "Have a Nice Day" },
         { title: "Bite This" }
       ]},
@@ -1740,7 +1746,7 @@ const POOLS = {
         { title: "I Like the Way (The Kissing Game)" }, { title: "Quality Time" },
         { title: "She's Playing Hard to Get" }
       ]},
-      { name: "ZhanÃƒÂ©", tracks: [
+      { name: "Zhané", tracks: [
         { title: "Hey Mr. D.J." }, { title: "Sending My Love" },
         { title: "Groove Thang" }
       ]},
@@ -2248,7 +2254,7 @@ const POOLS = {
 
 /* ---------- 2. CONFIG --------------------------------------------------- */
 const CONFIG = {
-  clipMs: 30000,                          // iTunes previews are ~30s Ã¢â‚¬â€ natural full length
+  clipMs: 30000,                          // iTunes previews are ~30s — natural full length
   cardSize: 5,                            // 5x5
   freeCenter: true,                       // center square is "FREE"
   voicePhrase: "take me back",            // lowercase substring match
@@ -2257,7 +2263,7 @@ const CONFIG = {
   audioVolume: 0.8,
   // --- Game challenge tuning ---
   maxSongsPerRound: 15,                   // hard cap; show "round over" if no bingo by then
-  // (Removed in artist-based rewrite Ã¢â‚¬â€ DJ now always picks an artist from
+  // (Removed in artist-based rewrite — DJ now always picks an artist from
   //  the card; players win by recognizing the artist, not memorizing songs.)
 };
 
@@ -2286,7 +2292,7 @@ function shuffled(arr) {
 
 function activePool() { return POOLS[currentPoolKey]; }
 
-/* Flatten the active pool's nested {artist Ã¢â€ â€™ tracks} into a flat array
+/* Flatten the active pool's nested {artist → tracks} into a flat array
    of cells: each cell is { title, artist }. The card picks 24 random
    cells; the DJ plays them by querying iTunes for `artist + title`. */
 function flattenActivePool() {
@@ -2359,7 +2365,7 @@ function newGame() {
   if (ro) ro.hidden = true;
 }
 
-/* ---------- 4. AUDIO PLAYER Ã‚Â· iTunes Preview backend -------------------
+/* ---------- 4. AUDIO PLAYER · iTunes Preview backend -------------------
    Apple hosts 30-second preview MP3s for almost every commercially-
    released track. The iTunes Search API (no key required, CORS enabled)
    resolves a "title artist" query into a previewUrl that plays in a
@@ -2375,18 +2381,18 @@ function newGame() {
    "idle" and gets loaded with the next track ~CROSSFADE_MS before the
    current clip ends. We animate .volume in an equal-power curve so the
    perceived loudness stays flat through the swap (linear fades would
-   dip in the middle since power = amplitudeÃ‚Â²). */
-const CROSSFADE_MS = 3000;            // total fade window Ã¢â‚¬â€ short so each song stays dominant for ~27 of its 30s slot
-const CROSSFADE_INCOMING_DELAY_MS = 500;   // outgoing fades alone for this long before incoming joins Ã¢â‚¬â€ kept short so the 3s window has room for incoming to ramp up
-const CROSSFADE_TAIL_BUFFER_MS = 500; // legacy â€” kept for back-compat
-const OUTGOING_FADE_TAIL_MS    = 500; // legacy â€” kept for back-compat
+   dip in the middle since power = amplitude²). */
+const CROSSFADE_MS = 3000;            // total fade window — short so each song stays dominant for ~27 of its 30s slot
+const CROSSFADE_INCOMING_DELAY_MS = 500;   // outgoing fades alone for this long before incoming joins — kept short so the 3s window has room for incoming to ramp up
+const CROSSFADE_TAIL_BUFFER_MS = 500; // legacy — kept for back-compat
+const OUTGOING_FADE_TAIL_MS    = 500; // legacy — kept for back-compat
 // Sequential transition timing (no overlap between songs).
 const OUTGOING_FADE_OUT_MS = 1500;  // outgoing fades from full â†’ silent over this window, ending at the clip's natural end
-const TRANSITION_GAP_MS    = 200;   // brief intentional silence between songs â€” makes transitions feel deliberate, not glitchy
+const TRANSITION_GAP_MS    = 200;   // brief intentional silence between songs — makes transitions feel deliberate, not glitchy
 const INCOMING_FADE_IN_MS  = 1500;  // incoming fades from silent â†’ full after the gap
-const CROSSFADE_HEAD_SKIP_MS = 1500;  // skip past the incoming clip's intro so what fades in is the meat Ã¢â‚¬â€ smaller = less likely to land mid-phrase
-const BPM_MAX_NUDGE = 0.06;           // max tempo-shift on the incoming deck for BPM matching (Ã‚Â±6% before it sounds weird)
-const audioEl  = $('#audioEl');   // deck A Ã¢â‚¬â€ also kept as the prime target
+const CROSSFADE_HEAD_SKIP_MS = 1500;  // skip past the incoming clip's intro so what fades in is the meat — smaller = less likely to land mid-phrase
+const BPM_MAX_NUDGE = 0.06;           // max tempo-shift on the incoming deck for BPM matching (±6% before it sounds weird)
+const audioEl  = $('#audioEl');   // deck A — also kept as the prime target
 const audioElB = $('#audioElB');  // deck B
 const decks = [audioEl, audioElB];
 let activeIdx = 0;
@@ -2411,29 +2417,29 @@ decks.forEach(d => {
 /* ---------- Web Audio: bass-swap filter + per-song loudness normalize ----
    Two cheap DJ-grade upgrades wrapping the existing <audio> decks:
 
-   (1) BASS SWAP Ã¢â‚¬â€ during a crossfade, the outgoing deck's bass is highpass-
-       filtered out (20Hz Ã¢â€ â€™ 250Hz) while the incoming deck rises from the
+   (1) BASS SWAP — during a crossfade, the outgoing deck's bass is highpass-
+       filtered out (20Hz → 250Hz) while the incoming deck rises from the
        same 250Hz cutoff back to 20Hz (passthrough). Stops two basslines
-       from clashing Ã¢â‚¬â€ the single trick that separates "playlist" from "mix".
+       from clashing — the single trick that separates "playlist" from "mix".
 
-   (2) LOUDNESS NORMALIZATION Ã¢â‚¬â€ each song's RMS is sampled for ~1.2s during
+   (2) LOUDNESS NORMALIZATION — each song's RMS is sampled for ~1.2s during
        its dominant phase via an AnalyserNode tap. The deck's `normGain` is
        set so perceived loudness lands near a fixed target. Quiet songs come
        up, hot-mastered songs settle down. No pre-analysis, no metadata.
 
    Per-deck graph:
-     <audio>  Ã¢â€ â€™  MediaElementSource  Ã¢â€ â€™  analyserTap  Ã¢â€ â€™  highpass  Ã¢â€ â€™  normGain  Ã¢â€ â€™  destination
+     <audio>  →  MediaElementSource  →  analyserTap  →  highpass  →  normGain  →  destination
 
    Element `.volume` is still the crossfade dial (cascades into the graph).
 -------------------------------------------------------------------------- */
 let audioCtx = null;
 const deckNodes = [];                  // [{ source, analyser, highpass, normGain, measureRAF }]
 const NORM_TARGET_RMS = 0.18;          // perceived-loudness aim (full-scale RMS)
-const HP_BASE_HZ = 20;                 // passthrough Ã¢â‚¬â€ no audible filtering
+const HP_BASE_HZ = 20;                 // passthrough — no audible filtering
 const HP_DUCK_HZ = 250;                // bass-killed during crossfade
 
 function ensureAudioGraph() {
-  // DISABLED Ã¢â‚¬â€ the MediaElementSource routing was silencing playback in this
+  // DISABLED — the MediaElementSource routing was silencing playback in this
   // environment. Helpers (resetDeckGraph, rampHighpass, startLoudnessMeasure)
   // all no-op when deckNodes is empty, so the original direct-to-speakers
   // <audio> playback path is fully restored.
@@ -2466,14 +2472,14 @@ function startLoudnessMeasure(deckIdx) {
     if (count >= targetSamples || performance.now() - startedAt > 2200) {
       const rms = Math.sqrt(sumSq / count) / elVolSnap;
       if (rms < 0.001) {
-        console.log(`Ã°Å¸â€Å  deck ${deckIdx}: RMS unreadable (CORS tainted?) Ã¢â‚¬â€ normGain stays at 1`);
+        console.log(`🔊 deck ${deckIdx}: RMS unreadable (CORS tainted?) — normGain stays at 1`);
       } else {
         const g = Math.max(0.4, Math.min(2.5, NORM_TARGET_RMS / rms));
         const t = audioCtx.currentTime;
         nodes.normGain.gain.cancelScheduledValues(t);
         nodes.normGain.gain.setValueAtTime(nodes.normGain.gain.value, t);
         nodes.normGain.gain.linearRampToValueAtTime(g, t + 0.2);
-        console.log(`Ã°Å¸â€Å  deck ${deckIdx}: RMS=${rms.toFixed(3)} Ã¢â€ â€™ normGain=${g.toFixed(2)}`);
+        console.log(`🔊 deck ${deckIdx}: RMS=${rms.toFixed(3)} → normGain=${g.toFixed(2)}`);
       }
       nodes.measureRAF = null;
       return;
@@ -2509,7 +2515,7 @@ function rampHighpass(deckIdx, fromHz, toHz, durationMs) {
   f.exponentialRampToValueAtTime(Math.max(20, toHz), t + durationMs / 1000);
 }
 
-/* Mute toggle Ã¢â‚¬â€ flips .muted on both decks; preserves crossfade volume curve. */
+/* Mute toggle — flips .muted on both decks; preserves crossfade volume curve. */
 const muteBtn = $('#muteBtn');
 if (muteBtn) {
   muteBtn.addEventListener('click', () => {
@@ -2522,7 +2528,7 @@ if (muteBtn) {
   });
 }
 
-/* Skip button â€” manual escape hatch when iTunes returns a silent or
+/* Skip button — manual escape hatch when iTunes returns a silent or
    off-target preview. Marks the current song as "previewFailed" so we
    don't try it again this round, then advances to the next track. */
 const skipBtn = $('#skipBtn');
@@ -2531,7 +2537,7 @@ if (skipBtn) {
     if (!gameStarted || currentCardIdx < 0) return;
     const current = cardSongs[currentCardIdx];
     if (current) current.previewFailed = true;   // exclude from future picks
-    skipToNext('Skipped â€” finding the next one.');
+    skipToNext('Skipped — finding the next one.');
   });
 }
 
@@ -2548,9 +2554,9 @@ function stopAllAudio() {
   nextPrefetch = null;
 }
 
-/* Resolve `artist + track title` Ã¢â€ â€™ iTunes preview URL. Cached on the
+/* Resolve `artist + track title` → iTunes preview URL. Cached on the
    song object after first lookup so we don't re-search if it recurs. */
-/* iTunes Search returns multiple candidates â€” the top one is often a
+/* iTunes Search returns multiple candidates — the top one is often a
    karaoke / tribute / instrumental cover that has a silent or off-key
    preview. We score every result on title + artist similarity and
    penalize known impostor markers so the official studio version wins. */
@@ -2598,10 +2604,10 @@ async function fetchPreviewUrl(song) {
     const matched = ranked[0] && ranked[0].score > 0 ? ranked[0].r : null;
     if (!matched || !matched.previewUrl) throw new Error('No previewUrl');
     song.previewUrl = matched.previewUrl.replace(/^http:\/\//, 'https://');
-    console.log('ðŸŽµ iTunes match:', song.artist, 'Â·', song.title, 'â†’', matched.trackName, 'by', matched.artistName, '(score ' + ranked[0].score + ')');
+    console.log('🎵 iTunes match:', song.artist, '·', song.title, '→', matched.trackName, 'by', matched.artistName, '(score ' + ranked[0].score + ')');
     return song.previewUrl;
   } catch (err) {
-    console.warn('iTunes lookup failed:', song.artist, 'Â·', song.title, 'Â·', err.message);
+    console.warn('iTunes lookup failed:', song.artist, '·', song.title, '·', err.message);
     song.previewFailed = true;
     return null;
   }
@@ -2631,7 +2637,7 @@ async function playSongAt(cardIndex) {
 
   const url = await fetchPreviewUrl(song);
   if (!url) {
-    return skipToNext('Preview unavailable Ã¢â‚¬â€ skipping.');
+    return skipToNext('Preview unavailable — skipping.');
   }
 
   // Hard-start: cancel any in-flight fade, silence the idle deck, play
@@ -2648,10 +2654,10 @@ async function playSongAt(cardIndex) {
     deck.volume = CONFIG.audioVolume;
     deck.playbackRate = 1;     // reset in case a prior crossfade nudged it
     deck.preservesPitch = deck.mozPreservesPitch = deck.webkitPreservesPitch = true;
-    console.log('Ã¢â€“Â¶Ã¯Â¸Â Playing:', song.artist, 'Ã‚Â·', song.title);
+    console.log('▶️ Playing:', song.artist, '·', song.title);
     const playPromise = deck.play();
     if (playPromise && typeof playPromise.then === 'function') await playPromise;
-    hideDjStartBtn();          // confirmed playing â€” safe to hide the affordance
+    hideDjStartBtn();          // confirmed playing — safe to hide the affordance
   } catch (err) {
     console.warn('Audio play blocked or failed:', err.name, err.message);
     audioPrimed = false;
@@ -2683,7 +2689,7 @@ async function playSongAt(cardIndex) {
    ready yet, we fall back to CONFIG.clipMs and rely on a `loadedmetadata`
    listener to reschedule once we know the real length. */
 /* Beat-snap the crossfade start: if the outgoing song has a known BPM, shift
-   the crossfade start (within Ã‚Â±BEAT_SNAP_MAX_SLIP_MS) so it lands on a beat-1
+   the crossfade start (within ±BEAT_SNAP_MAX_SLIP_MS) so it lands on a beat-1
    or beat-4 of the song's bar grid. Songs without `bpm` are passed through
    untouched. Assumes the iTunes preview starts on (or very near) beat 1; an
    optional `beatOffset` (seconds) lets you anchor differently per song. */
@@ -2710,7 +2716,7 @@ function quantizeLeadToBeat(song, deckCurrentTimeSec, leadMs) {
   }
   const adjustedLeadMs = (best + offset - deckCurrentTimeSec) * 1000;
   if (adjustedLeadMs !== leadMs) {
-    console.log(`Ã°Å¸Å½Â¯ beat-snap: ${song.artist} @ ${song.bpm}bpm Ã¢â‚¬â€ lead ${Math.round(leadMs)}ms Ã¢â€ â€™ ${Math.round(adjustedLeadMs)}ms`);
+    console.log(`🎯 beat-snap: ${song.artist} @ ${song.bpm}bpm — lead ${Math.round(leadMs)}ms → ${Math.round(adjustedLeadMs)}ms`);
   }
   return Math.max(0, adjustedLeadMs);
 }
@@ -2766,7 +2772,7 @@ async function startCrossfade() {
     return;
   }
   const url = await fetchPreviewUrl(next.song);
-  if (!url) return skipToNext('Preview unavailable Ã¢â‚¬â€ skipping.');
+  if (!url) return skipToNext('Preview unavailable — skipping.');
 
   const out = activeDeck();
   const inn = idleDeck();
@@ -2779,13 +2785,13 @@ async function startCrossfade() {
   try { inn.pause(); } catch (e) {}
   inn.src = url;
   // Skip the intro so what fades in is recognisable, not silence/buildup.
-  // Defer setting currentTime until metadata loads Ã¢â‚¬â€ Safari rejects it
+  // Defer setting currentTime until metadata loads — Safari rejects it
   // otherwise. We start at 0 and seek as soon as we can.
   inn.currentTime = 0;
   inn.volume = 0;
 
   // BPM-aware tempo nudge. If both tracks have a bpm, pull the incoming
-  // deck toward the outgoing tempo (clamped to Ã‚Â±BPM_MAX_NUDGE so the
+  // deck toward the outgoing tempo (clamped to ±BPM_MAX_NUDGE so the
   // pitch shift stays imperceptible). preservesPitch keeps it from
   // chipmunking. Tracks without bpm just play at normal speed.
   const outSong = playedSongs[playedSongs.length - 1];
@@ -2795,10 +2801,10 @@ async function startCrossfade() {
     const ratio = outSong.bpm / next.song.bpm;
     const clamped = Math.max(1 - BPM_MAX_NUDGE, Math.min(1 + BPM_MAX_NUDGE, ratio));
     inn.playbackRate = clamped;
-    console.log(`Ã°Å¸Â¥Â BPM nudge: ${next.song.bpm} Ã¢â€ â€™ ${(next.song.bpm * clamped).toFixed(1)} (target ${outSong.bpm})`);
+    console.log(`🥁 BPM nudge: ${next.song.bpm} → ${(next.song.bpm * clamped).toFixed(1)} (target ${outSong.bpm})`);
   }
 
-  console.log('ðŸŽš Sequential transition â†’', next.song.artist, 'Â·', next.song.title);
+  console.log('🎚 Sequential transition →', next.song.artist, '·', next.song.title);
   crossfading = true;
 
   // Bass-swap during the fade-out: outgoing's lows roll off as its volume
@@ -2808,7 +2814,7 @@ async function startCrossfade() {
 
   const target = CONFIG.audioVolume;
 
-  /* PHASE 1 â€” outgoing fades from full to silence over OUTGOING_FADE_OUT_MS.
+  /* PHASE 1 — outgoing fades from full to silence over OUTGOING_FADE_OUT_MS.
      Lead time is set in scheduleCrossfade so this completes right as the
      iTunes clip's audio naturally ends. */
   const phase1Start = performance.now();
@@ -2825,7 +2831,7 @@ async function startCrossfade() {
     setTimeout(phase2Start, TRANSITION_GAP_MS);
   }
 
-  /* PHASE 2 â€” incoming starts from the top of the iTunes clip and fades in
+  /* PHASE 2 — incoming starts from the top of the iTunes clip and fades in
      over INCOMING_FADE_IN_MS. Decks were unlocked at primeAudio time, so
      calling .play() here doesn't need a fresh user gesture. */
   function phase2Start() {
@@ -2910,15 +2916,15 @@ function endRoundNoBingo() {
   clearTimeout(clipTimer);
   clearInterval(timerInterval);
   stopAllAudio();
-  setBoothIdle(`Round over Ã‚Â· ${playedSongs.length} songs played, no bingo.`);
+  setBoothIdle(`Round over · ${playedSongs.length} songs played, no bingo.`);
   $$('#bingoGrid .sq').forEach(el => el.classList.add('is-roundover'));
-  $('#roundover').hidden = false;       // modal overlay â€” no scroll needed
+  $('#roundover').hidden = false;       // modal overlay — no scroll needed
   gameStarted = false;
   updateNewCardButton();
   showDjStartBtn();
 }
 
-// "Try a fresh card" inside the round-over panel Ã¢â‚¬â€ same as New Card,
+// "Try a fresh card" inside the round-over panel — same as New Card,
 // but with a more obvious affordance for losers.
 $('#tryAgainBtn').addEventListener('click', () => {
   $('#roundover').hidden = true;
@@ -2951,8 +2957,8 @@ function startTimerBar() {
   }, 200);
 }
 
-/* Booth display: song TITLE large (Bungee, .booth__title) Ã¢â‚¬â€ what the
-   player needs to find on their card Ã¢â‚¬â€ with the ARTIST in italic small
+/* Booth display: song TITLE large (Bungee, .booth__title) — what the
+   player needs to find on their card — with the ARTIST in italic small
    underneath as supporting context. */
 function setBoothPlaying(song) {
   $('#booth').classList.remove('is-idle');
@@ -2976,7 +2982,7 @@ function highlightNowPlaying(cardIndex) {
 }
 
 /* Update the "Song N / 15" counter in the booth. Color escalates as the
-   round tightens Ã¢â‚¬â€ yellow at >60% used, red at >85% used. */
+   round tightens — yellow at >60% used, red at >85% used. */
 function updateRoundCounter() {
   const el = $('#boothCounter');
   if (!el) return;
@@ -2998,10 +3004,10 @@ function primeAudio() {
   if (primePromise) return primePromise;
   // Unlock playback by calling play() ON THE REAL <audio> element during
   // a user gesture. We swap to a silent WAV briefly so the play actually
-  // starts and the gesture is "consumed" â€” after this, programmatic
+  // starts and the gesture is "consumed" — after this, programmatic
   // play() calls in any context will work.
   const silentSrc = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
-  // Prime BOTH decks in the same gesture â€” otherwise the idle deck's
+  // Prime BOTH decks in the same gesture — otherwise the idle deck's
   // first .play() during a crossfade gets blocked on mobile.
   const primeOne = (el) => {
     el.src = silentSrc;
@@ -3022,7 +3028,7 @@ function primeAudio() {
         audioPrimed = true;
         ensureAudioGraph();
         resumeAudioCtx();
-        console.log('ðŸ”“ Audio primed â€” both decks unlocked');
+        console.log('🔓 Audio primed — both decks unlocked');
       })
       .catch((err) => {
         console.warn('Audio prime failed (browser blocked play):', err.name);
@@ -3096,12 +3102,12 @@ function startGame() {
   updateNewCardButton();
   // NOTE: do NOT hide the DJ button here. We hide it only after a song
   // actually engages playback (in playSongAt's success path). If playback
-  // fails â€” autoplay block, skipLock race, network hiccup â€” the button
+  // fails — autoplay block, skipLock race, network hiccup — the button
   // stays visible so the player has a guaranteed retry path.
   skipToNext(); // picks a random unplayed non-FREE song
 }
 
-/* "Start the DJ" â€” the always-visible primary affordance. Lives under the
+/* "Start the DJ" — the always-visible primary affordance. Lives under the
    booth and disappears once the first song plays. Click primes audio
    (user-gesture-safe) and starts the game. */
 const djStartBtn = $('#djStartBtn');
@@ -3109,7 +3115,7 @@ function showDjStartBtn() { if (djStartBtn) djStartBtn.hidden = false; }
 function hideDjStartBtn() { if (djStartBtn) djStartBtn.hidden = true; }
 if (djStartBtn) {
   djStartBtn.addEventListener('click', () => {
-    // If the button is visible we're not actively playing â€” reset any stale
+    // If the button is visible we're not actively playing — reset any stale
     // gameStarted flag from a half-broken start attempt and try fresh.
     gameStarted = false;
     primeAudio().then(() => setTimeout(startGame, 100));
@@ -3169,7 +3175,7 @@ function checkWin() {
 }
 
 /* ---------- 8. VOICE WIN (Web Speech API) ------------------------------- */
-/* The brand call IS the win condition Ã¢â‚¬â€ players literally yell what the
+/* The brand call IS the win condition — players literally yell what the
    brand is called. To recognize it without backend / API keys we use the
    browser's native SpeechRecognition. Browser support varies (Chrome and
    Edge are reliable; Safari historically spotty). On unsupported browsers
@@ -3220,7 +3226,7 @@ function startVoiceListening() {
     recognition.onresult = (event) => {
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const t = event.results[i][0].transcript.toLowerCase();
-        micText.textContent = 'Ã¢â‚¬Å“' + t.trim() + 'Ã¢â‚¬Â';
+        micText.textContent = '"' + t.trim() + '"';
         if (t.includes(CONFIG.voicePhrase)) {
           claimWin();
           break;
@@ -3230,12 +3236,12 @@ function startVoiceListening() {
     recognition.onerror = (e) => {
       micEl.classList.add('is-error');
       if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
-        micText.textContent = 'Mic blocked Ã¢â‚¬â€ tap I YELLED IT to claim it';
+        micText.textContent = 'Mic blocked — tap I YELLED IT to claim it';
       } else if (e.error === 'no-speech') {
-        micText.textContent = 'Still listening for Ã¢â‚¬Å“Take Me BackÃ¢â‚¬ÂÃ¢â‚¬Â¦';
+        micText.textContent = 'Still listening for "Take Me Back"…';
         micEl.classList.remove('is-error');
       } else {
-        micText.textContent = 'Voice unavailable Ã¢â‚¬â€ tap the button to claim';
+        micText.textContent = 'Voice unavailable — tap the button to claim';
       }
     };
     recognition.onend = () => {
@@ -3248,12 +3254,12 @@ function startVoiceListening() {
     recognitionTimeout = setTimeout(() => {
       if (!winClaimed) {
         micEl.classList.add('is-error');
-        micText.textContent = 'Still here Ã¢â‚¬â€ tap I YELLED IT when ready';
+        micText.textContent = 'Still here — tap I YELLED IT when ready';
       }
     }, CONFIG.voiceTimeoutMs);
   } catch (err) {
     micEl.classList.add('is-error');
-    micText.textContent = 'Voice unavailable Ã¢â‚¬â€ tap the button to claim';
+    micText.textContent = 'Voice unavailable — tap the button to claim';
   }
 }
 
@@ -3276,9 +3282,9 @@ function claimWin() {
 
 $('#yelledItBtn').addEventListener('click', claimWin);
 
-/* ---------- 9. SHARE CARD (Canvas Ã¢â€ â€™ PNG Ã¢â€ â€™ download/share) --------------- */
+/* ---------- 9. SHARE CARD (Canvas → PNG → download/share) --------------- */
 /* Generates a 1080x1920 portrait image optimized for Instagram Stories.
-   Pure Canvas Ã¢â‚¬â€ no external dependencies. To edit the design (colors,
+   Pure Canvas — no external dependencies. To edit the design (colors,
    layout, copy), modify the `drawShareCard` function below. */
 
 function drawShareCard() {
@@ -3299,7 +3305,7 @@ function drawShareCard() {
   const TEXT        = '#F2EADB';
   const TEXT_MUTED  = '#A89C8A';
 
-  // Background Ã¢â‚¬â€ radial gradient + grain feel via overlay rect
+  // Background — radial gradient + grain feel via overlay rect
   const bgGrad = ctx.createRadialGradient(W/2, H*0.18, 0, W/2, H*0.18, H*0.9);
   bgGrad.addColorStop(0, '#3a1748');
   bgGrad.addColorStop(0.45, '#1c0d24');
@@ -3311,7 +3317,7 @@ function drawShareCard() {
   ctx.fillStyle = TAPE_HOT;
   ctx.font = '500 28px "JetBrains Mono", ui-monospace, monospace';
   ctx.textAlign = 'center';
-  ctx.fillText('Ã‚Â· TAKE ME BACK BINGO Ã‚Â·', W/2, 110);
+  ctx.fillText('· TAKE ME BACK BINGO ·', W/2, 110);
 
   // Headline
   ctx.fillStyle = TEXT;
@@ -3329,7 +3335,7 @@ function drawShareCard() {
   const statText = `Hit bingo in ${playedSongs.length} song${playedSongs.length === 1 ? '' : 's'}.`;
   ctx.fillText(statText, W/2, 440);
 
-  // 5x5 card Ã¢â‚¬â€ paper background.
+  // 5x5 card — paper background.
   // cardH is computed from cellSize so the grid never overflows the card.
   const cardX = 80, cardY = 540, cardW = W - 160;
   const cardPadX = 40;
@@ -3399,7 +3405,7 @@ function drawShareCard() {
         ctx.fill();
       }
 
-      // Song title Ã¢â‚¬â€ Bungee (marquee feel), dark on yellow/cream,
+      // Song title — Bungee (marquee feel), dark on yellow/cream,
       // white on purple. Wraps to fit longer titles.
       const labelText = song.free ? 'FREE' : song.title;
       const textColor = (isWin || song.free) ? '#fff' : INK;
@@ -3411,7 +3417,7 @@ function drawShareCard() {
     }
   }
 
-  // Bottom CTA strip Ã¢â‚¬â€ sits below the card with a fixed gap.
+  // Bottom CTA strip — sits below the card with a fixed gap.
   // cardH is now dynamic (sized to the grid), so ctaY follows it cleanly.
   const ctaY = cardY + cardH + 50;
   ctx.fillStyle = TEXT;
@@ -3426,7 +3432,7 @@ function drawShareCard() {
 
   ctx.fillStyle = TEXT_MUTED;
   ctx.font = '400 24px "Sora", system-ui, sans-serif';
-  ctx.fillText('@takemebackbingo  Ã‚Â·  Live Hip-Hop & R&B Bingo  Ã‚Â·  21+', W/2, ctaY + 140);
+  ctx.fillText('@takemebackbingo  ·  Live Hip-Hop & R&B Bingo  ·  21+', W/2, ctaY + 140);
 
   return canvas;
 }
@@ -3506,7 +3512,7 @@ $('#downloadBtn').addEventListener('click', () => {
 $('#shareBtn').addEventListener('click', async () => {
   const shareData = {
     title: 'I won Take Me Back Bingo',
-    text: 'Yelled "Take Me Back!" and won. Catch the real night Ã¢â€ â€™ takemebackbingo.com/events',
+    text: 'Yelled "Take Me Back!" and won. Catch the real night → takemebackbingo.com/events',
     url:  'https://takemebackbingo.com/events',
   };
   // navigator.share with file (mobile)
@@ -3527,7 +3533,7 @@ $('#shareBtn').addEventListener('click', async () => {
     try { await navigator.share(shareData); return; }
     catch (err) { if (err.name === 'AbortError') return; }
   }
-  // Desktop fallback Ã¢â‚¬â€ just trigger download
+  // Desktop fallback — just trigger download
   $('#downloadBtn').click();
 });
 
@@ -3538,7 +3544,7 @@ $('#playAgainBtn').addEventListener('click', () => {
   setTimeout(startGame, 400);
 });
 
-/* ---------- ANTI-CHEAT Ã‚Â· disable "New Card" mid-round -------------------
+/* ---------- ANTI-CHEAT · disable "New Card" mid-round -------------------
    Once the DJ has started playing (or the player has marked a square)
    you can't bail out and re-roll for an easier card. The button only
    becomes available again after a win is claimed, or before the first
@@ -3564,7 +3570,7 @@ function updateNewCardButton() {
 
 $('#newCardBtn').addEventListener('click', () => {
   if (isRoundInProgress()) {
-    // Visual nudge Ã¢â‚¬â€ quick shake on the locked button
+    // Visual nudge — quick shake on the locked button
     const btn = $('#newCardBtn');
     btn.classList.remove('shake'); void btn.offsetWidth; btn.classList.add('shake');
     setBoothLabel('Finish the round first.');
@@ -3629,7 +3635,7 @@ function resetGame() {
         p.setAttribute('aria-selected', isActive ? 'true' : 'false');
       });
       // Switching pool = fresh round. Chain on primeAudio so the start fires
-      // reliably whether or not the audio was already primed â€” the click
+      // reliably whether or not the audio was already primed — the click
       // itself counts as a user gesture, so a not-yet-primed audio gets
       // unlocked here and the new pool's first song plays as soon as it's ready.
       resetGame();
@@ -3653,7 +3659,7 @@ function resetGame() {
 
   // The "drop your email to be notified" link inside the tooltip goes to
   // index.html#contact (the homepage newsletter form). Default browser
-  // navigation handles it Ã¢â‚¬â€ no JS hook needed.
+  // navigation handles it — no JS hook needed.
 })();
 
 /* ---------- BOOT --------------------------------------------------------- */
