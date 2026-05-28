@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Events &middot; Take Me Back Bingo</title>
+<meta name="description" content="Upcoming Take Me Back Bingo nights and past event recaps." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Permanent+Marker&family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="nav">
+  <a href="index.html" class="nav__logo" aria-label="Take Me Back Bingo home">
+    <img src="logos/logo-yellow.png" alt="Take Me Back Bingo" class="nav__logo-img" />
+  </a>
+  <nav class="nav__links" id="primary-nav" aria-label="Primary">
+    <a href="index.html#how">About</a>
+    <a href="index.html#how">How to Play</a>
+    <a href="play.html">Play</a>
+    <a href="events.html" aria-current="page">Events</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="index.html#contact">Contact</a>
+  </nav>
+  <a href="events.html" class="btn btn--primary nav__cta">Buy Tickets</a>
+  <button type="button" class="nav__toggle" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav" onclick="(function(b){var n=b.closest('.nav');var o=n.getAttribute('data-nav-open')==='true';n.setAttribute('data-nav-open',o?'false':'true');b.setAttribute('aria-expanded',o?'false':'true');b.setAttribute('aria-label',o?'Open menu':'Close menu');})(this)"><span class="nav__toggle-bars" aria-hidden="true"></span></button>
+</header>
+
+<section class="events-page">
+  <div class="events-page__inner">
+
+    <!-- Page hero -->
+    <header class="events-page__head" data-reveal>
+      <p class="eyebrow"><span class="eyebrow__dot"></span> Events</p>
+      <h1 class="h2 events-page__h1">
+        The next night. The last night. <em>Pick your seat.</em>
+      </h1>
+      <p class="events-page__sub">
+        Live Hip&#8209;Hop &amp; R&amp;B bingo, dance battles, and lip sync rounds.
+        Tickets drop here first.
+      </p>
+    </header>
+
+    <!-- UPCOMING -->
+    <section class="events-section" aria-labelledby="events-upcoming">
+      <header class="events-section__head" data-reveal>
+        <h2 id="events-upcoming" class="events-section__h2">Upcoming</h2>
+        <span class="events-section__count">4 nights on sale</span>
+      </header>
+
+      <ol class="events-list">
+
+        <li class="event-card" id="evt-jun-14" data-reveal
+            data-share-title="Take Me Back Bingo Â· June 14"
+            data-share-text="Take Me Back Bingo â€” Sunday, June 14. Hip-Hop & R&B live music bingo. Get on the early access list:">
+          <div class="event-card__flyer">
+            <div class="event-card__date-block">
+              <span class="event-card__date-month">Jun</span>
+              <span class="event-card__date-day">14</span>
+            </div>
+            <span class="event-card__badge">On Sale</span>
+          </div>
+          <div class="event-card__body">
+            <p class="event-card__kicker">Take Me Back Bingo</p>
+            <h3 class="event-card__title">June Night</h3>
+            <dl class="event-card__meta">
+              <div><dt>Date</dt><dd>Sunday, June 14</dd></div>
+              <div><dt>Venue</dt><dd>TBA</dd></div>
+              <div><dt>Doors</dt><dd>8:00 PM &middot; 21+</dd></div>
+              <div><dt>Format</dt><dd>3&#8209;hour live music bingo</dd></div>
+            </dl>
+            <p class="event-card__copy">
+              Theme and venue announcement dropping soon. Join the early access list to lock in your seat
+              the moment tickets go live.
+            </p>
+            <div class="event-card__cta-row">
+              <a class="btn btn--primary btn--lg" href="#" data-ticket-link>
+                Buy Tickets
+                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+              <div class="share" data-share>
+                <button type="button" class="btn btn--ghost btn--lg" data-share-trigger aria-haspopup="menu" aria-expanded="false" aria-label="Share this event">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                  <span class="share-label">Share</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="event-card" id="evt-jul-19" data-reveal
+            data-share-title="All White Affair Bingo Â· July 19"
+            data-share-text="All White Affair Bingo with DJ Doowop â€” Sunday, July 19. Dress code is strict white. Tickets:">
+          <div class="event-card__flyer">
+            <div class="event-card__date-block event-card__date-block--accent">
+              <span class="event-card__date-month">Jul</span>
+              <span class="event-card__date-day">19</span>
+            </div>
+            <span class="event-card__badge">On Sale</span>
+          </div>
+          <div class="event-card__body">
+            <p class="event-card__kicker">Featuring DJ Doowop</p>
+            <h3 class="event-card__title">All White Affair Bingo</h3>
+            <dl class="event-card__meta">
+              <div><dt>Date</dt><dd>Sunday, July 19</dd></div>
+              <div><dt>Dress Code</dt><dd>All white attire</dd></div>
+              <div><dt>Doors</dt><dd>8:00 PM &middot; 21+</dd></div>
+              <div><dt>Music</dt><dd>Hip&#8209;Hop &amp; R&amp;B classics</dd></div>
+            </dl>
+            <p class="event-card__copy">
+              Our signature summer night. Strict all&#8209;white dress code, DJ Doowop on the ones and twos,
+              and a fuller prize pool than usual. Last year this one sold out in seventy&#8209;two hours.
+            </p>
+            <div class="event-card__cta-row">
+              <a class="btn btn--primary btn--lg" href="#" data-ticket-link>
+                Buy Tickets
+                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+              <a class="btn btn--ghost btn--lg" href="#contact" data-open-inquiry data-inquiry-topic="Reserve a table" data-inquiry-context="July 19 Â· All White Affair Bingo">Reserve a table</a>
+              <div class="share" data-share>
+                <button type="button" class="btn btn--ghost btn--lg" data-share-trigger aria-haspopup="menu" aria-expanded="false" aria-label="Share this event">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                  <span class="share-label">Share</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="event-card" id="evt-aug-16" data-reveal
+            data-share-title="R&amp;B Bingo by the Lake Â· August 16"
+            data-share-text="R&amp;B Bingo by the Lake â€” Sunday, August 16. Outdoor, sunset, all R&amp;B all night. Tickets:">
+          <div class="event-card__flyer">
+            <div class="event-card__date-block">
+              <span class="event-card__date-month">Aug</span>
+              <span class="event-card__date-day">16</span>
+            </div>
+            <span class="event-card__badge">On Sale</span>
+          </div>
+          <div class="event-card__body">
+            <p class="event-card__kicker">Outdoor &middot; By the Lake</p>
+            <h3 class="event-card__title">R&amp;B Bingo by the Lake</h3>
+            <dl class="event-card__meta">
+              <div><dt>Date</dt><dd>Sunday, August 16</dd></div>
+              <div><dt>Venue</dt><dd>Outdoor &middot; Lakeside (TBA)</dd></div>
+              <div><dt>Doors</dt><dd>7:00 PM &middot; 21+</dd></div>
+              <div><dt>Music</dt><dd>R&amp;B all night</dd></div>
+            </dl>
+            <p class="event-card__copy">
+              Sunset bingo, open sky, lakeside vibes. R&amp;B&#8209;only set list. Bring a chair or grab
+              a table, the dance battle moves to the grass after the last round.
+            </p>
+            <div class="event-card__cta-row">
+              <a class="btn btn--primary btn--lg" href="#" data-ticket-link>
+                Buy Tickets
+                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+              <a class="btn btn--ghost btn--lg" href="#contact" data-open-inquiry data-inquiry-topic="Group of 6+" data-inquiry-context="August 16 Â· R&amp;B Bingo by the Lake">Group of 6+?</a>
+              <div class="share" data-share>
+                <button type="button" class="btn btn--ghost btn--lg" data-share-trigger aria-haspopup="menu" aria-expanded="false" aria-label="Share this event">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                  <span class="share-label">Share</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="event-card" id="evt-sep-06" data-reveal
+            data-share-title="Caribbean Bingo Â· September 6"
+            data-share-text="Caribbean Bingo with Bobby Conders â€” Sunday, September 6. R&amp;B/Hip-Hop vs Reggae/Soca all night. Tickets:">
+          <div class="event-card__flyer">
+            <div class="event-card__date-block event-card__date-block--accent">
+              <span class="event-card__date-month">Sep</span>
+              <span class="event-card__date-day">06</span>
+            </div>
+            <span class="event-card__badge">On Sale</span>
+          </div>
+          <div class="event-card__body">
+            <p class="event-card__kicker">Hosted by Bobby Conders</p>
+            <h3 class="event-card__title">Caribbean Bingo</h3>
+            <dl class="event-card__meta">
+              <div><dt>Date</dt><dd>Sunday, September 6</dd></div>
+              <div><dt>Venue</dt><dd>Outdoor (TBA)</dd></div>
+              <div><dt>Doors</dt><dd>7:00 PM &middot; 21+</dd></div>
+              <div><dt>Music</dt><dd>R&amp;B &amp; Hip&#8209;Hop vs Reggae &amp; Soca</dd></div>
+            </dl>
+            <p class="event-card__copy">
+              Carnival energy meets the bingo card. Bobby Conders on the mic, half the night R&amp;B and
+              Hip&#8209;Hop, half the night Reggae and Soca. Wave your flag, line up your card.
+            </p>
+            <div class="event-card__cta-row">
+              <a class="btn btn--primary btn--lg" href="#" data-ticket-link>
+                Buy Tickets
+                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+              <a class="btn btn--ghost btn--lg" href="#contact" data-open-inquiry data-inquiry-topic="Sponsor a night" data-inquiry-context="September 6 · Caribbean Bingo">Sponsor a night</a>
+              <div class="share" data-share>
+                <button type="button" class="btn btn--ghost btn--lg" data-share-trigger aria-haspopup="menu" aria-expanded="false" aria-label="Share this event">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                  <span class="share-label">Share</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </li>
+
+      </ol>
+    </section>
+
+    <!-- PAST -->
+    <section class="events-section" aria-labelledby="events-past">
+      <header class="events-section__head" data-reveal>
+        <h2 id="events-past" class="events-section__h2">Past Nights</h2>
+        <span class="events-section__count">Sold out shows</span>
+      </header>
+
+      <ol class="events-list events-list--past">
+
+        <li class="event-card event-card--past" id="evt-thriller" data-reveal
+            data-share-title="Thriller Bingo Â· Michael Jackson Tribute"
+            data-share-text="Thriller Bingo â€” an MJ-only set list, hosted by Rey Gibbs with DJ Nix In The Mix. Sold out the room."
+            data-share-image="flyers/Thriller-Bingo-High-Class.jpg"
+            data-share-image-name="Thriller-Bingo-Flyer.jpg">
+          <div class="event-card__flyer event-card__flyer--past">
+            <img src="flyers/Thriller-Bingo-High-Class.jpg" alt="Thriller Bingo flyer Â· past Michael Jackson tribute night" loading="lazy" />
+            <span class="event-card__badge event-card__badge--sold">Sold Out</span>
+          </div>
+          <div class="event-card__body">
+            <p class="event-card__kicker">Michael Jackson Tribute</p>
+            <h3 class="event-card__title">Thriller Bingo</h3>
+            <p class="event-card__copy">
+              An MJ&#8209;only set list. From <em>Off the Wall</em> through <em>Thriller</em>,
+              <em>Bad</em>, <em>Dangerous</em> and the late&#8209;era hits. Hosted by Rey Gibbs with
+              DJ Nix In The Mix. Sold out the room.
+            </p>
+            <div class="event-card__cta-row">
+              <a class="btn btn--ghost btn--lg" href="gallery.html">
+                See the photos
+                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+              <div class="share" data-share>
+                <button type="button" class="btn btn--ghost btn--lg" data-share-trigger aria-haspopup="menu" aria-expanded="false" aria-label="Share this event flyer">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                  <span class="share-label">Share</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="event-card event-card--past" id="evt-reminisce" data-reveal
+            data-share-title="Reminisce Bingo Â· High Class Exclusive"
+            data-share-text="Reminisce Bingo â€” the launch night. Packed room, 90s & 2000s hip-hop and R&B, dance battle into the early hours."
+            data-share-image="flyers/Reminisce-Bingo-High-Class-Exclusive.jpg"
+            data-share-image-name="Reminisce-Bingo-Flyer.jpg">
+          <div class="event-card__flyer event-card__flyer--past">
+            <img src="flyers/Reminisce-Bingo-High-Class-Exclusive.jpg" alt="Reminisce Bingo flyer Â· past Take Me Back night" loading="lazy" />
+            <span class="event-card__badge event-card__badge--sold">Sold Out</span>
+          </div>
+          <div class="event-card__body">
+            <p class="event-card__kicker">High Class Exclusive</p>
+            <h3 class="event-card__title">Reminisce Bingo</h3>
+            <p class="event-card__copy">
+              The launch night. Packed room, hip&#8209;hop and R&amp;B from the 90s and 2000s,
+              dance battle into the early hours. Photos live in the gallery.
+            </p>
+            <div class="event-card__cta-row">
+              <a class="btn btn--ghost btn--lg" href="gallery.html">
+                See the photos
+                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+              <div class="share" data-share>
+                <button type="button" class="btn btn--ghost btn--lg" data-share-trigger aria-haspopup="menu" aria-expanded="false" aria-label="Share this event flyer">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                  <span class="share-label">Share</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </li>
+
+      </ol>
+    </section>
+
+    <!-- CTA strip -->
+    <aside class="events-cta" data-reveal>
+      <div>
+        <p class="eyebrow"><span class="eyebrow__dot"></span> Bring us to your city</p>
+        <h3 class="events-cta__title">Don&rsquo;t see a date near you?</h3>
+        <p class="events-cta__copy">
+          Private bookings, corporate parties, and city expansion inquiries welcome.
+          We bring the host, the cards, the DJ, and the prizes.
+        </p>
+      </div>
+      <div class="events-cta__buttons">
+        <a class="btn btn--primary btn--lg" href="#contact" data-open-inquiry data-inquiry-topic="Private &amp; corporate bookings">Book a Private Night</a>
+        <a class="btn btn--ghost btn--lg" href="#contact" data-open-inquiry data-inquiry-topic="Bring us to your city">Bring us to your city</a>
+      </div>
+    </aside>
+
+  </div>
+</section>
+
+<footer class="footer" id="contact">
+  <div class="footer__bleed" aria-hidden="true"></div>
+  <div class="footer__inner">
+    <div class="footer__lockup">
+      <img src="logos/logo-yellow.png" alt="Take Me Back Bingo" class="footer__logo" />
+      <div class="footer__lockup-copy">
+        <p class="footer__tagline">
+          <span class="footer__tagline-script">Three hours.</span>
+          <span class="footer__tagline-block">Fifty Tracks. One Winner Per Round.</span>
+        </p>
+        <p class="footer__sub">Hip-Hop &amp; R&amp;B bingo, live in your city. Dance battles, prizes, throwbacks all night.</p>
+        <div class="footer__cta-row">
+          <a href="events.html" class="btn btn--primary btn--lg">Buy Tickets</a>
+          <a href="#contact" class="btn btn--ghost btn--lg" data-open-inquiry data-inquiry-topic="Private &amp; corporate bookings">Book a Private Night</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__cols">
+      <div class="footer__col">
+        <h4 class="footer__h">Explore</h4>
+        <ul class="footer__list">
+          <li><a href="index.html#how">About</a></li>
+          <li><a href="index.html#how">How to Play</a></li>
+          <li><a href="events.html">Events</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4 class="footer__h">Work With Us</h4>
+        <ul class="footer__list">
+          <li><a href="#contact" data-open-inquiry data-inquiry-topic="Private &amp; corporate bookings">Private &amp; Corporate Bookings</a></li>
+          <li><a href="#contact" data-open-inquiry data-inquiry-topic="Brand partnerships">Brand Partnerships</a></li>
+          <li><a href="#contact" data-open-inquiry data-inquiry-topic="Bring us to your city">Bring Us To Your City</a></li>
+          <li><a href="#contact" data-open-inquiry data-inquiry-topic="Press &amp; media">Press &amp; Media</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4 class="footer__h">Stay In The Loop</h4>
+        <p class="footer__newsletter-copy">New cities, new dates, early ticket drops. No spam.</p>
+        <form class="footer__newsletter" data-newsletter-form method="POST" action="https://formspree.io/f/mbdbggbv" novalidate>
+          <label class="sr-only" for="footer-email">Email address</label>
+          <input id="footer-email" name="email" type="email" required placeholder="you@email.com" autocomplete="email" />
+          <input type="hidden" name="topic" value="newsletter" />
+          <input type="hidden" name="_subject" value="[Take Me Back Bingo] Newsletter signup" />
+          <button type="submit" aria-label="Subscribe">
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <p class="footer__newsletter-status" data-newsletter-status role="status" aria-live="polite"></p>
+        </form>
+        <div class="footer__contact">
+          <a href="tel:+17326467073" class="footer__contact-line">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span>732.646.7073</span>
+          </a>
+          <a href="mailto:info@takemebackbingo.com" class="footer__contact-line" data-open-inquiry>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
+            <span>info@takemebackbingo.com</span>
+          </a>
+        </div>
+        <div class="footer__social">
+          <a href="https://www.instagram.com/takemebackbingo" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+          </a>
+          <a href="https://www.facebook.com/share/14YvCAxPKQL/" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="mailto:info@takemebackbingo.com" aria-label="Email" data-open-inquiry>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <div class="footer__bottom-row">
+        <p class="footer__copy">&copy; <span id="year">2026</span> High Class Experience. All rights reserved.</p>
+        <p class="footer__credit">
+          Designed by <a href="https://robertvanliew.com" target="_blank" rel="noopener">robertvanliew.com</a>
+        </p>
+        <p class="footer__legal">
+          <a href="legal.html#privacy">Privacy</a>
+          <span class="footer__dot">Â·</span>
+          <a href="legal.html#terms">Terms</a>
+          <span class="footer__dot">Â·</span>
+          <a href="legal.html#accessibility">Accessibility</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ INQUIRY MODAL ============ -->
+<div class="modal" id="inquiry-modal" role="dialog" aria-modal="true" aria-labelledby="inquiry-modal-title" hidden>
+  <div class="modal__scrim" data-modal-close></div>
+  <div class="modal__panel" role="document">
+    <button class="modal__close" type="button" aria-label="Close" data-modal-close>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+    <header class="modal__head">
+      <p class="eyebrow"><span class="eyebrow__dot"></span> Get in Touch</p>
+      <h2 id="inquiry-modal-title" class="modal__title">Send us an inquiry.</h2>
+      <p class="modal__sub">Tickets, private bookings, brand partnerships, press, tell us what you need and we&rsquo;ll be back within one business day.</p>
+    </header>
+    <form class="modal__form" data-inquiry-form method="POST" action="https://formspree.io/f/mbdbggbv" novalidate>
+      <input type="hidden" name="_subject" data-inquiry-subject-field value="[Take Me Back Bingo] Inquiry" />
+      <input type="hidden" name="context" data-inquiry-context-field value="" />
+      <div class="modal__row">
+        <label class="modal__field"><span class="modal__label">Name</span><input type="text" name="name" required autocomplete="name" placeholder="Your name" /></label>
+        <label class="modal__field"><span class="modal__label">Email</span><input type="email" name="email" required autocomplete="email" placeholder="you@email.com" /></label>
+      </div>
+      <div class="modal__row">
+        <label class="modal__field"><span class="modal__label">Phone <span class="modal__optional">(optional)</span></span><input type="tel" name="phone" autocomplete="tel" placeholder="555.555.5555" /></label>
+        <label class="modal__field"><span class="modal__label">Inquiry Type</span>
+          <select name="topic" required>
+            <option value="" disabled selected>Choose one</option>
+            <option>Buy tickets / general</option>
+            <option>Reserve a table</option>
+            <option>Group of 6+</option>
+            <option>Early access / waitlist</option>
+            <option>Private &amp; corporate bookings</option>
+            <option>Brand partnerships</option>
+            <option>Sponsor a night</option>
+            <option>Bring us to your city</option>
+            <option>Press &amp; media</option>
+          </select>
+        </label>
+      </div>
+      <label class="modal__field"><span class="modal__label">Message</span><textarea name="message" rows="5" required placeholder="Tell us a bit about the night, the date, the headcount, the vibe."></textarea></label>
+      <div class="modal__actions">
+        <button type="submit" class="btn btn--primary btn--lg">Send Inquiry
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <p class="modal__hint">Or call <a href="tel:+17326467073">732.646.7073</a></p>
+      </div>
+      <p class="modal__status" data-inquiry-status role="status"></p>
+    </form>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var html = document.documentElement;
+    html.classList.remove('no-js');
+    html.classList.add('js');
+
+    /* Anti-theft: block right-click on imagery + asset drag-start. */
+    document.addEventListener('contextmenu', function (e) {
+      var t = e.target;
+      if (t && (t.tagName === 'IMG' || t.tagName === 'VIDEO' || t.tagName === 'CANVAS' || t.closest('.gallery, .bingocard, .tape-stage, .event-card__flyer, .cassette, .winners, .reel'))) {
+        e.preventDefault();
+      }
+    });
+    document.addEventListener('dragstart', function (e) {
+      if (e.target && (e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO')) e.preventDefault();
+    });
+
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var nodes = document.querySelectorAll('[data-reveal]');
+    function revealAll() {
+      nodes.forEach(function (el) {
+        el.classList.add('is-in');
+        if (el.hasAttribute('data-reveal-stagger')) {
+          Array.prototype.forEach.call(el.children, function (c, i) { c.style.setProperty('--i', i); });
+        }
+      });
+    }
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      revealAll();
+    } else {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          var el = entry.target;
+          el.classList.add('is-in');
+          if (el.hasAttribute('data-reveal-stagger')) {
+            Array.prototype.forEach.call(el.children, function (c, i) { c.style.setProperty('--i', i); });
+          }
+          io.unobserve(el);
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -6% 0px' });
+      nodes.forEach(function (el) { io.observe(el); });
+      setTimeout(revealAll, 3000);
+    }
+    var yearEl = document.getElementById('year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+    var inquiryModal = document.getElementById('inquiry-modal');
+    if (inquiryModal) {
+      var lastFocus = null;
+      function openInquiry() {
+        lastFocus = document.activeElement;
+        inquiryModal.hidden = false;
+        document.body.style.overflow = 'hidden';
+        requestAnimationFrame(function () {
+          var first = inquiryModal.querySelector('input, select, textarea, button');
+          if (first) first.focus();
+          inquiryModal.classList.add('is-open');
+        });
+      }
+      function closeInquiry() {
+        inquiryModal.classList.remove('is-open');
+        document.body.style.overflow = '';
+        setTimeout(function () { inquiryModal.hidden = true; if (lastFocus && lastFocus.focus) lastFocus.focus(); }, 220);
+      }
+      var inquiryForm = inquiryModal.querySelector('[data-inquiry-form]');
+      var inquiryStatus = inquiryModal.querySelector('[data-inquiry-status]');
+      var inquirySubmitBtn = inquiryForm.querySelector('button[type="submit"]');
+      var inquiryBtnDefault = inquirySubmitBtn ? inquirySubmitBtn.innerHTML : '';
+      var inquiryTitleEl = document.getElementById('inquiry-modal-title');
+      var defaultInquiryTitle = inquiryTitleEl ? inquiryTitleEl.textContent : 'Send us an inquiry.';
+      var inquirySelectEl = inquiryForm.querySelector('select[name="topic"]');
+      var inquiryMsgEl = inquiryForm.querySelector('textarea[name="message"]');
+      var inquirySubjEl = inquiryForm.querySelector('[data-inquiry-subject-field]');
+      var inquiryCtxEl = inquiryForm.querySelector('[data-inquiry-context-field]');
+      var defaultMsgPlaceholder = inquiryMsgEl ? inquiryMsgEl.getAttribute('placeholder') : '';
+
+      function applyInquiryContext(trigger) {
+        var topic = trigger && trigger.getAttribute('data-inquiry-topic');
+        var context = trigger && trigger.getAttribute('data-inquiry-context');
+        if (inquiryTitleEl) inquiryTitleEl.textContent = defaultInquiryTitle;
+        if (inquirySubjEl) inquirySubjEl.value = '[Take Me Back Bingo] Inquiry';
+        if (inquiryCtxEl) inquiryCtxEl.value = '';
+        if (inquiryMsgEl) inquiryMsgEl.setAttribute('placeholder', defaultMsgPlaceholder);
+        if (inquirySelectEl) inquirySelectEl.selectedIndex = 0;
+        if (topic && inquirySelectEl) {
+          var matched = false;
+          for (var i = 0; i < inquirySelectEl.options.length; i++) {
+            if (inquirySelectEl.options[i].text.toLowerCase() === topic.toLowerCase()) {
+              inquirySelectEl.selectedIndex = i; matched = true; break;
+            }
+          }
+          if (!matched) {
+            var opt = document.createElement('option');
+            opt.text = topic; opt.value = topic; opt.selected = true;
+            inquirySelectEl.appendChild(opt);
+          }
+          if (inquiryTitleEl) inquiryTitleEl.textContent = topic + '.';
+          if (inquirySubjEl) inquirySubjEl.value = '[Take Me Back Bingo] ' + topic;
+        }
+        if (context) {
+          if (inquiryCtxEl) inquiryCtxEl.value = context;
+          if (inquiryMsgEl) inquiryMsgEl.setAttribute('placeholder',
+            'Re: ' + context + ', tell us about your group, date, headcount, and the vibe.');
+        }
+      }
+
+      document.querySelectorAll('[data-open-inquiry]').forEach(function (el) {
+        el.addEventListener('click', function (e) { e.preventDefault(); applyInquiryContext(el); openInquiry(); });
+      });
+      inquiryModal.querySelectorAll('[data-modal-close]').forEach(function (el) { el.addEventListener('click', closeInquiry); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !inquiryModal.hidden) closeInquiry(); });
+
+      inquiryForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (inquirySubmitBtn) { inquirySubmitBtn.disabled = true; inquirySubmitBtn.textContent = 'Sendingâ€¦'; }
+        inquiryStatus.classList.remove('is-error');
+        inquiryStatus.classList.add('is-shown');
+        inquiryStatus.textContent = '';
+        var endpoint = inquiryForm.getAttribute('action') || 'https://formspree.io/f/mbdbggbv';
+        var payload = {};
+        new FormData(inquiryForm).forEach(function (v, k) { payload[k] = v; });
+        fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        })
+          .then(function (res) {
+            if (!res.ok) throw new Error('Formspree ' + res.status);
+            inquiryStatus.textContent = 'Thanks, we got it. Weâ€™ll be back within one business day.';
+            inquiryForm.reset();
+            setTimeout(function () { if (!inquiryModal.hidden) closeInquiry(); }, 2000);
+          })
+          .catch(function () {
+            inquiryStatus.classList.add('is-error');
+            inquiryStatus.textContent = 'Something went wrong sending that. Please try again, or email info@takemebackbingo.com directly.';
+          })
+          .then(function () {
+            if (inquirySubmitBtn) { inquirySubmitBtn.disabled = false; inquirySubmitBtn.innerHTML = inquiryBtnDefault; }
+          });
+      });
+    }
+
+    // === Footer newsletter, Formspree POST, tagged topic=newsletter ===
+    var newsletterForm = document.querySelector('[data-newsletter-form]');
+    if (newsletterForm) {
+      var newsletterStatus = newsletterForm.querySelector('[data-newsletter-status]');
+      var newsletterBtn = newsletterForm.querySelector('button[type="submit"]');
+      var newsletterBtnDefault = newsletterBtn ? newsletterBtn.innerHTML : '';
+      function setNewsletterStatus(msg, isError) {
+        if (!newsletterStatus) return;
+        newsletterStatus.textContent = msg;
+        newsletterStatus.classList.toggle('is-error', !!isError);
+        newsletterStatus.classList.add('is-shown');
+      }
+      newsletterForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (newsletterBtn) { newsletterBtn.disabled = true; newsletterBtn.textContent = 'â€¦'; }
+        setNewsletterStatus('', false);
+        var endpoint = newsletterForm.getAttribute('action') || 'https://formspree.io/f/mbdbggbv';
+        var payload = {};
+        new FormData(newsletterForm).forEach(function (v, k) { payload[k] = v; });
+        fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        })
+          .then(function (res) {
+            if (!res.ok) throw new Error('Formspree ' + res.status);
+            setNewsletterStatus('Thanks, youâ€™re on the list.', false);
+            newsletterForm.reset();
+            if (newsletterBtn) newsletterBtn.innerHTML = newsletterBtnDefault;
+          })
+          .catch(function () {
+            setNewsletterStatus('Couldnâ€™t subscribe. Try again or email info@takemebackbingo.com.', true);
+            if (newsletterBtn) newsletterBtn.innerHTML = newsletterBtnDefault;
+          })
+          .then(function () { if (newsletterBtn) newsletterBtn.disabled = false; });
+      });
+    }
+
+    // === "Tickets not on sale yet" â†’ open the full inquiry modal ===
+    // The inquiry form already has a topic dropdown and collects name +
+    // email + phone + message, so we route ticket clicks there with the
+    // "Early access / waitlist" topic pre-selected and the event name
+    // pre-filled as context. User can change the topic in the dropdown
+    // if they want something else (private booking, partnerships, etc.).
+    document.querySelectorAll('[data-ticket-link]').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        if (a.getAttribute('href') !== '#') return;     // real link â†’ navigate normally
+        e.preventDefault();
+        var card = a.closest('.event-card');
+        var title = card ? (card.querySelector('.event-card__title') || {}).textContent : null;
+        var dateEl = card ? card.querySelector('.event-card__meta dd') : null;
+        var date = dateEl ? dateEl.textContent.trim() : null;
+        var contextStr = title && date ? (date + ' Â· ' + title.trim())
+                        : (title ? title.trim() : 'Upcoming night');
+        // Synthetic trigger so applyInquiryContext reads the right
+        // topic/context without needing data-attributes on each ticket link.
+        var trigger = document.createElement('span');
+        trigger.setAttribute('data-inquiry-topic', 'Early access / waitlist');
+        trigger.setAttribute('data-inquiry-context', contextStr);
+        if (typeof applyInquiryContext === 'function') applyInquiryContext(trigger);
+        if (typeof openInquiry === 'function') openInquiry();
+      });
+    });
+
+    // === SHARE â€” per-event share button with native share + popover fallback ===
+    function buildSharePop() {
+      var pop = document.createElement('div');
+      pop.className = 'share-pop';
+      pop.setAttribute('role', 'menu');
+      pop.setAttribute('aria-label', 'Share options');
+      pop.innerHTML =
+        '<button type="button" class="share-pop__item" data-share-copy role="menuitem">' +
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
+          '<span data-share-copy-label>Copy link</span>' +
+        '</button>' +
+        '<a class="share-pop__item" data-share-link="twitter" target="_blank" rel="noopener" role="menuitem">' +
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2H21l-6.52 7.45L22 22h-6.836l-4.79-6.27L4.8 22H2l6.97-7.97L2 2h6.91l4.33 5.74L18.244 2zm-2.4 18h1.6L7.27 4H5.6l10.244 16z"/></svg>' +
+          '<span>X / Twitter</span>' +
+        '</a>' +
+        '<a class="share-pop__item" data-share-link="facebook" target="_blank" rel="noopener" role="menuitem">' +
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.56 9.88V14.9H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.77l-.44 2.9h-2.33v6.98A10 10 0 0 0 22 12z"/></svg>' +
+          '<span>Facebook</span>' +
+        '</a>' +
+        '<a class="share-pop__item" data-share-link="whatsapp" target="_blank" rel="noopener" role="menuitem">' +
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.52 3.48A11.93 11.93 0 0 0 12.07 0C5.5 0 .15 5.34.15 11.91c0 2.1.55 4.15 1.6 5.96L0 24l6.3-1.65a11.93 11.93 0 0 0 5.77 1.47h.01c6.57 0 11.91-5.34 11.91-11.91 0-3.18-1.24-6.17-3.47-8.43zM12.07 21.8h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.21-3.74.98 1-3.64-.24-.38a9.88 9.88 0 0 1-1.52-5.27c0-5.46 4.44-9.9 9.91-9.9 2.65 0 5.13 1.03 7 2.9a9.83 9.83 0 0 1 2.9 7c-.01 5.47-4.45 9.9-9.89 9.9zm5.43-7.42c-.3-.15-1.76-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.95 1.17-.18.2-.35.22-.65.08-.3-.15-1.26-.46-2.4-1.48-.88-.79-1.48-1.76-1.66-2.06-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.21-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01a1.1 1.1 0 0 0-.8.37c-.27.3-1.05 1.03-1.05 2.5 0 1.47 1.08 2.9 1.23 3.1.15.2 2.13 3.24 5.16 4.55.72.31 1.28.5 1.72.64.72.23 1.38.2 1.9.12.58-.09 1.76-.72 2-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.2-.57-.35z"/></svg>' +
+          '<span>WhatsApp</span>' +
+        '</a>' +
+        '<a class="share-pop__item" data-share-link="email" role="menuitem">' +
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>' +
+          '<span>Email</span>' +
+        '</a>';
+      return pop;
+    }
+
+    function getShareData(share) {
+      var card = share.closest('.event-card') || share;
+      var title = card.getAttribute('data-share-title') || document.title;
+      var text  = card.getAttribute('data-share-text')  || title;
+      var slug  = card.id ? '#' + card.id : '';
+      var url   = location.origin + location.pathname + slug;
+      var img   = card.getAttribute('data-share-image');
+      var imgUrl = img ? new URL(img, location.href).href : null;
+      var imgName = card.getAttribute('data-share-image-name') || (img ? img.split('/').pop() : null);
+      return { title: title, text: text, url: url, imageUrl: imgUrl, imageName: imgName };
+    }
+
+    // Fetch flyer as a File so it can be passed to navigator.share({ files })
+    function fetchShareFile(data) {
+      if (!data.imageUrl) return Promise.resolve(null);
+      return fetch(data.imageUrl)
+        .then(function (r) { if (!r.ok) throw new Error('flyer fetch ' + r.status); return r.blob(); })
+        .then(function (blob) { return new File([blob], data.imageName || 'flyer.jpg', { type: blob.type || 'image/jpeg' }); })
+        .catch(function () { return null; });
+    }
+
+    function closeAllShares(except) {
+      document.querySelectorAll('.share[data-open="true"]').forEach(function (s) {
+        if (s === except) return;
+        s.setAttribute('data-open', 'false');
+        var btn = s.querySelector('[data-share-trigger]');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    function openShare(share) {
+      var data = getShareData(share);
+      var pop = share.querySelector('.share-pop');
+      if (!pop) { pop = buildSharePop(); share.appendChild(pop); }
+
+      // Inject (or remove) a "Download flyer" item depending on whether the card has one
+      var dl = pop.querySelector('[data-share-link="download"]');
+      if (data.imageUrl) {
+        if (!dl) {
+          dl = document.createElement('a');
+          dl.className = 'share-pop__item';
+          dl.setAttribute('data-share-link', 'download');
+          dl.setAttribute('role', 'menuitem');
+          dl.innerHTML =
+            '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>' +
+            '<span>Download flyer</span>';
+          pop.insertBefore(dl, pop.firstChild);
+        }
+        dl.href = data.imageUrl;
+        dl.setAttribute('download', data.imageName || '');
+      } else if (dl) {
+        dl.remove();
+      }
+
+      var tw = pop.querySelector('[data-share-link="twitter"]');
+      var fb = pop.querySelector('[data-share-link="facebook"]');
+      var wa = pop.querySelector('[data-share-link="whatsapp"]');
+      var em = pop.querySelector('[data-share-link="email"]');
+      if (tw) tw.href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(data.text + ' ' + data.url);
+      if (fb) fb.href = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(data.url);
+      if (wa) wa.href = 'https://wa.me/?text=' + encodeURIComponent(data.text + ' ' + data.url);
+      if (em) em.href = 'mailto:?subject=' + encodeURIComponent(data.title) + '&body=' + encodeURIComponent(data.text + '\n\n' + data.url);
+
+      var copyBtn = pop.querySelector('[data-share-copy]');
+      var copyLbl = pop.querySelector('[data-share-copy-label]');
+      if (copyBtn && copyLbl) {
+        copyBtn.onclick = function () {
+          var done = function () {
+            copyBtn.classList.add('is-copied');
+            copyLbl.textContent = 'Copied!';
+            setTimeout(function () {
+              copyBtn.classList.remove('is-copied');
+              copyLbl.textContent = 'Copy link';
+            }, 1800);
+          };
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(data.url).then(done, function () {
+              // Fallback for non-secure contexts
+              var ta = document.createElement('textarea');
+              ta.value = data.url; ta.style.position = 'fixed'; ta.style.opacity = '0';
+              document.body.appendChild(ta); ta.select();
+              try { document.execCommand('copy'); done(); } catch (_) {}
+              document.body.removeChild(ta);
+            });
+          }
+        };
+      }
+
+      closeAllShares(share);
+      share.setAttribute('data-open', 'true');
+      var trigger = share.querySelector('[data-share-trigger]');
+      if (trigger) trigger.setAttribute('aria-expanded', 'true');
+    }
+
+    document.querySelectorAll('[data-share-trigger]').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        var share = btn.closest('[data-share]');
+        if (!share) return;
+        var data = getShareData(share);
+
+        // No native share at all (typical desktop) â€” open the popover with all options
+        if (!navigator.share) {
+          var isOpen = share.getAttribute('data-open') === 'true';
+          if (isOpen) {
+            share.setAttribute('data-open', 'false');
+            btn.setAttribute('aria-expanded', 'false');
+          } else {
+            openShare(share);
+          }
+          return;
+        }
+
+        // Build the payload â€” attach the flyer file if the browser can share files
+        var buildPayload = (data.imageUrl && navigator.canShare)
+          ? fetchShareFile(data).then(function (file) {
+              var base = { title: data.title, text: data.text, url: data.url };
+              if (!file) return base;
+              var withFile = { title: data.title, text: data.text, url: data.url, files: [file] };
+              return navigator.canShare(withFile) ? withFile : base;
+            })
+          : Promise.resolve({ title: data.title, text: data.text, url: data.url });
+
+        btn.setAttribute('aria-busy', 'true');
+        buildPayload
+          .then(function (payload) { return navigator.share(payload); })
+          .catch(function () { /* user cancelled or share unavailable â€” stay silent */ })
+          .then(function () { btn.removeAttribute('aria-busy'); });
+      });
+    });
+
+    document.addEventListener('click', function (e) {
+      if (e.target.closest('[data-share]')) return;
+      closeAllShares(null);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeAllShares(null);
+    });
+  })();
+</script>
+</body>
+</html>
+

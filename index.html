@@ -1,0 +1,1563 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Take Me Back Bingo · Hip-Hop & R&B Music Bingo Night</title>
+<meta name="description" content="Three hours of hip-hop and R&B music bingo, dance battles, throwbacks. Prizes, samples, sick beats. 21+." />
+<meta name="robots" content="index,follow,max-image-preview:large" />
+<meta name="theme-color" content="#141111" />
+<link rel="canonical" href="https://takemebackbingo.com/" />
+
+<script>
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.addEventListener('load', function () {
+    if (!location.hash) window.scrollTo(0, 0);
+  });
+</script>
+
+<!-- Favicons -->
+<link rel="icon" href="logos/logo-yellow.png" type="image/png" />
+<link rel="apple-touch-icon" href="logos/logo-yellow.png" />
+
+<!-- Open Graph · iMessage, Slack, Facebook, LinkedIn -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Take Me Back Bingo" />
+<meta property="og:title" content="Take Me Back Bingo · Hip-Hop & R&B Music Bingo Night" />
+<meta property="og:description" content="Three hours, sixty songs, one winner per round. Hip-hop & R&B bingo with dance battles, prizes, and throwbacks all night. 21+." />
+<meta property="og:url" content="https://takemebackbingo.com/" />
+<meta property="og:image" content="https://takemebackbingo.com/logos/logo-yellow.png" />
+<meta property="og:image:alt" content="Take Me Back Bingo logo" />
+
+<!-- Twitter / X card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Take Me Back Bingo · Hip-Hop & R&B Music Bingo Night" />
+<meta name="twitter:description" content="Three hours, sixty songs, one winner per round. Hip-hop & R&B bingo with dance battles, prizes, and throwbacks all night. 21+." />
+<meta name="twitter:image" content="https://takemebackbingo.com/logos/logo-yellow.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Permanent+Marker&family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css" />
+
+<!-- ⚠️ EXPERIMENTAL: hides the cassette + its shadow so the "About the
+     Night" article moves up into its spot. Remove this <style> block to
+     bring the cassette back. -->
+<style>
+  .tape-stage .cassette,
+  .tape-stage .tape-stage__shadow { display: none !important; }
+  .tape-stage .tape-bio { margin-top: 0; }
+
+  /* ====== Bio message rotator ======
+     Slow pure-opacity crossfade, feels like a magazine page turn rather
+     than a UI slide. Both slides stack via grid; only .is-active reads. */
+  .bio-rotator {
+    position: relative;
+    display: grid;
+    grid-template-areas: "stack";
+  }
+  .bio-rotator__slide {
+    grid-area: stack;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity .9s cubic-bezier(.4, 0, .2, 1),
+      visibility 0s linear .9s;
+  }
+  .bio-rotator__slide.is-active {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity .9s cubic-bezier(.4, 0, .2, 1),
+      visibility 0s linear 0s;
+  }
+  .bio-rotator__slide > *:last-child { margin-bottom: 0; }
+  .bio-rotator__dots {
+    position: relative;
+    margin-top: var(--s-4);
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--s-2);
+  }
+  .bio-rotator__dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(242,234,219,.2);
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    transition: background var(--dur-fast) var(--ease-out), width var(--dur-base) var(--ease-out);
+  }
+  .bio-rotator__dot.is-active { background: var(--tape-yellow); width: 18px; border-radius: 3px; }
+  .bio-rotator__dot:hover { background: var(--tape-yellow-hot); }
+
+  /* ====== Flyer slider · matches the events page "past nights" look ======
+     No boxy container, no forced aspect crop. Image renders at native
+     proportions. First slide holds the container height; later slides
+     stack on top of it absolutely so the layout never jumps. */
+  .flyer-slider {
+    position: relative;
+    margin-top: var(--s-5);
+    padding-top: var(--s-4);
+    border-top: 1px solid var(--rule);
+  }
+  .flyer-slider__slide {
+    position: relative;
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity .7s cubic-bezier(.4, 0, .2, 1),
+      visibility 0s linear .7s;
+  }
+  /* All slides after the first stack on top of it so the container's
+     height tracks slide 1's natural height, no aspect-ratio crop. */
+  .flyer-slider__slide + .flyer-slider__slide {
+    position: absolute;
+    top: var(--s-4);
+    left: 0;
+    right: 0;
+  }
+  .flyer-slider__slide.is-active {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity .7s cubic-bezier(.4, 0, .2, 1),
+      visibility 0s linear 0s;
+  }
+  .flyer-slider__slide img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  /* Hide the visual title from the caption (the flyer art already shows
+     the event name), keep only the SOLD OUT badge for clarity. */
+  .flyer-slider__slide figcaption span { display: none; }
+  .flyer-slider__slide figcaption em {
+    position: absolute;
+    bottom: var(--s-3);
+    right: var(--s-3);
+    padding: 6px 12px;
+    background: rgba(20,17,17,.85);
+    backdrop-filter: blur(6px);
+    border-radius: var(--r-pill);
+    color: var(--tape-yellow);
+    font-family: var(--font-mono);
+    font-size: var(--fs-11);
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    font-style: normal;
+    z-index: 1;
+  }
+  /* Per-slide overrides, tune badge position to the flyer artwork. */
+  .flyer-slider__slide--badge-top figcaption em {
+    top: var(--s-3);
+    bottom: auto;
+  }
+  /* Reminisce flyer: position the SOLD OUT badge just below the
+     DJ name credit line, right-aligned. The percentage may need a
+     small tweak depending on viewport, adjust the `top` value here. */
+  .flyer-slider__slide--badge-below-dj figcaption em {
+    top: 58%;
+    right: var(--s-3);
+    bottom: auto;
+  }
+  .flyer-slider__dots {
+    position: relative;
+    margin-top: var(--s-4);
+    display: flex;
+    justify-content: center;
+    gap: var(--s-2);
+  }
+  .flyer-slider__dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(242,234,219,.2);
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    transition: background var(--dur-fast) var(--ease-out), width var(--dur-base) var(--ease-out);
+  }
+  .flyer-slider__dot.is-active { background: var(--tape-yellow); width: 18px; border-radius: 3px; }
+  .flyer-slider__dot:hover { background: var(--tape-yellow-hot); }
+
+  /* ====== Animation logo · sized to match the old flyer footprint
+     (1024x1280 → 4/5 aspect). object-fit: contain keeps the logo
+     fully visible; background fills any letterbox area. ====== */
+  .logo-anim {
+    position: relative;
+    margin-top: var(--s-5);
+    padding-top: var(--s-4);
+    border-top: 1px solid var(--rule);
+  }
+  .logo-anim__video {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    height: auto;
+    object-fit: cover;
+    background: #000;
+  }
+  /* Mobile: taller frame so the animation fills the open vertical space
+     under it instead of leaving a black band before the meta-strip */
+  @media (max-width: 768px) {
+    .logo-anim__video { aspect-ratio: 3 / 4; }
+  }
+</style>
+
+<!-- FAQ schema · structured Q&A for crawlers, AI overviews, and PAA -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"How does music bingo work?","acceptedAnswer":{"@type":"Answer","text":"Music bingo works like classic bingo, but instead of numbers the DJ plays a 30-second clip of a song and the title appears on your card. Mark off songs as you hear them. First player to line up five in a row, column, or diagonal yells the call phrase and wins the round. We run three rounds a night."}},
+    {"@type":"Question","name":"Do I need to know every song to win?","acceptedAnswer":{"@type":"Answer","text":"No, the song title appears on the screen behind the host, so you just match it to the squares on your card. You're playing bingo, not Shazam. Knowing the words is a bonus for singing along, not a requirement for winning."}},
+    {"@type":"Question","name":"How long is a music bingo night?","acceptedAnswer":{"@type":"Answer","text":"A Take Me Back Bingo night runs about three hours. We host on Fridays, Saturdays, and Sundays, start times vary by venue, so check the events page for the night you want. Each night is three bingo rounds plus a live dance battle to close."}},
+    {"@type":"Question","name":"How much does a music bingo ticket cost?","acceptedAnswer":{"@type":"Answer","text":"Ticket prices vary by city and venue, most general-admission seats run $15–$25. Reserved group tables with bottle service start higher. Check the Events page for live pricing and date-specific tiers."}},
+    {"@type":"Question","name":"Is music bingo 21+? Do I need an ID?","acceptedAnswer":{"@type":"Answer","text":"Yes, every Take Me Back Bingo night is 21 and over with no exceptions. Bring a valid government-issued photo ID, driver's license, passport, or state ID. The door checks IDs as soon as it opens, and won't admit anyone without it."}},
+    {"@type":"Question","name":"Can I bring a group to music bingo?","acceptedAnswer":{"@type":"Answer","text":"Yes, groups of six or more can reserve a high-top with bottle service and priority cards. We've hosted birthdays, bachelorettes, and work crews. Use the booking form to reserve a table; otherwise, general admission seating is first-come, first-served."}},
+    {"@type":"Question","name":"Can you bring music bingo to my city or company?","acceptedAnswer":{"@type":"Answer","text":"We travel for private events, brand activations, corporate parties, festivals, and weddings. If there's a sound system and a crowd, we can build a custom show with custom themes, custom cards, and custom prizes. Reach out via the booking form to start the conversation."}},
+    {"@type":"Question","name":"What if I show up late to music bingo?","acceptedAnswer":{"@type":"Answer","text":"Start times vary by venue, check the events page for your night. Aim to arrive about 15 minutes before the first round to grab a drink, pick up your cards, and find a seat. If you arrive after a round has started, you'll jump in mid-game, we don't hold cards or pause for late arrivals."}},
+    {"@type":"Question","name":"Can I get a refund on a music bingo ticket?","acceptedAnswer":{"@type":"Answer","text":"All ticket sales are final, no refunds and no transfers. If Take Me Back Bingo cancels a night for any reason, you will receive a full refund automatically. Outside of that, plan ahead and double-check the date before you buy."}},
+    {"@type":"Question","name":"What do you wear to music bingo?","acceptedAnswer":{"@type":"Answer","text":"Dress like it's 2003, throwback jerseys, denim on denim, velour tracksuits, gold chains, chunky sneakers, baby tees. The photos hit harder when the room looks like a time machine. There's no formal dress code, so whatever you would wear to a good bar also works."}}
+  ]
+}
+</script>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <a href="#" class="nav__logo" aria-label="Take Me Back Bingo home">
+    <img src="logos/logo-yellow.png" alt="Take Me Back Bingo" class="nav__logo-img" />
+  </a>
+  <nav class="nav__links" id="primary-nav" aria-label="Primary">
+    <a href="#how">How to Play</a>
+    <a href="play.html">Play</a>
+    <a href="events.html">Events</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="#faq">FAQ</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <a href="events.html" class="btn btn--primary nav__cta">Buy Tickets</a>
+  <button type="button" class="nav__toggle" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav" onclick="(function(b){var n=b.closest('.nav');var o=n.getAttribute('data-nav-open')==='true';n.setAttribute('data-nav-open',o?'false':'true');b.setAttribute('aria-expanded',o?'false':'true');b.setAttribute('aria-label',o?'Open menu':'Close menu');})(this)"><span class="nav__toggle-bars" aria-hidden="true"></span></button>
+</header>
+
+<!-- ============ HERO · MIXTAPE J-CARD ============ -->
+<section class="hero">
+  <div class="hero__grain" aria-hidden="true"></div>
+
+  <!-- Hero media · sizzle reel. Autoplays muted/looped/inline so the room reads
+       as movement before a single word is read. Honor prefers-reduced-motion via JS. -->
+  <div class="hero-media hero-media--reel" data-reveal>
+    <!-- Backdrop · same video, blurred + scaled to fill the frame so the crisp
+         foreground gets cinematic letterbox bars instead of a hard crop. -->
+    <video
+      class="hero-reel__bg"
+      src="Video/hero.mp4"
+      autoplay muted loop playsinline preload="metadata"
+      aria-hidden="true"
+      tabindex="-1"
+    ></video>
+    <!-- Foreground · the real video, full quality, no zoom-in crop. -->
+    <video
+      class="hero-reel"
+      data-hero-reel
+      src="Video/hero.mp4"
+      poster="photos/GSP_2205.jpg"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      aria-label="Sizzle reel from a past Take Me Back Bingo night"
+    ></video>
+    <div class="hero-reel__vignette" aria-hidden="true"></div>
+    <img src="logos/logo-yellow.png" alt="Take Me Back Bingo" class="hero-reel__logo" />
+    <div class="hero-reel__chrome" aria-hidden="true">
+      <span class="hero-reel__tag">
+        <span class="hero-reel__rec"></span>
+        THRILLER BINGO
+      </span>
+      <span class="hero-reel__meta">HIP-HOP &amp; R&amp;B · LIVE</span>
+    </div>
+    <button
+      type="button"
+      class="hero-reel__sound"
+      data-hero-reel-sound
+      aria-label="Unmute sizzle reel"
+      aria-pressed="false"
+    >
+      <svg class="hero-reel__sound-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+      <svg class="hero-reel__sound-on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+    </button>
+  </div>
+
+  <div class="hero__grid">
+    <!-- LEFT: typographic J-card "tracklist" -->
+    <div class="jcard">
+      <p class="eyebrow" data-reveal>
+        <span class="eyebrow__dot"></span>
+        A Live Music Bingo Experience
+      </p>
+
+      <h1 class="jcard__title" data-reveal data-reveal-stagger>
+        <span class="jcard__title-script">TAKE ME BACK</span>
+        <span class="jcard__title-block">BINGO<em>.</em></span>
+      </h1>
+
+      <p class="jcard__lede" data-reveal>
+        We don&rsquo;t call B&#8209;12. We drop the needle on the hits you forgot you loved.
+        Mark the song on your card, line it up, shout it out.
+        Win prizes. Stay for the dance battle.
+      </p>
+
+      <!-- Flippable bingo card · click to reveal a rotating gallery photo.
+           The card lives on the front face; back face shows a photo + CTA. -->
+      <div class="bingocard" data-reveal data-flip-card>
+        <div class="bingocard__flipper" role="button" tabindex="0" aria-label="Flip card to see a photo from a past night" aria-pressed="false">
+        <div class="bingocard__face bingocard__face--front">
+        <div class="bingocard__paper">
+          <div class="bingocard__head">
+            <span>B</span><span>I</span><span>N</span><span>G</span><span>O</span>
+          </div>
+          <div class="bingocard__grid">
+            <!-- row 1 -->
+            <div class="sq">Thriller</div>
+            <div class="sq is-daubed">No Scrubs</div>
+            <div class="sq">Hypnotize</div>
+            <div class="sq">Crazy in Love</div>
+            <div class="sq">Pony</div>
+            <!-- row 2 -->
+            <div class="sq">Say My Name</div>
+            <div class="sq">Juicy</div>
+            <div class="sq is-daubed">Bills, Bills, Bills</div>
+            <div class="sq">Waterfalls</div>
+            <div class="sq">Ms. Jackson</div>
+            <!-- row 3 -->
+            <div class="sq">California Love</div>
+            <div class="sq">Bump n&rsquo; Grind</div>
+            <div class="sq sq--free">FREE</div>
+            <div class="sq is-daubed">In Da Club</div>
+            <div class="sq">U Remind Me</div>
+            <!-- row 4 -->
+            <div class="sq">Hot in Herre</div>
+            <div class="sq">Doo Wop</div>
+            <div class="sq">Nothin&rsquo; on You</div>
+            <div class="sq is-daubed">Yeah!</div>
+            <div class="sq">Get Low</div>
+            <!-- row 5 -->
+            <div class="sq is-daubed">Billie Jean</div>
+            <div class="sq">Promiscuous</div>
+            <div class="sq">Lose Yourself</div>
+            <div class="sq">Drop It Like It&rsquo;s Hot</div>
+            <div class="sq is-daubed">Ignition</div>
+          </div>
+          <div class="bingocard__foot">
+            <span>HIP-HOP &amp; R&amp;B</span>
+            <span class="bingocard__foot-sep" aria-hidden="true">·</span>
+            <span>21+</span>
+          </div>
+        </div>
+        <span class="bingocard__hint" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          Click to flip
+        </span>
+        </div><!-- /face front -->
+
+        <div class="bingocard__face bingocard__face--back">
+          <figure class="bingocard__photo">
+            <img data-flip-photo src="photos/GSP_2205.jpg" alt="Take Me Back Bingo crowd shot" />
+          </figure>
+          <div class="bingocard__back-overlay">
+            <h3 class="bingocard__back-title">See the night for yourself.</h3>
+            <p class="bingocard__back-copy">Real photos from past Take Me Back Bingo nights.</p>
+            <div class="bingocard__back-cta-row">
+              <button type="button" class="btn btn--ghost btn--lg" data-flip-back>Flip back</button>
+            </div>
+          </div>
+        </div><!-- /face back -->
+        </div><!-- /flipper -->
+      </div>
+
+      <div class="jcard__cta-row" data-reveal>
+        <a href="play.html" class="btn btn--primary btn--lg">
+          Play Now
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="gallery.html" class="btn btn--ghost btn--lg">
+          View the Gallery
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- RIGHT: physical cassette with yellow tape, song-title balls -->
+    <div class="tape-stage" aria-hidden="true">
+      <div class="tape-stage__shadow"></div>
+
+      <div class="cassette" data-tilt>
+        <!-- the J-card label on the cassette body -->
+        <div class="cassette__label">
+          <div class="cassette__label-top">
+            <span class="cassette__brand">BINGO</span>
+            <span class="cassette__vol">VOL. 01</span>
+          </div>
+          <div class="cassette__label-mid">Michael Jackson &ldquo;Tribute&rdquo;</div>
+          <div class="cassette__label-bot">
+            <span>SIDE A</span>
+            <span class="cassette__nr">·</span>
+            <span>90 MIN</span>
+            <span class="cassette__nr">·</span>
+            <span>NR</span>
+          </div>
+        </div>
+
+        <!-- Reels · SVG-rendered wound tape (turbulence + displacement
+             warps a radial gradient into organic, photo-real wound film) -->
+        <div class="cassette__reels">
+
+          <!-- LEFT REEL -->
+          <div class="cassette__reel cassette__reel--spin">
+            <svg class="cassette__reel-tape" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <defs>
+                <!-- Subtle organic warp so the coils aren't mechanically perfect -->
+                <filter id="reel-warp-a" x="-5%" y="-5%" width="110%" height="110%">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3" result="t"/>
+                  <feDisplacementMap in="SourceGraphic" in2="t" scale="0.6"/>
+                </filter>
+                <!-- Base wound-tape fill: very dark brown core, near-black edge -->
+                <radialGradient id="reel-base-a" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%"  stop-color="#1c100a"/>
+                  <stop offset="70%" stop-color="#120907"/>
+                  <stop offset="100%" stop-color="#050201"/>
+                </radialGradient>
+                <!-- Top-light bronze sheen catching the coiled edge -->
+                <radialGradient id="reel-sheen-a" cx="50%" cy="28%" r="55%">
+                  <stop offset="0%"  stop-color="#8a5a36" stop-opacity=".42"/>
+                  <stop offset="45%" stop-color="#3a2516" stop-opacity=".18"/>
+                  <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+                </radialGradient>
+                <!-- Outer rim shadow -->
+                <radialGradient id="reel-rim-a" cx="50%" cy="50%" r="50%">
+                  <stop offset="80%" stop-color="#000" stop-opacity="0"/>
+                  <stop offset="100%" stop-color="#000" stop-opacity=".75"/>
+                </radialGradient>
+                <mask id="reel-mask-a">
+                  <rect width="100" height="100" fill="#fff"/>
+                  <circle cx="50" cy="50" r="17" fill="#000"/>
+                </mask>
+              </defs>
+              <g mask="url(#reel-mask-a)">
+                <circle cx="50" cy="50" r="50" fill="url(#reel-base-a)"/>
+                <!-- Concentric tape coils, fine, dense rings -->
+                <g fill="none" stroke="#000" stroke-opacity=".55" stroke-width=".45" filter="url(#reel-warp-a)">
+                  <circle cx="50" cy="50" r="49.2"/><circle cx="50" cy="50" r="48.4"/>
+                  <circle cx="50" cy="50" r="47.6"/><circle cx="50" cy="50" r="46.8"/>
+                  <circle cx="50" cy="50" r="46.0"/><circle cx="50" cy="50" r="45.2"/>
+                  <circle cx="50" cy="50" r="44.4"/><circle cx="50" cy="50" r="43.6"/>
+                  <circle cx="50" cy="50" r="42.8"/><circle cx="50" cy="50" r="42.0"/>
+                  <circle cx="50" cy="50" r="41.2"/><circle cx="50" cy="50" r="40.4"/>
+                  <circle cx="50" cy="50" r="39.6"/><circle cx="50" cy="50" r="38.8"/>
+                  <circle cx="50" cy="50" r="38.0"/><circle cx="50" cy="50" r="37.2"/>
+                  <circle cx="50" cy="50" r="36.4"/><circle cx="50" cy="50" r="35.6"/>
+                  <circle cx="50" cy="50" r="34.8"/><circle cx="50" cy="50" r="34.0"/>
+                  <circle cx="50" cy="50" r="33.2"/><circle cx="50" cy="50" r="32.4"/>
+                  <circle cx="50" cy="50" r="31.6"/><circle cx="50" cy="50" r="30.8"/>
+                  <circle cx="50" cy="50" r="30.0"/><circle cx="50" cy="50" r="29.2"/>
+                  <circle cx="50" cy="50" r="28.4"/><circle cx="50" cy="50" r="27.6"/>
+                  <circle cx="50" cy="50" r="26.8"/><circle cx="50" cy="50" r="26.0"/>
+                  <circle cx="50" cy="50" r="25.2"/><circle cx="50" cy="50" r="24.4"/>
+                  <circle cx="50" cy="50" r="23.6"/><circle cx="50" cy="50" r="22.8"/>
+                  <circle cx="50" cy="50" r="22.0"/><circle cx="50" cy="50" r="21.2"/>
+                  <circle cx="50" cy="50" r="20.4"/><circle cx="50" cy="50" r="19.6"/>
+                  <circle cx="50" cy="50" r="18.8"/><circle cx="50" cy="50" r="18.0"/>
+                </g>
+                <!-- bronze tape-edge highlight between coils -->
+                <g fill="none" stroke="#7a4a25" stroke-opacity=".18" stroke-width=".25" filter="url(#reel-warp-a)">
+                  <circle cx="50" cy="50" r="48.0"/><circle cx="50" cy="50" r="45.6"/>
+                  <circle cx="50" cy="50" r="43.2"/><circle cx="50" cy="50" r="40.8"/>
+                  <circle cx="50" cy="50" r="38.4"/><circle cx="50" cy="50" r="36.0"/>
+                  <circle cx="50" cy="50" r="33.6"/><circle cx="50" cy="50" r="31.2"/>
+                  <circle cx="50" cy="50" r="28.8"/><circle cx="50" cy="50" r="26.4"/>
+                  <circle cx="50" cy="50" r="24.0"/><circle cx="50" cy="50" r="21.6"/>
+                  <circle cx="50" cy="50" r="19.2"/>
+                </g>
+                <!-- top-light sheen -->
+                <circle cx="50" cy="50" r="50" fill="url(#reel-sheen-a)"/>
+                <!-- outer rim shadow -->
+                <circle cx="50" cy="50" r="50" fill="url(#reel-rim-a)"/>
+              </g>
+            </svg>
+          </div>
+
+          <div class="cassette__window"></div>
+
+          <!-- RIGHT REEL · same structure, different seed for variation -->
+          <div class="cassette__reel cassette__reel--spin cassette__reel--slow">
+            <svg class="cassette__reel-tape" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <defs>
+                <filter id="reel-warp-b" x="-5%" y="-5%" width="110%" height="110%">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves="2" seed="11" result="t"/>
+                  <feDisplacementMap in="SourceGraphic" in2="t" scale="0.6"/>
+                </filter>
+                <radialGradient id="reel-base-b" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%"  stop-color="#1c100a"/>
+                  <stop offset="70%" stop-color="#120907"/>
+                  <stop offset="100%" stop-color="#050201"/>
+                </radialGradient>
+                <radialGradient id="reel-sheen-b" cx="50%" cy="30%" r="55%">
+                  <stop offset="0%"  stop-color="#8a5a36" stop-opacity=".4"/>
+                  <stop offset="45%" stop-color="#3a2516" stop-opacity=".18"/>
+                  <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+                </radialGradient>
+                <radialGradient id="reel-rim-b" cx="50%" cy="50%" r="50%">
+                  <stop offset="80%" stop-color="#000" stop-opacity="0"/>
+                  <stop offset="100%" stop-color="#000" stop-opacity=".75"/>
+                </radialGradient>
+                <mask id="reel-mask-b">
+                  <rect width="100" height="100" fill="#fff"/>
+                  <circle cx="50" cy="50" r="17" fill="#000"/>
+                </mask>
+              </defs>
+              <g mask="url(#reel-mask-b)">
+                <circle cx="50" cy="50" r="50" fill="url(#reel-base-b)"/>
+                <g fill="none" stroke="#000" stroke-opacity=".55" stroke-width=".45" filter="url(#reel-warp-b)">
+                  <circle cx="50" cy="50" r="49.0"/><circle cx="50" cy="50" r="48.2"/>
+                  <circle cx="50" cy="50" r="47.4"/><circle cx="50" cy="50" r="46.6"/>
+                  <circle cx="50" cy="50" r="45.8"/><circle cx="50" cy="50" r="45.0"/>
+                  <circle cx="50" cy="50" r="44.2"/><circle cx="50" cy="50" r="43.4"/>
+                  <circle cx="50" cy="50" r="42.6"/><circle cx="50" cy="50" r="41.8"/>
+                  <circle cx="50" cy="50" r="41.0"/><circle cx="50" cy="50" r="40.2"/>
+                  <circle cx="50" cy="50" r="39.4"/><circle cx="50" cy="50" r="38.6"/>
+                  <circle cx="50" cy="50" r="37.8"/><circle cx="50" cy="50" r="37.0"/>
+                  <circle cx="50" cy="50" r="36.2"/><circle cx="50" cy="50" r="35.4"/>
+                  <circle cx="50" cy="50" r="34.6"/><circle cx="50" cy="50" r="33.8"/>
+                  <circle cx="50" cy="50" r="33.0"/><circle cx="50" cy="50" r="32.2"/>
+                  <circle cx="50" cy="50" r="31.4"/><circle cx="50" cy="50" r="30.6"/>
+                  <circle cx="50" cy="50" r="29.8"/><circle cx="50" cy="50" r="29.0"/>
+                  <circle cx="50" cy="50" r="28.2"/><circle cx="50" cy="50" r="27.4"/>
+                  <circle cx="50" cy="50" r="26.6"/><circle cx="50" cy="50" r="25.8"/>
+                  <circle cx="50" cy="50" r="25.0"/><circle cx="50" cy="50" r="24.2"/>
+                  <circle cx="50" cy="50" r="23.4"/><circle cx="50" cy="50" r="22.6"/>
+                  <circle cx="50" cy="50" r="21.8"/><circle cx="50" cy="50" r="21.0"/>
+                  <circle cx="50" cy="50" r="20.2"/><circle cx="50" cy="50" r="19.4"/>
+                  <circle cx="50" cy="50" r="18.6"/><circle cx="50" cy="50" r="17.8"/>
+                </g>
+                <g fill="none" stroke="#7a4a25" stroke-opacity=".18" stroke-width=".25" filter="url(#reel-warp-b)">
+                  <circle cx="50" cy="50" r="47.8"/><circle cx="50" cy="50" r="45.4"/>
+                  <circle cx="50" cy="50" r="43.0"/><circle cx="50" cy="50" r="40.6"/>
+                  <circle cx="50" cy="50" r="38.2"/><circle cx="50" cy="50" r="35.8"/>
+                  <circle cx="50" cy="50" r="33.4"/><circle cx="50" cy="50" r="31.0"/>
+                  <circle cx="50" cy="50" r="28.6"/><circle cx="50" cy="50" r="26.2"/>
+                  <circle cx="50" cy="50" r="23.8"/><circle cx="50" cy="50" r="21.4"/>
+                  <circle cx="50" cy="50" r="19.0"/>
+                </g>
+                <circle cx="50" cy="50" r="50" fill="url(#reel-sheen-b)"/>
+                <circle cx="50" cy="50" r="50" fill="url(#reel-rim-b)"/>
+              </g>
+            </svg>
+          </div>
+
+        </div>
+
+        <!-- screw heads -->
+        <span class="cassette__screw cassette__screw--tl"></span>
+        <span class="cassette__screw cassette__screw--tr"></span>
+        <span class="cassette__screw cassette__screw--bl"></span>
+        <span class="cassette__screw cassette__screw--br"></span>
+      </div>
+
+      <!-- Floating song-title chips temporarily removed (Nov 2026).
+           To restore: ask "bring back the floating chips".
+           CSS for .chip and .chip__* still in styles.css. -->
+
+      <!-- Editorial bio · sits naked under the cassette, no card chrome -->
+      <article class="tape-bio" aria-labelledby="tape-bio-title">
+        <p class="tape-bio__kicker">About the Night</p>
+        <h3 class="tape-bio__title" id="tape-bio-title">A music bingo night that runs like a mixtape.</h3>
+
+        <p class="tape-bio__dek tape-bio__dek--lead">
+          <span class="tape-bio__dropcap">T</span>he host doesn&rsquo;t call B&#8209;12. The DJ drops a
+          thirty&#8209;second clip, Thriller, No Scrubs, In Da Club, and the room reacts
+          before the hook even lands. Mark the title on your card, line it up, shout it out.
+        </p>
+
+        <!-- Rotating message slot · the two body messages cycle in place
+             instead of stacking vertically. Saves vertical real estate so
+             the flyer slider below can sit larger. JS auto-cycles every
+             ~8s; dots let you jump manually. Pauses on hover. -->
+        <div class="bio-rotator" data-bio-rotator>
+          <div class="bio-rotator__slide is-active" data-bio-slide>
+            <p class="tape-bio__dek">
+              Every card is unique. Twenty&#8209;four titles drawn from a sixty&#8209;song pool, so the table
+              next to you is hearing the same beat but chasing a different win. Prizes between rounds.
+              Bottle service for full houses. House samples for the close calls.
+            </p>
+          </div>
+          <div class="bio-rotator__slide" data-bio-slide>
+            <blockquote class="tape-bio__quote">
+              <span class="tape-bio__quote-mark" aria-hidden="true">&ldquo;</span>
+              Nobody films it because everybody&rsquo;s singing.
+            </blockquote>
+            <p class="tape-bio__dek">
+              We close on a full dance battle. Hosts pick the champion, the room votes the runner&#8209;up,
+              and the last track is a side B nobody&rsquo;s heard in years. Fridays, Saturdays, Sundays ,
+              check the events page for times. Twenty&#8209;one and over. Dress like it&rsquo;s 2003.
+            </p>
+          </div>
+          <div class="bio-rotator__dots" role="tablist" aria-label="Bio messages">
+            <button type="button" class="bio-rotator__dot is-active" data-bio-dot="0" aria-label="Message 1"></button>
+            <button type="button" class="bio-rotator__dot" data-bio-dot="1" aria-label="Message 2"></button>
+          </div>
+        </div>
+
+        <!-- Animation logo · replaces the past-night flyer slider.
+             Sized to the original flyer aspect ratio (4:5) so the
+             surrounding layout stays unchanged. -->
+        <div class="logo-anim" data-reveal>
+          <video
+            class="logo-anim__video"
+            src="Animation%20Logo/Logo%20animation%201.mp4"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="auto"
+            aria-label="Take Me Back Bingo animated logo"
+          ></video>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+  <!-- bottom meta strip (J-card spine) -->
+  <ul class="meta-strip" data-reveal data-reveal-stagger>
+    <li>
+      <strong>Fri / Sat / Sun</strong>
+      <span>21+, IDs checked, see events for times</span>
+    </li>
+    <li>
+      <strong>60 songs</strong>
+      <span>across the night, hip&#8209;hop and R&amp;B</span>
+    </li>
+    <li>
+      <strong>3 rounds</strong>
+      <span>across about three hours</span>
+    </li>
+    <li>
+      <strong>Dance battle</strong>
+      <span>to close the night, hosts pick the champion</span>
+    </li>
+  </ul>
+</section>
+
+<!-- ============ MARQUEE, set as a tape edge ============ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    <span>Hip-Hop</span><span class="marquee__sep">/</span>
+    <span>R&amp;B</span><span class="marquee__sep">/</span>
+    <span>Lip Sync Battles</span><span class="marquee__sep">/</span>
+    <span>Dance Battles</span><span class="marquee__sep">/</span>
+    <span>Prizes</span><span class="marquee__sep">/</span>
+    <span>80s &middot; 90s &middot; 00s</span><span class="marquee__sep">/</span>
+    <span>Live Host</span><span class="marquee__sep">/</span>
+    <!-- duplicate for seamless loop -->
+    <span>Hip-Hop</span><span class="marquee__sep">/</span>
+    <span>R&amp;B</span><span class="marquee__sep">/</span>
+    <span>Lip Sync Battles</span><span class="marquee__sep">/</span>
+    <span>Dance Battles</span><span class="marquee__sep">/</span>
+    <span>Prizes</span><span class="marquee__sep">/</span>
+    <span>80s &middot; 90s &middot; 00s</span><span class="marquee__sep">/</span>
+    <span>Live Host</span><span class="marquee__sep">/</span>
+  </div>
+</div>
+
+<!-- ============ HOW IT PLAYS ============ -->
+<section class="how" id="how">
+  <div class="how__inner">
+    <header class="how__head">
+      <p class="eyebrow eyebrow--dark" data-reveal>
+        <span class="eyebrow__dot"></span>
+        How to play
+      </p>
+      <h2 class="h2" data-reveal>
+        Bingo, but the numbers are <em>the songs you grew up on.</em>
+      </h2>
+      <p class="how__intro" data-reveal>
+        Same rules as the bingo your grandma plays. The host calls songs instead of numbers,
+        the DJ plays them, and every card is unique. First to line up five wins the round.
+        We run three rounds a night, then close with a dance battle.
+      </p>
+    </header>
+
+    <ol class="how__steps" data-reveal data-reveal-stagger>
+      <li class="how__step">
+        <span class="how__num">01</span>
+        <h3 class="how__title">Grab your card</h3>
+        <p class="how__copy">
+          Each player gets a unique 5&times;5 card. Every square is a song title pulled
+          from that night&rsquo;s theme, 90s R&amp;B, 2000s Hip&#8209;Hop, Michael Jackson,
+          80s Throwbacks. Sixty songs in the pool. Twenty&#8209;four on your card. One free
+          space in the middle.
+        </p>
+      </li>
+      <li class="how__step">
+        <span class="how__num">02</span>
+        <h3 class="how__title">The DJ drops a jam!</h3>
+        <p class="how__copy">
+          Thirty to sixty seconds of a track. No host calling B&#8209;12. If the song is on
+          your card, you mark the square. If it&rsquo;s not, you sing along until the next
+          one drops. Could be Thriller. Could be No Scrubs. Could be a deep cut.
+        </p>
+      </li>
+      <li class="how__step">
+        <span class="how__num">03</span>
+        <h3 class="how__title">Line it up, shout it out</h3>
+        <p class="how__copy">
+          Five in a row, column, diagonal, or four corners. First person to a line yells
+          &ldquo;BINGO&rdquo; (or &ldquo;THRILLER,&rdquo; or whatever the night&rsquo;s call
+          phrase is). Host confirms, the room cheers, the round closes.
+        </p>
+      </li>
+      <li class="how__step">
+        <span class="how__num">04</span>
+        <h3 class="how__title">Win prizes, stay for the dance battle</h3>
+        <p class="how__copy">
+          Prizes every round, bar tabs, merch, brand samples. New cards
+          between rounds. After round six, the cards go away and the last hour is a full dance
+          off with hosts picking a champion.
+        </p>
+      </li>
+    </ol>
+
+    <div class="how__details" data-reveal>
+      <div class="how__detail">
+        <p class="how__detail-label">Themes we run</p>
+        <p class="how__detail-text">
+          90s R&amp;B &middot; 2000s Hip&#8209;Hop &middot; Michael Jackson &middot;
+          80s Throwbacks &middot; Quiet Storm &middot; Y2K Pop. New themes drop monthly.
+        </p>
+      </div>
+      <div class="how__detail">
+        <p class="how__detail-label">Pace of the night</p>
+        <p class="how__detail-text">
+          Friday, Saturday, or Sunday nights, start times vary by venue, so check the
+          events page. Three rounds spread across about three hours, then a dance battle to close.
+        </p>
+      </div>
+      <div class="how__detail">
+        <p class="how__detail-label">What to bring</p>
+        <p class="how__detail-text">
+          Yourself, your ID (twenty&#8209;one and over), and the lyrics you forgot you
+          knew. Cards, daubers, and the soundtrack are on us.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ · liner-notes accordion · PAA-tuned ============ -->
+<section class="faq" id="faq">
+  <div class="faq__inner">
+    <header class="faq__head">
+      <p class="eyebrow" data-reveal>
+        <span class="eyebrow__dot"></span>
+        FAQ &middot; Liner Notes
+      </p>
+      <h2 class="h2" data-reveal>
+        The Music Bingo FAQ. <em>Liner notes for the curious.</em>
+      </h2>
+      <p class="faq__intro" data-reveal>
+        Everything you wanted to ask before buying a ticket to a Take Me Back Bingo night.
+        Still curious? <a href="#contact" data-open-inquiry>Send us a note.</a>
+      </p>
+    </header>
+
+    <ol class="faq__list" data-reveal data-reveal-stagger>
+      <li class="faq__item">
+        <details>
+          <summary>
+            <h3 class="faq__q">How does music bingo work?</h3>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="faq__a">
+            <p>
+              Music bingo works like classic bingo, but instead of numbers the DJ plays a
+              30-second clip of a song and the title appears on your card. Mark off songs as
+              you hear them. First player to line up five in a row, column, or diagonal yells
+              the call phrase and wins the round. We run three rounds a night.
+            </p>
+          </div>
+        </details>
+      </li>
+
+      <li class="faq__item">
+        <details>
+          <summary>
+            <h3 class="faq__q">Do I need to know every song to win?</h3>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="faq__a">
+            <p>
+              No, the song title appears on the screen behind the host, so you just
+              match it to the squares on your card. You&rsquo;re playing bingo, not Shazam.
+              Knowing the words is a bonus for singing along, not a requirement for winning.
+            </p>
+          </div>
+        </details>
+      </li>
+
+      <li class="faq__item">
+        <details>
+          <summary>
+            <h3 class="faq__q">How long is a music bingo night?</h3>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="faq__a">
+            <p>
+              A Take Me Back Bingo night runs about three hours. We host on Fridays, Saturdays,
+              and Sundays, start times vary by venue, so check the events page for the night
+              you want. Each night is three bingo rounds plus a live dance battle to close.
+            </p>
+          </div>
+        </details>
+      </li>
+
+      <li class="faq__item">
+        <details>
+          <summary>
+            <h3 class="faq__q">How much does a music bingo ticket cost?</h3>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="faq__a">
+            <p>
+              Ticket prices vary by city and venue, most general-admission seats run
+              $15&ndash;$25. Reserved group tables with bottle service start higher. Check the
+              <a href="events.html">Events page</a> for live pricing and date-specific tiers.
+            </p>
+          </div>
+        </details>
+      </li>
+
+      <li class="faq__item">
+        <details>
+          <summary>
+            <h3 class="faq__q">Is music bingo 21+? Do I need an ID?</h3>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="faq__a">
+            <p>
+              Yes, every Take Me Back Bingo night is 21 and over with no exceptions. Bring a
+              valid government-issued photo ID, driver&rsquo;s license, passport, or
+              state ID. The door checks IDs as soon as it opens and won&rsquo;t admit anyone
+              without it.
+            </p>
+          </div>
+        </details>
+      </li>
+
+      <li class="faq__item">
+        <details>
+          <summary>
+            <h3 class="faq__q">Can I bring a group to music bingo?</h3>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="faq__a">
+            <p>
+              Yes, groups of six or more can reserve a high-top with bottle service and
+              priority cards. We&rsquo;ve hosted birthdays, bachelorettes, and work crews.
+              Use the <a href="#contact" data-open-inquiry>booking form</a> to reserve a table;
+              otherwise, general admission seating is first-come, first-served.
+            </p>
+          </div>
+        </details>
+      </li>
+
+      <li class="faq__item">
+        <details>
+          <summary>
+            <h3 class="faq__q">Can you bring music bingo to my city or company?</h3>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="faq__a">
+            <p>
+              We travel for private events, brand activations, corporate parties, festivals,
+              and weddings. If there&rsquo;s a sound system and a crowd, we can build a custom
+              show with custom themes, custom cards, and custom prizes. Reach out via the
+              <a href="#contact" data-open-inquiry>booking form</a> to start the conversation.
+            </p>
+          </div>
+        </details>
+      </li>
+
+      <li class="faq__item">
+        <details>
+          <summary>
+            <h3 class="faq__q">What if I show up late to music bingo?</h3>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="faq__a">
+            <p>
+              Start times vary by venue, check the events page for your night. Aim to
+              arrive about 15 minutes before the first round so you can grab a drink, pick up
+              your cards, and find a seat. If you arrive after a round has started, you&rsquo;ll
+              jump in mid-game, we don&rsquo;t hold cards or pause for late arrivals.
+            </p>
+          </div>
+        </details>
+      </li>
+
+      <li class="faq__item">
+        <details>
+          <summary>
+            <h3 class="faq__q">Can I get a refund on a music bingo ticket?</h3>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="faq__a">
+            <p>
+              All ticket sales are final, no refunds and no transfers. If Take Me Back
+              Bingo cancels a night for any reason, you&rsquo;ll receive a full refund
+              automatically. Outside of that, plan ahead and double-check the date before you
+              buy. Questions? <a href="mailto:info@takemebackbingo.com">info@takemebackbingo.com</a>.
+            </p>
+          </div>
+        </details>
+      </li>
+
+      <li class="faq__item">
+        <details>
+          <summary>
+            <h3 class="faq__q">What do you wear to music bingo?</h3>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="faq__a">
+            <p>
+              Dress like it&rsquo;s 2003, throwback jerseys, denim on denim, velour
+              tracksuits, gold chains, chunky sneakers, baby tees. The photos hit harder when
+              the room looks like a time machine. There&rsquo;s no formal dress code, so
+              whatever you&rsquo;d wear to a good bar also works.
+            </p>
+          </div>
+        </details>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer" id="contact">
+  <div class="footer__bleed" aria-hidden="true"></div>
+
+  <div class="footer__inner">
+
+    <!-- BIG hero band: logo lockup + tagline -->
+    <div class="footer__lockup" data-reveal>
+      <img src="logos/logo-yellow.png" alt="Take Me Back Bingo" class="footer__logo" />
+      <div class="footer__lockup-copy">
+        <p class="footer__tagline">
+          <span class="footer__tagline-script">Friday, Saturday, Sunday.</span>
+          <span class="footer__tagline-block">Three rounds. Dance battle to close.</span>
+        </p>
+        <p class="footer__sub">
+          Hip-Hop &amp; R&amp;B bingo, live in your city. Mark the song, line it up, win the round.
+        </p>
+        <div class="footer__cta-row">
+          <a href="events.html" class="btn btn--primary btn--lg">Buy Tickets</a>
+          <a href="#contact" class="btn btn--ghost btn--lg" data-open-inquiry data-inquiry-topic="Private &amp; corporate bookings">Book a Private Night</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- columns -->
+    <div class="footer__cols">
+      <div class="footer__col">
+        <h4 class="footer__h">Explore</h4>
+        <ul class="footer__list">
+          <li><a href="#how">About</a></li>
+          <li><a href="#how">How to Play</a></li>
+          <li><a href="events.html">Events</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h4 class="footer__h">Work With Us</h4>
+        <ul class="footer__list">
+          <li><a href="#contact" data-open-inquiry data-inquiry-topic="Private &amp; corporate bookings">Private &amp; Corporate Bookings</a></li>
+          <li><a href="#contact" data-open-inquiry data-inquiry-topic="Brand partnerships">Brand Partnerships</a></li>
+          <li><a href="#contact" data-open-inquiry data-inquiry-topic="Bring us to your city">Bring Us To Your City</a></li>
+          <li><a href="#contact" data-open-inquiry data-inquiry-topic="Press &amp; media">Press &amp; Media</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h4 class="footer__h">Stay In The Loop</h4>
+        <p class="footer__newsletter-copy">
+          New cities, new dates, early ticket drops. No spam.
+        </p>
+        <form class="footer__newsletter" data-newsletter-form method="POST" action="https://formspree.io/f/mbdbggbv" novalidate>
+          <label class="sr-only" for="footer-email">Email address</label>
+          <input id="footer-email" name="email" type="email" required placeholder="you@email.com" autocomplete="email" />
+          <!-- Tag this submission so Formspree can distinguish newsletter from inquiry -->
+          <input type="hidden" name="topic" value="newsletter" />
+          <input type="hidden" name="_subject" value="[Take Me Back Bingo] Newsletter signup" />
+          <button type="submit" aria-label="Subscribe">
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <p class="footer__newsletter-status" data-newsletter-status role="status" aria-live="polite"></p>
+        </form>
+        <div class="footer__contact">
+          <a href="tel:+17326467073" class="footer__contact-line">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span>732.646.7073</span>
+          </a>
+          <a href="mailto:info@takemebackbingo.com" class="footer__contact-line" data-open-inquiry>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
+            <span>info@takemebackbingo.com</span>
+          </a>
+        </div>
+
+        <div class="footer__social">
+          <a href="https://www.instagram.com/takemebackbingo" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+          </a>
+          <a href="https://www.facebook.com/share/14YvCAxPKQL/" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="mailto:info@takemebackbingo.com" aria-label="Email" data-open-inquiry>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- bottom bar -->
+    <div class="footer__bottom">
+      <div class="footer__bottom-row">
+        <p class="footer__copy">&copy; <span id="year">2026</span> High Class Experience. All rights reserved.</p>
+        <p class="footer__credit">
+          Designed by <a href="https://robertvanliew.com" target="_blank" rel="noopener">robertvanliew.com</a>
+        </p>
+        <p class="footer__legal">
+          <a href="legal.html#privacy">Privacy</a>
+          <span class="footer__dot">·</span>
+          <a href="legal.html#terms">Terms</a>
+          <span class="footer__dot">·</span>
+          <a href="legal.html#accessibility">Accessibility</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ INQUIRY MODAL · opens from footer email icon ============ -->
+<div class="modal" id="inquiry-modal" role="dialog" aria-modal="true" aria-labelledby="inquiry-modal-title" hidden>
+  <div class="modal__scrim" data-modal-close></div>
+  <div class="modal__panel" role="document">
+    <button class="modal__close" type="button" aria-label="Close" data-modal-close>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+
+    <header class="modal__head">
+      <p class="eyebrow"><span class="eyebrow__dot"></span> Get in Touch</p>
+      <h2 id="inquiry-modal-title" class="modal__title">Send us an inquiry.</h2>
+      <p class="modal__sub">
+        Tickets, private bookings, brand partnerships, press, tell us what you need
+        and we&rsquo;ll be back within one business day.
+      </p>
+    </header>
+
+    <form class="modal__form" data-inquiry-form method="POST" action="https://formspree.io/f/mbdbggbv" novalidate>
+      <!-- Populated by JS when the modal is opened with a context-specific CTA -->
+      <input type="hidden" name="_subject" data-inquiry-subject-field value="[Take Me Back Bingo] Inquiry" />
+      <input type="hidden" name="context" data-inquiry-context-field value="" />
+
+      <div class="modal__row">
+        <label class="modal__field">
+          <span class="modal__label">Name</span>
+          <input type="text" name="name" required autocomplete="name" placeholder="Your name" />
+        </label>
+        <label class="modal__field">
+          <span class="modal__label">Email</span>
+          <input type="email" name="email" required autocomplete="email" placeholder="you@email.com" />
+        </label>
+      </div>
+
+      <div class="modal__row">
+        <label class="modal__field">
+          <span class="modal__label">Phone <span class="modal__optional">(optional)</span></span>
+          <input type="tel" name="phone" autocomplete="tel" placeholder="555.555.5555" />
+        </label>
+        <label class="modal__field">
+          <span class="modal__label">Inquiry Type</span>
+          <select name="topic" required>
+            <option value="" disabled selected>Choose one</option>
+            <option>Buy tickets / general</option>
+            <option>Reserve a table</option>
+            <option>Group of 6+</option>
+            <option>Early access / waitlist</option>
+            <option>Private &amp; corporate bookings</option>
+            <option>Brand partnerships</option>
+            <option>Sponsor a night</option>
+            <option>Bring us to your city</option>
+            <option>Press &amp; media</option>
+          </select>
+        </label>
+      </div>
+
+      <label class="modal__field">
+        <span class="modal__label">Message</span>
+        <textarea name="message" rows="5" required placeholder="Tell us a bit about the night, the date, the headcount, the vibe."></textarea>
+      </label>
+
+      <div class="modal__actions">
+        <button type="submit" class="btn btn--primary btn--lg">
+          Send Inquiry
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <p class="modal__hint">Or call <a href="tel:+17326467073">732.646.7073</a></p>
+      </div>
+
+      <p class="modal__status" data-inquiry-status role="status"></p>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Self-contained progressive enhancement. If this runs, content is hidden
+  // until revealed. If it fails, the .no-js class stays and content is fully
+  // visible by default (graceful degradation, see styles.css ".js [data-reveal]").
+  (function () {
+    var html = document.documentElement;
+    html.classList.remove('no-js');
+    html.classList.add('js');
+
+    /* Anti-theft: block right-click on imagery + asset drag-start. */
+    document.addEventListener('contextmenu', function (e) {
+      var t = e.target;
+      if (t && (t.tagName === 'IMG' || t.tagName === 'VIDEO' || t.tagName === 'CANVAS' || t.closest('.gallery, .bingocard, .tape-stage, .event-card__flyer, .cassette, .winners, .reel'))) {
+        e.preventDefault();
+      }
+    });
+    document.addEventListener('dragstart', function (e) {
+      if (e.target && (e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO')) e.preventDefault();
+    });
+
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var nodes = document.querySelectorAll('[data-reveal]');
+
+    function revealAll() {
+      nodes.forEach(function (el) {
+        el.classList.add('is-in');
+        if (el.hasAttribute('data-reveal-stagger')) {
+          Array.prototype.forEach.call(el.children, function (c, i) { c.style.setProperty('--i', i); });
+        }
+      });
+    }
+
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      revealAll();
+    } else {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          var el = entry.target;
+          el.classList.add('is-in');
+          if (el.hasAttribute('data-reveal-stagger')) {
+            Array.prototype.forEach.call(el.children, function (c, i) { c.style.setProperty('--i', i); });
+          }
+          io.unobserve(el);
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+      nodes.forEach(function (el) { io.observe(el); });
+      // Safety net: if anything is still hidden after 3s, force-reveal.
+      setTimeout(revealAll, 3000);
+    }
+
+    var yearEl = document.getElementById('year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+    // === Inquiry modal, opens from any footer email link ===
+    var inquiryModal = document.getElementById('inquiry-modal');
+    if (inquiryModal) {
+      var lastFocus = null;
+      function openInquiry() {
+        lastFocus = document.activeElement;
+        inquiryModal.hidden = false;
+        document.body.style.overflow = 'hidden';
+        requestAnimationFrame(function () {
+          var first = inquiryModal.querySelector('input, select, textarea, button');
+          if (first) first.focus();
+          inquiryModal.classList.add('is-open');
+        });
+      }
+      function closeInquiry() {
+        inquiryModal.classList.remove('is-open');
+        document.body.style.overflow = '';
+        setTimeout(function () {
+          inquiryModal.hidden = true;
+          if (lastFocus && lastFocus.focus) lastFocus.focus();
+        }, 220);
+      }
+      // Default copy for the modal heading + message placeholder, so we can reset
+      // between context-specific opens.
+      var inquiryTitleEl = document.getElementById('inquiry-modal-title');
+      var inquirySubEl = inquiryModal.querySelector('.modal__sub');
+      var defaultInquiryTitle = inquiryTitleEl ? inquiryTitleEl.textContent : 'Send us an inquiry.';
+      var inquirySelectEl = inquiryModal.querySelector('select[name="topic"]');
+      var inquiryMsgEl = inquiryModal.querySelector('textarea[name="message"]');
+      var inquirySubjEl = inquiryModal.querySelector('[data-inquiry-subject-field]');
+      var inquiryCtxEl = inquiryModal.querySelector('[data-inquiry-context-field]');
+      var defaultMsgPlaceholder = inquiryMsgEl ? inquiryMsgEl.getAttribute('placeholder') : '';
+
+      function applyInquiryContext(trigger) {
+        var topic = trigger && trigger.getAttribute('data-inquiry-topic');
+        var context = trigger && trigger.getAttribute('data-inquiry-context');
+
+        // Reset to defaults first so stale state from a previous open doesn't leak.
+        if (inquiryTitleEl) inquiryTitleEl.textContent = defaultInquiryTitle;
+        if (inquirySubjEl) inquirySubjEl.value = '[Take Me Back Bingo] Inquiry';
+        if (inquiryCtxEl) inquiryCtxEl.value = '';
+        if (inquiryMsgEl) inquiryMsgEl.setAttribute('placeholder', defaultMsgPlaceholder);
+        if (inquirySelectEl) inquirySelectEl.selectedIndex = 0;
+
+        if (topic && inquirySelectEl) {
+          // Match an existing <option> case-insensitively; otherwise append one.
+          var matched = false;
+          for (var i = 0; i < inquirySelectEl.options.length; i++) {
+            if (inquirySelectEl.options[i].text.toLowerCase() === topic.toLowerCase()) {
+              inquirySelectEl.selectedIndex = i;
+              matched = true; break;
+            }
+          }
+          if (!matched) {
+            var opt = document.createElement('option');
+            opt.text = topic; opt.value = topic; opt.selected = true;
+            inquirySelectEl.appendChild(opt);
+          }
+          if (inquiryTitleEl) inquiryTitleEl.textContent = topic + '.';
+          if (inquirySubjEl) inquirySubjEl.value = '[Take Me Back Bingo] ' + topic;
+        }
+
+        if (context) {
+          if (inquiryCtxEl) inquiryCtxEl.value = context;
+          if (inquiryMsgEl) inquiryMsgEl.setAttribute('placeholder',
+            'Re: ' + context + ', tell us about your group, date, headcount, and the vibe.');
+        }
+      }
+
+      document.querySelectorAll('[data-open-inquiry]').forEach(function (el) {
+        el.addEventListener('click', function (e) {
+          e.preventDefault();
+          applyInquiryContext(el);
+          openInquiry();
+        });
+      });
+      inquiryModal.querySelectorAll('[data-modal-close]').forEach(function (el) {
+        el.addEventListener('click', closeInquiry);
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !inquiryModal.hidden) closeInquiry();
+      });
+      // Single config point, swap mbdbggbv for the real Formspree endpoint.
+      var FORMSPREE_ENDPOINT = 'https://formspree.io/f/mbdbggbv';
+
+      function postToFormspree(form) {
+        // Honor the form's own action if it was overridden in HTML, else fall back to the const.
+        var endpoint = form.getAttribute('action') || FORMSPREE_ENDPOINT;
+        var payload = {};
+        new FormData(form).forEach(function (v, k) { payload[k] = v; });
+        return fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      }
+
+      var inquiryForm = inquiryModal.querySelector('[data-inquiry-form]');
+      var inquiryStatus = inquiryModal.querySelector('[data-inquiry-status]');
+      var inquirySubmitBtn = inquiryForm.querySelector('button[type="submit"]');
+      var inquiryBtnDefault = inquirySubmitBtn ? inquirySubmitBtn.innerHTML : '';
+
+      inquiryForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        // Lock the button so users can't double-submit.
+        if (inquirySubmitBtn) {
+          inquirySubmitBtn.disabled = true;
+          inquirySubmitBtn.textContent = 'Sending…';
+        }
+        inquiryStatus.classList.remove('is-error');
+        inquiryStatus.classList.add('is-shown');
+        inquiryStatus.textContent = '';
+
+        postToFormspree(inquiryForm)
+          .then(function (res) {
+            if (!res.ok) throw new Error('Formspree responded ' + res.status);
+            inquiryStatus.textContent = 'Thanks, we got it. We’ll be back within one business day.';
+            inquiryForm.reset();
+            // Keep the modal open for ~2s so the user actually sees the confirmation,
+            // then auto-close. (closeInquiry restores focus and unlocks scroll.)
+            setTimeout(function () {
+              if (!inquiryModal.hidden) closeInquiry();
+            }, 2000);
+          })
+          .catch(function () {
+            inquiryStatus.classList.add('is-error');
+            inquiryStatus.textContent = 'Something went wrong sending that. Please try again, or email info@takemebackbingo.com directly.';
+          })
+          .then(function () {
+            if (inquirySubmitBtn) {
+              inquirySubmitBtn.disabled = false;
+              inquirySubmitBtn.innerHTML = inquiryBtnDefault;
+            }
+          });
+      });
+    }
+
+    // === Footer newsletter, Formspree POST, tagged topic=newsletter ===
+    var newsletterForm = document.querySelector('[data-newsletter-form]');
+    if (newsletterForm) {
+      var newsletterStatus = newsletterForm.querySelector('[data-newsletter-status]');
+      var newsletterBtn = newsletterForm.querySelector('button[type="submit"]');
+      var newsletterBtnDefault = newsletterBtn ? newsletterBtn.innerHTML : '';
+
+      function setNewsletterStatus(msg, isError) {
+        if (!newsletterStatus) return;
+        newsletterStatus.textContent = msg;
+        newsletterStatus.classList.toggle('is-error', !!isError);
+        newsletterStatus.classList.add('is-shown');
+      }
+
+      newsletterForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (newsletterBtn) {
+          newsletterBtn.disabled = true;
+          newsletterBtn.textContent = '…';
+        }
+        setNewsletterStatus('', false);
+
+        // postToFormspree is defined inside the inquiry block; redeclare locally
+        // so the newsletter still works if the inquiry modal isn't on the page.
+        var endpoint = newsletterForm.getAttribute('action') || 'https://formspree.io/f/mbdbggbv';
+        var payload = {};
+        new FormData(newsletterForm).forEach(function (v, k) { payload[k] = v; });
+
+        fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        })
+          .then(function (res) {
+            if (!res.ok) throw new Error('Formspree responded ' + res.status);
+            setNewsletterStatus('Thanks, you’re on the list.', false);
+            newsletterForm.reset();
+            if (newsletterBtn) newsletterBtn.innerHTML = newsletterBtnDefault;
+          })
+          .catch(function () {
+            setNewsletterStatus('Couldn’t subscribe. Try again or email info@takemebackbingo.com.', true);
+            if (newsletterBtn) newsletterBtn.innerHTML = newsletterBtnDefault;
+          })
+          .then(function () {
+            if (newsletterBtn) newsletterBtn.disabled = false;
+          });
+      });
+    }
+
+    // === Hero sizzle reel · respect reduced motion + sound toggle ===
+    // Skip the flyer intro on every loop. Tweak this number if the flyer is
+    // longer or shorter than ~4s in your video.
+    var HERO_REEL_INTRO_SKIP = 102.0; // seconds, start on the DJ frame (1:42)
+    var HERO_REEL_OUTRO_TRIM = 10.0;  // seconds, chop the WizTV promo off the tail
+    var heroReel = document.querySelector('[data-hero-reel]');
+    var heroReelBg = document.querySelector('.hero-reel__bg');
+    var heroReelSound = document.querySelector('[data-hero-reel-sound]');
+
+    function syncSkipIntro(video) {
+      if (!video) return;
+      function jumpPastIntro() {
+        try { if (video.currentTime < HERO_REEL_INTRO_SKIP) video.currentTime = HERO_REEL_INTRO_SKIP; } catch (e) {}
+      }
+      function jumpBeforeOutro() {
+        if (!isFinite(video.duration)) return;
+        var cutoff = video.duration - HERO_REEL_OUTRO_TRIM;
+        if (cutoff > HERO_REEL_INTRO_SKIP && video.currentTime >= cutoff) {
+          try { video.currentTime = HERO_REEL_INTRO_SKIP; } catch (e) {}
+        }
+      }
+      // Initial skip once metadata is loaded
+      if (video.readyState >= 1) jumpPastIntro();
+      else video.addEventListener('loadedmetadata', jumpPastIntro);
+      // Every loop iteration restarts at 0, jump forward immediately
+      video.addEventListener('seeked', function () {
+        if (video.currentTime < HERO_REEL_INTRO_SKIP - 0.05) jumpPastIntro();
+      });
+      video.addEventListener('timeupdate', function () {
+        if (video.currentTime < HERO_REEL_INTRO_SKIP - 0.05) jumpPastIntro();
+        jumpBeforeOutro();
+      });
+    }
+
+    // Match the hero frame to the source video's true aspect ratio once we
+    // know it, kills the letterbox so the video fills the whole rectangle
+    // without any zoom/crop and without a blurred "I can't see faces" backdrop.
+    var heroMediaEl = document.querySelector('.hero-media--reel');
+    function matchAspect(v) {
+      if (!v || !heroMediaEl) return;
+      function apply() {
+        if (!v.videoWidth || !v.videoHeight) return;
+        // Clamp aspect ratio: never narrower than 16:9 (don't get too tall on
+        // portrait clips) and never wider than 21:9 (don't get too letterboxed).
+        var raw = v.videoWidth / v.videoHeight;
+        var clamped = Math.max(16/9, Math.min(21/9, raw));
+        heroMediaEl.style.aspectRatio = clamped.toFixed(4) + ' / 1';
+      }
+      if (v.readyState >= 1) apply();
+      else v.addEventListener('loadedmetadata', apply, { once: true });
+    }
+    matchAspect(heroReel);
+
+    if (heroReel) {
+      if (reduceMotion) {
+        heroReel.removeAttribute('autoplay');
+        heroReel.pause();
+        if (heroReelBg) { heroReelBg.removeAttribute('autoplay'); heroReelBg.pause(); }
+      } else {
+        syncSkipIntro(heroReel);
+        syncSkipIntro(heroReelBg);
+        var playAttempt = heroReel.play();
+        if (playAttempt && typeof playAttempt.catch === 'function') playAttempt.catch(function () {});
+        if (heroReelBg) {
+          var bgPlay = heroReelBg.play();
+          if (bgPlay && typeof bgPlay.catch === 'function') bgPlay.catch(function () {});
+        }
+      }
+      if (heroReelSound) {
+        heroReelSound.addEventListener('click', function () {
+          var willUnmute = heroReel.muted;
+          heroReel.muted = !willUnmute;
+          heroReelSound.setAttribute('aria-pressed', willUnmute ? 'true' : 'false');
+          heroReelSound.setAttribute('aria-label', willUnmute ? 'Mute sizzle reel' : 'Unmute sizzle reel');
+          if (willUnmute) {
+            var p = heroReel.play();
+            if (p && typeof p.catch === 'function') p.catch(function () {});
+          }
+        });
+      }
+    }
+
+    // === Bio message rotator · cycles between the two body paragraphs ===
+    // Auto-advances every 8s. Pauses on hover so people can read. Dots
+    // let users manually jump.
+    (function initBioRotator() {
+      var root = document.querySelector('[data-bio-rotator]');
+      if (!root) return;
+      var slides = root.querySelectorAll('[data-bio-slide]');
+      var dots   = root.querySelectorAll('[data-bio-dot]');
+      if (slides.length < 2) return;
+      var idx = 0;
+      var timer = null;
+      var INTERVAL_MS = 10000;  // longer dwell, pure-opacity crossfade
+      function show(i) {
+        idx = (i + slides.length) % slides.length;
+        slides.forEach(function (el, j) { el.classList.toggle('is-active', j === idx); });
+        dots.forEach(function (el, j) { el.classList.toggle('is-active', j === idx); });
+      }
+      function start() { stop(); timer = setInterval(function () { show(idx + 1); }, INTERVAL_MS); }
+      function stop()  { if (timer) clearInterval(timer); timer = null; }
+      dots.forEach(function (dot, j) {
+        dot.addEventListener('click', function () { show(j); start(); });
+      });
+      root.addEventListener('mouseenter', stop);
+      root.addEventListener('mouseleave', start);
+      start();
+    })();
+
+    // === Flyer slider · auto-cycles through past-event flyers ===
+    (function initFlyerSlider() {
+      var root = document.querySelector('[data-flyer-slider]');
+      if (!root) return;
+      var slides = root.querySelectorAll('[data-flyer-slide]');
+      var dots   = root.querySelectorAll('[data-flyer-dot]');
+      if (slides.length < 2) return;
+      var idx = 0;
+      var timer = null;
+      var INTERVAL_MS = 5000;
+      function show(i) {
+        idx = (i + slides.length) % slides.length;
+        slides.forEach(function (el, j) { el.classList.toggle('is-active', j === idx); });
+        dots.forEach(function (el, j) { el.classList.toggle('is-active', j === idx); });
+      }
+      function start() { stop(); timer = setInterval(function () { show(idx + 1); }, INTERVAL_MS); }
+      function stop()  { if (timer) clearInterval(timer); timer = null; }
+      dots.forEach(function (dot, j) {
+        dot.addEventListener('click', function (e) {
+          e.preventDefault(); e.stopPropagation();
+          show(j); start();
+        });
+      });
+      root.addEventListener('mouseenter', stop);
+      root.addEventListener('mouseleave', start);
+      start();
+    })();
+
+    // === Flippable bingo card · click cycles through gallery photos ===
+    var FLIP_PHOTOS = [
+      'photos/GSP_2205.jpg',
+      'photos/GSP_2287.jpg',
+      'photos/GSP_2395.jpg',
+      'photos/GSP_2262.jpg',
+      'photos/GSP_2436.jpg',
+      'photos/GSP_2308.jpg',
+      'photos/GSP_2298.jpg',
+      'photos/GSP_2404.jpg'
+    ];
+    document.querySelectorAll('[data-flip-card]').forEach(function (card) {
+      var flipper = card.querySelector('.bingocard__flipper');
+      var photoEl = card.querySelector('[data-flip-photo]');
+      var backBtn = card.querySelector('[data-flip-back]');
+      var ctaLink = card.querySelector('[data-flip-cta]');
+      var idx = -1; // first flip lands on index 0 (the Thriller flyer)
+
+      function setPhoto() {
+        idx = (idx + 1) % FLIP_PHOTOS.length;
+        photoEl.src = FLIP_PHOTOS[idx];
+      }
+      function flipTo(state) {
+        card.setAttribute('data-flipped', state ? 'true' : 'false');
+        flipper.setAttribute('aria-pressed', state ? 'true' : 'false');
+        if (state) setPhoto();
+      }
+
+      flipper.addEventListener('click', function (e) {
+        // ignore clicks coming from the CTA link or the flip-back button
+        if (e.target.closest('[data-flip-back]') || e.target.closest('[data-flip-cta]')) return;
+        flipTo(card.getAttribute('data-flipped') !== 'true');
+      });
+      flipper.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        if (e.target.closest('[data-flip-back]') || e.target.closest('[data-flip-cta]')) return;
+        e.preventDefault();
+        flipTo(card.getAttribute('data-flipped') !== 'true');
+      });
+
+      if (backBtn) {
+        backBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          flipTo(false);
+        });
+      }
+      // let the CTA link navigate normally, just stop the parent flip handler
+      if (ctaLink) {
+        ctaLink.addEventListener('click', function (e) { e.stopPropagation(); });
+      }
+    });
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+# Files/folders to exclude from the Vercel deployment.
+# Vercel free tier limits: 100MB per file, 1GB total deploy size.
+
+# The hero MP4 is 3GB — way over Vercel limits. Excluding it means the
+# hero <video> element falls back to its poster image until the video is
+# re-encoded smaller OR hosted on a CDN (Cloudflare Stream / Mux / Vimeo).
+Video/
+
+# Mac/editor junk
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Source assets that aren't referenced by the site (saves bandwidth)
+*.psd
+*.ai
+*.sketch
+
+# Local dev / temp files
+node_modules/
+.env
+.env.local

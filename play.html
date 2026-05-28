@@ -1,0 +1,3787 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Play Ã‚Â· Take Me Back Bingo Ã‚Â· Free Hip-Hop & R&B Music Bingo Demo</title>
+<meta name="description" content="Free in-browser demo of Take Me Back Bingo. Mark the throwback songs as they play, yell TAKE ME BACK to win." />
+<meta name="theme-color" content="#141111" />
+
+<link rel="icon" href="logos/logo-yellow.png" type="image/png" />
+<link rel="apple-touch-icon" href="logos/logo-yellow.png" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Play Take Me Back Bingo Ã‚Â· Free Demo" />
+<meta property="og:description" content="A free in-browser music bingo demo. Hit BINGO, yell the brand call, share your win card." />
+<meta property="og:image" content="https://takemebackbingo.com/logos/logo-yellow.png" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Permanent+Marker&family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css" />
+
+<!-- ================================================================
+     PLAY-PAGE SPECIFIC STYLES
+     ================================================================
+     Everything cosmetic to the demo lives here. The nav, footer,
+     buttons, modal, eyebrow, etc. inherit from styles.css.
+================================================================ -->
+<style>
+  .play {
+    /* Scope-override the tape-yellow tokens so every "yellow" inside the
+       bingo game (era pills, DJ start button, daubed squares, mute hover,
+       etc.) matches the warm muted gold used in the logo art. */
+    --tape-yellow:      #C9962B;
+    --tape-yellow-hot:  #D8A52E;
+    --tape-yellow-warm: #A87B1E;
+
+    position: relative;
+    min-height: 70vh;
+    padding: var(--s-8) var(--s-5) var(--s-9);
+    background:
+      radial-gradient(60% 50% at 50% 0%, rgba(123,45,142,.18), transparent 70%),
+      var(--bg);
+    color: var(--text);
+  }
+  .play__inner { max-width: 880px; margin: 0 auto; }
+  .play__head { text-align: center; margin-bottom: var(--s-7); }
+  .play__h1 {
+    font-family: var(--font-display);
+    font-size: clamp(var(--fs-38), 7vw, var(--fs-76));
+    line-height: .95;
+    letter-spacing: -.01em;
+    margin: var(--s-3) 0 var(--s-4);
+  }
+  .play__h1 em {
+    font-family: var(--font-script);
+    font-style: normal;
+    color: var(--tape-yellow);
+  }
+  .play__lede {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: var(--fs-20);
+    color: var(--text-muted);
+    max-width: 50ch;
+    margin: 0 auto;
+    text-wrap: pretty;
+  }
+
+  /* --- DJ BOOTH · BOTTOM HALF of one continuous chassis.
+         No top border, identical background — borders + bg flow into the
+         era-selector above so the two halves read as one unbroken panel.
+         A tiny ON AIR LED sits inside the booth content (top-left) to keep
+         the radio metaphor without interrupting the seam. --- */
+  .booth {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--s-3) var(--s-4);
+    align-items: center;
+    background: var(--bg-elev);
+    border: 1px solid var(--rule);
+    border-top: 0;
+    border-radius: 0 0 var(--r-lg) var(--r-lg);
+    padding: var(--s-4) var(--s-5);
+    margin: 0 0 var(--s-5);
+    box-shadow: 0 12px 28px -16px rgba(0,0,0,.65);
+  }
+  .booth__mute {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 50%;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color .15s ease, border-color .15s ease, background .15s ease;
+  }
+  .booth__mute:hover,
+  .booth__mute:focus-visible { color: var(--tape-yellow-hot); border-color: var(--tape-yellow-hot); outline: none; }
+  .booth__mute svg { width: 18px; height: 18px; }
+  .booth__mute .icon-muted { display: none; }
+  .booth__mute.is-muted .icon-unmuted { display: none; }
+  .booth__mute.is-muted .icon-muted { display: inline; }
+  .booth__mute.is-muted { color: #FF8A6E; border-color: #FF8A6E; }
+
+  /* Skip button â€” sits to the left of mute. Lets the player advance past
+     a silent/stuck preview without waiting out the clip. */
+  .booth__skip {
+    position: absolute;
+    top: 10px;
+    right: 56px;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 50%;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color .15s ease, border-color .15s ease;
+  }
+  .booth__skip:hover,
+  .booth__skip:focus-visible { color: var(--tape-yellow-hot); border-color: var(--tape-yellow-hot); outline: none; }
+  .booth__skip svg { width: 16px; height: 16px; }
+  .booth__pulse {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--tape-yellow-hot);
+    box-shadow: 0 0 0 0 rgba(255,216,77,.7);
+    animation: boothPulse 1.4s ease-out infinite;
+    grid-row: span 2;
+  }
+  .booth.is-idle .booth__pulse {
+    background: var(--text-muted);
+    animation: none;
+    box-shadow: none;
+  }
+  @keyframes boothPulse {
+    0%   { box-shadow: 0 0 0 0 rgba(255,216,77,.7); }
+    70%  { box-shadow: 0 0 0 14px rgba(255,216,77,0); }
+    100% { box-shadow: 0 0 0 0 rgba(255,216,77,0); }
+  }
+  .booth__label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-11);
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--tape-yellow);
+  }
+  .booth__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-20);
+    color: var(--text);
+    margin: 0;
+    line-height: 1.1;
+  }
+  .booth__artist {
+    font-family: var(--font-body);
+    font-size: var(--fs-14);
+    color: var(--text-muted);
+    grid-column: 2;
+  }
+  /* Round counter Ã¢â‚¬â€ "Song 7 / 15" - applies tension as the round runs out */
+  .booth__counter {
+    grid-column: 2;
+    justify-self: end;
+    font-family: var(--font-mono);
+    font-size: var(--fs-11);
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: -22px;        /* tuck next to the artist line */
+  }
+  .booth__counter.is-warning { color: var(--tape-yellow-hot); }
+  .booth__counter.is-critical { color: #FF8A6E; }
+  .booth__timer {
+    grid-column: 1 / -1;
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(242,234,219,.08);
+    overflow: hidden;
+  }
+  .booth__timer-fill {
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent-600), var(--tape-yellow-hot));
+    transition: width .25s linear;
+  }
+
+  /* --- BINGO CARD GRID --- */
+  .bingo {
+    background: var(--surface-card);
+    color: var(--ink);
+    border-radius: var(--r-lg);
+    padding: var(--s-4);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.4) inset,
+      0 30px 70px -30px rgba(0,0,0,.7);
+  }
+  .bingo__head {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--s-2);
+    margin-bottom: var(--s-3);
+  }
+  .bingo__head span {
+    font-family: var(--font-display);
+    font-size: clamp(var(--fs-24), 5vw, var(--fs-38));
+    color: var(--primary);
+    text-align: center;
+    line-height: 1;
+    letter-spacing: .04em;
+    /* Layered offset stack to match the homepage card BINGO letters:
+       white highlight on top-left, yellow accent drop, soft dark depth. */
+    text-shadow:
+      1px 1px 0 rgba(255,255,255,.6),
+      2px 2px 0 var(--accent),
+      3px 3px 0 rgba(0,0,0,.12);
+  }
+  .bingo__grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-auto-rows: 1fr;
+    gap: var(--s-2);
+  }
+  .sq {
+    position: relative;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: var(--s-2);
+    background: rgba(24,18,18,.05);
+    border: 1px solid rgba(24,18,18,.12);
+    border-radius: var(--r-md);
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: clamp(var(--fs-12), 1.4vw, var(--fs-16));
+    line-height: 1.15;
+    color: var(--ink);
+    cursor: pointer;
+    user-select: none;
+    overflow: hidden;
+    transition: transform var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+    text-wrap: balance;
+  }
+  .sq:hover { border-color: var(--primary); transform: translateY(-1px); }
+  .sq:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  .sq.is-now {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(123,45,142,.35);
+  }
+  /* Marked square: yellow-tinted CELL (not a covering circle) so the
+     song name stays fully readable. Small dauber stamp in the corner
+     gives the visual "I marked this" cue without burying the title. */
+  .sq.is-daubed {
+    background: linear-gradient(180deg, #FFE57A 0%, var(--tape-yellow) 100%);
+    border-color: var(--accent);
+    color: var(--ink);
+    font-weight: 700;
+  }
+  /* Dauber orb removed — the yellow cell tint is enough to signal "marked". */
+  .sq--free {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary-700);
+    cursor: default;
+    font-family: var(--font-display);
+    font-size: clamp(var(--fs-16), 2vw, var(--fs-24));
+    letter-spacing: .04em;
+  }
+  .sq--free:hover { transform: none; border-color: var(--primary-700); }
+
+  /* FREE square stays brand-purple even when auto-daubed Ã¢â‚¬â€ the yellow
+     tint + corner stamp from .is-daubed would otherwise override it. */
+  .sq--free.is-daubed {
+    background: var(--primary);
+    border-color: var(--primary-700);
+    color: #fff;
+  }
+  .sq--free.is-daubed::after { display: none; }
+
+  /* Round-over state Ã¢â‚¬â€ card dims so player knows the round ended without bingo */
+  .sq.is-roundover {
+    opacity: .35;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  .sq.is-roundover.is-daubed { opacity: .55; }
+
+  /* Highlight the winning line (rows/cols/diagonals) */
+  .sq.is-win {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary-700);
+    animation: winPulse 1s var(--ease-out) infinite alternate;
+  }
+  .sq.is-win.is-daubed { color: #fff; }
+  @keyframes winPulse {
+    from { box-shadow: 0 0 0 2px rgba(123,45,142,.4); }
+    to   { box-shadow: 0 0 0 6px rgba(123,45,142,.0); }
+  }
+
+  /* --- Round-over panel Ã¢â‚¬â€ appears when the 15-song cap is hit
+         without bingo. Hidden until .is-shown class added by JS. --- */
+  /* True modal overlay â€” full-screen scrim, centered card */
+  .roundover {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: grid;
+    place-items: center;
+    padding: var(--s-4);
+    background: rgba(0,0,0,.72);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    animation: roundoverIn .35s var(--ease-out);
+  }
+  .roundover[hidden] { display: none; }
+  /* The inner card is laid out as a flex column on .roundover itself once
+     we constrain its size and apply the panel styling via a wrapper-ish
+     pattern: every child gets centered, and the panel chrome lives on
+     a single pseudo-card-sized block via grid + padding. */
+  .roundover__card {
+    width: min(540px, 92vw);
+    background: linear-gradient(135deg, rgba(123,45,142,.95), rgba(20,17,17,.96));
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--r-lg);
+    box-shadow: 0 30px 80px -20px rgba(0,0,0,.7);
+    padding: var(--s-5) var(--s-5) var(--s-5);
+    text-align: center;
+    position: relative;
+  }
+  .roundover__close {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 50%;
+  }
+  .roundover__close:hover { color: var(--tape-yellow); }
+  @keyframes roundoverIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  .roundover__eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--fs-11);
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--tape-yellow);
+    margin: 0 0 var(--s-2);
+  }
+  .roundover__h2 {
+    font-family: var(--font-display);
+    font-size: clamp(var(--fs-24), 4vw, var(--fs-38));
+    line-height: 1.05;
+    margin: 0 0 var(--s-3);
+    color: var(--text);
+  }
+  .roundover__copy {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: var(--fs-16);
+    color: var(--text-muted);
+    max-width: 50ch;
+    margin: 0 auto var(--s-4);
+    text-wrap: pretty;
+  }
+  .roundover__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    justify-content: center;
+  }
+
+  /* --- CTA row below the card --- */
+  .play__cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    justify-content: center;
+    margin-top: var(--s-6);
+  }
+  /* Anti-cheat lock styling Ã¢â‚¬â€ "New Card" disabled mid-round */
+  .play__cta-row .btn[disabled],
+  .play__cta-row .btn.is-locked {
+    opacity: .35;
+    cursor: not-allowed;
+    pointer-events: auto; /* keep clickable so we can show the nudge */
+  }
+  .play__cta-row .btn.shake {
+    animation: btnShake .35s ease-in-out;
+  }
+  @keyframes btnShake {
+    0%, 100% { transform: translateX(0); }
+    20%      { transform: translateX(-6px); }
+    40%      { transform: translateX(5px); }
+    60%      { transform: translateX(-3px); }
+    80%      { transform: translateX(3px); }
+  }
+
+  /* --- Tiny inline "tap to start" fallback (shown only if autoplay
+         priming fails). Hidden by default. --- */
+  .tap-prime {
+    display: none;
+    margin: var(--s-4) auto 0;
+    padding: 10px 18px;
+    background: var(--tape-yellow);
+    color: var(--ink);
+    border: 0;
+    border-radius: var(--r-pill);
+    font-family: var(--font-body);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    font-size: var(--fs-12);
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,.35);
+  }
+  .tap-prime.is-shown { display: block; }
+
+  /* ====================================================================
+     TOUR-DEMAND CAPTURE - sticky bar + win-modal inline form
+     Single-mechanic email + city ask. Tagged with `topic=tour-demand` so
+     submissions land in a clean bucket for tour planning + outreach.
+     ==================================================================== */
+  .tour-bar {
+    position: fixed;
+    left: 50%;
+    bottom: 16px;
+    transform: translate(-50%, 140%);
+    width: min(880px, calc(100% - 24px));
+    z-index: 70;
+    background: linear-gradient(180deg, rgba(36, 28, 50, .98), rgba(20, 17, 17, .98));
+    border: 1px solid var(--rule-strong);
+    border-radius: 14px;
+    box-shadow: 0 30px 80px -20px rgba(0,0,0,.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: transform .5s var(--ease-out);
+  }
+  .tour-bar.is-shown { transform: translate(-50%, 0); }
+  .tour-bar[hidden] { display: none; }
+  .tour-bar__close {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    border: 0;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 50%;
+  }
+  .tour-bar__close:hover { color: var(--tape-yellow); }
+  .tour-bar__inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 18px;
+    align-items: center;
+    padding: 16px 50px 16px 20px;
+  }
+  .tour-bar__eyebrow {
+    font-family: var(--font-display);
+    font-size: var(--fs-18);
+    color: var(--text);
+    margin: 0 0 2px;
+    letter-spacing: .01em;
+  }
+  .tour-bar__sub {
+    font-family: var(--font-body);
+    font-size: var(--fs-13);
+    color: var(--text-muted);
+    margin: 0;
+  }
+  .tour-bar__form {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .tour-bar__form input[type="email"],
+  .tour-bar__form input[type="text"] {
+    background: rgba(255, 255, 255, .04);
+    border: 1px solid var(--rule);
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-size: var(--fs-14);
+    min-width: 0;
+    width: 160px;
+    outline: none;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .tour-bar__form input[type="email"]:focus,
+  .tour-bar__form input[type="text"]:focus {
+    border-color: var(--tape-yellow);
+    background: rgba(255, 255, 255, .07);
+  }
+  .tour-bar__form .btn { white-space: nowrap; }
+  .tour-bar__status,
+  .tour-capture__status {
+    font-family: var(--font-mono);
+    font-size: var(--fs-11);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--tape-yellow);
+    margin: 8px 0 0;
+    min-height: 1em;
+    width: 100%;
+  }
+  .tour-bar__status.is-error,
+  .tour-capture__status.is-error { color: #FF8A6E; }
+
+  /* Inline form inside the win celebration modal */
+  .tour-capture {
+    margin: var(--s-5) auto 0;
+    max-width: 560px;
+    padding: var(--s-4);
+    background: rgba(255, 255, 255, .04);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    text-align: left;
+  }
+  .tour-capture__h {
+    font-family: var(--font-display);
+    font-size: var(--fs-18);
+    color: var(--text);
+    margin: 0 0 4px;
+  }
+  .tour-capture__sub {
+    font-family: var(--font-body);
+    font-size: var(--fs-13);
+    color: var(--text-muted);
+    margin: 0 0 var(--s-3);
+  }
+  .tour-capture__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 8px;
+  }
+  .tour-capture__row input[type="email"],
+  .tour-capture__row input[type="text"] {
+    background: rgba(255, 255, 255, .04);
+    border: 1px solid var(--rule);
+    color: var(--text);
+    padding: 11px 12px;
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-size: var(--fs-14);
+    outline: none;
+    min-width: 0;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .tour-capture__row input:focus {
+    border-color: var(--tape-yellow);
+    background: rgba(255, 255, 255, .07);
+  }
+  .tour-capture__row .btn { white-space: nowrap; }
+
+  @media (max-width: 760px) {
+    .tour-bar__inner { grid-template-columns: 1fr; padding: 14px 44px 14px 16px; }
+    .tour-bar__form input[type="email"],
+    .tour-bar__form input[type="text"] { flex: 1 1 140px; width: auto; }
+    .tour-capture__row { grid-template-columns: 1fr; }
+  }
+
+  /* --- Primary "Start the DJ" affordance, sits under the booth. Visible
+         whenever a round hasn't started â€” gives the player a guaranteed way
+         to begin without relying on scroll auto-start. Hidden once the
+         first song plays. --- */
+  .dj-start {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 0 auto var(--s-5);
+    padding: 14px 28px;
+    background: var(--tape-yellow);
+    color: var(--ink);
+    border: 0;
+    border-radius: var(--r-pill);
+    font-family: var(--font-display, var(--font-body));
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    font-size: var(--fs-14, 14px);
+    cursor: pointer;
+    box-shadow: 0 8px 20px -6px rgba(255, 216, 77, .5), 0 2px 4px rgba(0,0,0,.4);
+    transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .dj-start:hover { transform: translateY(-1px); box-shadow: 0 12px 26px -8px rgba(255, 216, 77, .65), 0 3px 6px rgba(0,0,0,.45); }
+  .dj-start:active { transform: translateY(0); }
+  .dj-start[hidden] { display: none; }
+  .dj-start__icon {
+    display: inline-flex;
+    width: 22px; height: 22px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--tape-yellow);
+    font-size: 11px;
+    line-height: 1;
+    padding-left: 2px;       /* optical centering for the play triangle */
+  }
+  /* Pulse the button gently so it reads as the next action */
+  @keyframes djStartPulse {
+    0%, 100% { box-shadow: 0 8px 20px -6px rgba(255, 216, 77, .5), 0 2px 4px rgba(0,0,0,.4); }
+    50%      { box-shadow: 0 10px 26px -4px rgba(255, 216, 77, .85), 0 2px 4px rgba(0,0,0,.4); }
+  }
+  .dj-start { animation: djStartPulse 2.2s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) {
+    .dj-start { animation: none; }
+  }
+
+  /* --- Hidden 1x1 YouTube audio iframe host (off-screen, no video frame) --- */
+  .yt-audio-host {
+    position: fixed;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    top: -10px; left: -10px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* --- VOICE-WIN MODAL --- */
+  .winm {
+    position: fixed;
+    inset: 0;
+    z-index: 250;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--s-4);
+    opacity: 0;
+    transition: opacity var(--dur-base) var(--ease-out);
+  }
+  .winm.is-open { opacity: 1; }
+  .winm[hidden] { display: none; }
+  .winm__scrim {
+    position: absolute; inset: 0;
+    background: radial-gradient(80% 70% at 50% 40%, rgba(123,45,142,.55), rgba(0,0,0,.85) 70%);
+    backdrop-filter: blur(8px);
+  }
+  .winm__panel {
+    position: relative;
+    background: var(--bg-elev);
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--r-lg);
+    padding: var(--s-7) var(--s-6);
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 40px 80px -20px rgba(0,0,0,.7);
+  }
+  .winm__eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--fs-11);
+    letter-spacing: .25em;
+    text-transform: uppercase;
+    color: var(--tape-yellow);
+  }
+  .winm__h2 {
+    font-family: var(--font-display);
+    font-size: clamp(var(--fs-48), 9vw, 5.5rem);
+    line-height: .95;
+    margin: var(--s-3) 0 var(--s-2);
+    color: var(--text);
+  }
+  .winm__call {
+    font-family: var(--font-script);
+    font-size: clamp(var(--fs-30), 5vw, var(--fs-48));
+    color: var(--tape-yellow);
+    line-height: 1;
+    margin: var(--s-2) 0 var(--s-4);
+  }
+  .winm__copy {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: var(--fs-18);
+    color: var(--text-muted);
+    margin: 0 0 var(--s-5);
+    line-height: 1.5;
+  }
+  .winm__mic {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-2);
+    margin: 0 0 var(--s-5);
+    padding: var(--s-3);
+    background: rgba(255,216,77,.06);
+    border: 1px dashed rgba(255,216,77,.3);
+    border-radius: var(--r-md);
+    font-family: var(--font-mono);
+    font-size: var(--fs-12);
+    letter-spacing: .15em;
+    color: var(--tape-yellow);
+    text-transform: uppercase;
+  }
+  .winm__mic-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--tape-yellow-hot);
+    animation: micPulse 1s ease-out infinite;
+  }
+  .winm__mic.is-error { color: #FF8A6E; border-color: rgba(255,138,110,.4); background: rgba(255,138,110,.06); }
+  .winm__mic.is-error .winm__mic-dot { background: #FF8A6E; animation: none; }
+  @keyframes micPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: .35; transform: scale(.8); }
+  }
+  .winm__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+    align-items: stretch;
+  }
+
+  /* --- WIN CELEBRATION (after voice/button win) --- */
+  .celebration {
+    position: fixed;
+    inset: 0;
+    z-index: 260;
+    display: grid;
+    place-items: center;
+    padding: var(--s-5) var(--s-4);
+    overflow-y: auto;
+    background:
+      radial-gradient(80% 60% at 50% 20%, rgba(123,45,142,.4), transparent 70%),
+      var(--bg);
+  }
+  .celebration[hidden] { display: none; }
+  .celebration__inner { max-width: 540px; width: 100%; text-align: center; }
+  .celebration__h2 {
+    font-family: var(--font-display);
+    font-size: clamp(var(--fs-48), 11vw, var(--fs-76));
+    line-height: .9;
+    margin: var(--s-4) 0 var(--s-3);
+  }
+  .celebration__h2 em {
+    font-family: var(--font-script);
+    font-style: normal;
+    color: var(--tape-yellow);
+  }
+  .celebration__copy {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: var(--fs-18);
+    color: var(--text-muted);
+    margin: 0 0 var(--s-5);
+  }
+  .celebration__preview {
+    background: rgba(0,0,0,.4);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-md);
+    padding: var(--s-3);
+    margin: 0 auto var(--s-5);
+    max-width: 320px;
+  }
+  .celebration__preview img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--r-sm);
+    display: block;
+  }
+  .celebration__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    justify-content: center;
+    margin-bottom: var(--s-4);
+  }
+  .celebration__cta {
+    margin-top: var(--s-4);
+    font-family: var(--font-body);
+    font-size: var(--fs-14);
+    color: var(--text-muted);
+  }
+  .celebration__cta a {
+    color: var(--tape-yellow);
+    border-bottom: 1px solid rgba(239,197,58,.4);
+  }
+
+  /* --- One-line explainer Ã‚Â· all caps mono, sits above era selector --- */
+  .play__explainer {
+    font-family: var(--font-mono);
+    font-size: var(--fs-11);
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-align: center;
+    margin: 0 0 var(--s-3);
+  }
+
+  /* --- Era selector · TOP HALF of one continuous chassis.
+         No bottom border, no seam ornament. Background and chrome match
+         the booth below pixel-for-pixel so they read as a single panel. --- */
+  .era-selector {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--s-2);
+    margin: 0;
+    padding: 16px 14px;
+    background: var(--bg-elev);
+    border: 1px solid var(--rule);
+    border-bottom: 0;
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+  }
+  .era-pill {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    padding: 10px 18px;
+    border-radius: var(--r-pill);
+    font-family: var(--font-display);
+    font-size: clamp(var(--fs-11), 1.2vw, var(--fs-14));
+    letter-spacing: .04em;
+    color: var(--text);
+    cursor: pointer;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    transition: background var(--dur-fast) var(--ease-out),
+                color var(--dur-fast) var(--ease-out),
+                transform var(--dur-fast) var(--ease-out);
+  }
+  /* Mobile: lay the 6 pills out as a tidy 2×3 grid (decade × genre) so
+     they're evenly spaced instead of wrapping into an uneven 4+2 row */
+  @media (max-width: 640px) {
+    .era-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      padding: 10px;
+      /* keep bottom corners flat so the seam with the booth is invisible */
+      border-radius: var(--r-lg) var(--r-lg) 0 0;
+    }
+    .era-pill {
+      width: 100%;
+      padding: 12px 10px;
+      border-radius: var(--r-md);
+      font-size: var(--fs-12);
+      letter-spacing: .06em;
+    }
+  }
+  .era-pill:hover { color: var(--accent); }
+  .era-pill.is-active {
+    background: var(--accent);
+    color: var(--ink);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.25),
+      0 0 0 1px rgba(201,150,43,.45),
+      0 0 18px -2px rgba(201,150,43,.55);
+  }
+  .era-pill.is-soon {
+    color: var(--text-muted);
+    opacity: .65;
+    cursor: not-allowed;
+  }
+  .era-pill.is-soon:hover { color: var(--text-muted); }
+  .era-pill__soon {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--tape-yellow);
+    opacity: .8;
+    margin-top: 1px;
+  }
+  /* Tooltip for coming-soon pills Ã¢â‚¬â€ appears below the selector strip */
+  .era-tooltip {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    padding: 8px 14px;
+    background: var(--bg);
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--r-md);
+    font-family: var(--font-body);
+    font-size: var(--fs-12);
+    color: var(--text-muted);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+    z-index: 5;
+    box-shadow: 0 10px 24px -10px rgba(0,0,0,.8);
+  }
+  .era-tooltip[hidden] { display: none; }
+  .era-tooltip.is-shown {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+  }
+  .era-tooltip a {
+    color: var(--tape-yellow);
+    border-bottom: 1px dashed rgba(255,216,77,.4);
+  }
+  .era-tooltip a:hover { color: var(--tape-yellow-hot); border-bottom-color: var(--tape-yellow-hot); }
+
+  /* --- Artist cell text · clean sans, high-def. Sora at semibold so
+         titles read sharply at small sizes. Container queries shrink the
+         font automatically when a title has many words, preventing the
+         "one word per line" wrap on long titles like
+         "I Have Learned To Respect The Power Of Love". --- */
+  .sq {
+    container-type: inline-size;
+    font-family: var(--font-body);
+    font-size: clamp(12px, 1.55vw, 16px);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: .005em;
+    text-transform: uppercase;
+    color: var(--ink);
+    padding: 6px 7px;
+    overflow-wrap: break-word;
+    word-break: normal;
+    hyphens: auto;
+    text-wrap: pretty;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  /* Long-title squares (>20 chars of content typically) shrink further
+     using container query units so multi-word phrases fit on fewer lines */
+  @container (max-width: 100px) {
+    .sq > span { font-size: 10.5cqi; }
+  }
+  /* Subtle Ã‚Â±1deg tilt on alternate cells Ã¢â‚¬â€ hand-stamped ticket feel.
+     Keeps text balanced overall, never reads as chaotic. */
+  .sq:nth-child(odd) > span  { display: inline-block; transform: rotate(-1deg); }
+  .sq:nth-child(even) > span { display: inline-block; transform: rotate(1deg); }
+  .sq.sq--free > span { transform: none; }
+  .sq.is-daubed > span { transform: none; }  /* Settle on mark */
+
+  /* Shake feedback when a player taps a square whose song hasn't played yet. */
+  @keyframes sqShakeNope {
+    0%, 100% { transform: translateX(0); }
+    20%      { transform: translateX(-4px); }
+    40%      { transform: translateX(4px); }
+    60%      { transform: translateX(-3px); }
+    80%      { transform: translateX(3px); }
+  }
+  .sq.shake-nope { animation: sqShakeNope .35s ease; }
+  @media (prefers-reduced-motion: reduce) {
+    .sq.shake-nope { animation: none; }
+  }
+
+  /* --- Booth track line (shown UNDER the booth__title artist name) --- */
+  .booth__track {
+    grid-column: 2;
+    font-family: var(--font-body);
+    font-size: var(--fs-14);
+    font-style: italic;
+    color: var(--text-muted);
+    margin-top: -8px;
+  }
+
+  /* Reduced motion Ã¢â‚¬â€ disable pulse + tilt animations */
+  @media (prefers-reduced-motion: reduce) {
+    .booth__pulse, .sq.is-win, .winm__mic-dot, .sq.is-daubed::after {
+      animation: none !important;
+    }
+    .sq:nth-child(odd) > span,
+    .sq:nth-child(even) > span { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV (mirrors index.html) ============ -->
+<header class="nav">
+  <a href="index.html" class="nav__logo" aria-label="Take Me Back Bingo home">
+    <img src="logos/logo-yellow.png" alt="Take Me Back Bingo" class="nav__logo-img" />
+  </a>
+  <nav class="nav__links" id="primary-nav" aria-label="Primary">
+    <a href="play.html" aria-current="page">Play</a>
+    <a href="events.html">Events</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="index.html#faq">FAQ</a>
+    <a href="index.html#contact">Contact</a>
+  </nav>
+  <a href="events.html" class="btn btn--primary nav__cta">Buy Tickets</a>
+  <button type="button" class="nav__toggle" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav" onclick="(function(b){var n=b.closest('.nav');var o=n.getAttribute('data-nav-open')==='true';n.setAttribute('data-nav-open',o?'false':'true');b.setAttribute('aria-expanded',o?'false':'true');b.setAttribute('aria-label',o?'Open menu':'Close menu');})(this)"><span class="nav__toggle-bars" aria-hidden="true"></span></button>
+</header>
+
+<!-- ============ PLAY ============ -->
+<main class="play">
+  <div class="play__inner">
+
+    <header class="play__head">
+      <p class="eyebrow">
+        <span class="eyebrow__dot"></span>
+        Free In-Browser Demo
+      </p>
+      <h1 class="play__h1">
+        Play <em>Take Me Back</em> Bingo.
+      </h1>
+      <p class="play__lede">
+        Thirty seconds of throwback hip-hop and R&amp;B per round. Mark the song on your card.
+        Hit five in a row, yell <strong>&ldquo;TAKE ME BACK!&rdquo;</strong>, we&rsquo;ll be listening.
+      </p>
+    </header>
+
+    <!-- One-line explainer Ã‚Â· sets expectations in 5 words -->
+    <p class="play__explainer">Hear the song &middot; Mark your card &middot; Yell &ldquo;Take Me Back!&rdquo;</p>
+
+    <!-- Era selector Ã‚Â· 6 live pools (80s/90s/2000s Ãƒâ€” R&B/Hip-Hop) -->
+    <div class="era-selector" role="tablist" aria-label="Bingo era">
+      <button type="button" class="era-pill is-active" role="tab" data-era="80s-rnb" aria-selected="true">
+        <span class="era-pill__label">80&rsquo;s R&amp;B</span>
+      </button>
+      <button type="button" class="era-pill" role="tab" data-era="80s-hiphop" aria-selected="false">
+        <span class="era-pill__label">80&rsquo;s Hip-Hop</span>
+      </button>
+      <button type="button" class="era-pill" role="tab" data-era="90s-rnb" aria-selected="false">
+        <span class="era-pill__label">90&rsquo;s R&amp;B</span>
+      </button>
+      <button type="button" class="era-pill" role="tab" data-era="90s-hiphop" aria-selected="false">
+        <span class="era-pill__label">90&rsquo;s Hip-Hop</span>
+      </button>
+      <button type="button" class="era-pill" role="tab" data-era="2000s-rnb" aria-selected="false">
+        <span class="era-pill__label">2000&rsquo;s R&amp;B</span>
+      </button>
+      <button type="button" class="era-pill" role="tab" data-era="2000s-hiphop" aria-selected="false">
+        <span class="era-pill__label">2000&rsquo;s Hip-Hop</span>
+      </button>
+      <!-- Tooltip surfaces from any data-coming-soon pill on hover/focus -->
+      <div class="era-tooltip" id="eraTooltip" role="tooltip" hidden>
+        <span>Stay tuned, </span>
+        <a href="index.html#contact" data-era-newsletter-link>drop your email to be notified</a>
+      </div>
+    </div>
+
+    <!-- DJ booth Ã¢â‚¬â€ shows the currently playing artist + track -->
+    <div class="booth is-idle" id="booth" aria-live="polite">
+      <span class="booth__pulse" aria-hidden="true"></span>
+      <span class="booth__label" id="boothLabel">DJ Booth</span>
+      <h2 class="booth__title" id="boothTitle">Hit Start the DJ to play.</h2>
+      <span class="booth__track" id="boothTrack"></span>
+      <span class="booth__counter" id="boothCounter" aria-label="Songs played in this round">Song 0 / 15</span>
+      <div class="booth__timer" aria-hidden="true"><span class="booth__timer-fill" id="boothTimer"></span></div>
+      <button type="button" class="booth__skip" id="skipBtn" aria-label="Skip this song" title="Skip song">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polygon points="5 4 15 12 5 20 5 4" fill="currentColor"/>
+          <line x1="19" y1="5" x2="19" y2="19"/>
+        </svg>
+      </button>
+      <button type="button" class="booth__mute" id="muteBtn" aria-label="Mute audio" aria-pressed="false" title="Mute">
+        <svg class="icon-unmuted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M11 5 6 9H2v6h4l5 4V5z"/>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+        </svg>
+        <svg class="icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M11 5 6 9H2v6h4l5 4V5z"/>
+          <line x1="22" y1="9" x2="16" y2="15"/>
+          <line x1="16" y1="9" x2="22" y2="15"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Primary start affordance â€” visible whenever no round is in progress.
+         Click primes audio (counts as a user gesture) AND starts the game,
+         so it works on first load, after a win, after a new card, and after
+         switching eras. The scroll auto-start still works as a backup. -->
+    <button type="button" class="dj-start" id="djStartBtn" aria-label="Start the DJ">
+      <span class="dj-start__icon" aria-hidden="true">â–¶</span>
+      <span class="dj-start__label">Start the DJ</span>
+    </button>
+
+    <!-- Bingo card -->
+    <section class="bingo" id="bingo" aria-label="Bingo card">
+      <div class="bingo__head" aria-hidden="true">
+        <span>B</span><span>I</span><span>N</span><span>G</span><span>O</span>
+      </div>
+      <div class="bingo__grid" id="bingoGrid" role="grid"></div>
+    </section>
+
+    <button type="button" class="tap-prime" id="tapPrime">Tap to start the DJ</button>
+
+    <!-- Round-over panel: surfaces when player hits the 15-song cap without
+         bingo. Hidden by default; .is-shown adds visibility. The CTAs give
+         the player an obvious "try again" path AND convert losers into
+         ticket interest ("you almost had it Ã¢â‚¬â€ at the real night you get 8
+         rounds"). -->
+    <div class="roundover" id="roundover" hidden role="dialog" aria-modal="true" aria-labelledby="roundoverTitle">
+      <div class="roundover__card">
+        <button type="button" class="roundover__close" id="roundoverClose" aria-label="Close">&times;</button>
+        <p class="roundover__eyebrow">So close.</p>
+        <h2 class="roundover__h2" id="roundoverTitle">No bingo this round.</h2>
+        <p class="roundover__copy">
+          Three rounds. A full hip&#8209;hop &amp; R&amp;B set. A dance battle to close.
+          The real night gives you a lot more cards to mark, come catch one.
+        </p>
+        <div class="roundover__actions">
+          <a href="events.html" class="btn btn--primary btn--lg">
+            See upcoming nights
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <button type="button" class="btn btn--ghost btn--lg" id="tryAgainBtn">Try a fresh card</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="play__cta-row">
+      <button type="button" class="btn btn--ghost btn--lg" id="newCardBtn">New Card</button>
+      <a href="events.html" class="btn btn--primary btn--lg">
+        Buy Tickets
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+  </div>
+</main>
+
+<!-- Two hidden audio elements form a dual-deck DJ rig so the next song
+     can fade in while the current one fades out (no abrupt cut). Apple's
+     preview CDN doesn't return CORS headers, so we can't route through
+     Web Audio GainNodes Ã¢â‚¬â€ we animate the elements' .volume directly.
+     NOTE: do NOT set crossorigin="anonymous" Ã¢â‚¬â€ any CORS attempt makes
+     these silently fail. -->
+<audio id="audioEl"  preload="none" aria-hidden="true"></audio>
+<audio id="audioElB" preload="none" aria-hidden="true"></audio>
+
+<!-- ============ VOICE-WIN MODAL ============ -->
+<div class="winm" id="winm" role="dialog" aria-modal="true" aria-labelledby="winmTitle" hidden>
+  <div class="winm__scrim"></div>
+  <div class="winm__panel" role="document">
+    <p class="winm__eyebrow">B I N G O</p>
+    <h2 class="winm__h2" id="winmTitle">FIVE IN A ROW.</h2>
+    <p class="winm__call">&ldquo;Take Me Back!&rdquo;</p>
+    <p class="winm__copy">
+      Yell the brand call out loud to claim it, just like you would at the real night.
+    </p>
+    <div class="winm__mic" id="winmMic">
+      <span class="winm__mic-dot"></span>
+      <span id="winmMicText">Listening for &ldquo;Take Me Back&rdquo;&hellip;</span>
+    </div>
+    <div class="winm__actions">
+      <button type="button" class="btn btn--primary btn--lg" id="yelledItBtn">I YELLED IT</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ WIN CELEBRATION + SHARE CARD ============ -->
+<div class="celebration" id="celebration" hidden>
+  <div class="celebration__inner">
+    <p class="eyebrow"><span class="eyebrow__dot"></span> Confirmed</p>
+    <h1 class="celebration__h2">YOU <em>won</em>.</h1>
+    <p class="celebration__copy">
+      Drop your win card on your story, tag <strong>@takemebackbingo</strong> and we&rsquo;ll
+      reshare. Then come catch the real night.
+    </p>
+    <figure class="celebration__preview">
+      <img id="shareCardPreview" alt="Your Take Me Back Bingo win card" />
+    </figure>
+    <div class="celebration__actions">
+      <a href="events.html" class="btn btn--primary btn--lg">
+        See upcoming nights
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <button type="button" class="btn btn--ghost btn--lg" id="shareBtn">Share to Instagram</button>
+      <button type="button" class="btn btn--ghost btn--lg" id="downloadBtn">Download Card</button>
+      <button type="button" class="btn btn--ghost btn--lg" id="playAgainBtn">Play Again</button>
+    </div>
+    <p class="celebration__cta">
+      You just won the home version. Imagine the real night.
+    </p>
+
+    <!-- Tour demand capture inside the win modal — peak conversion moment. -->
+    <form class="tour-capture" data-tour-form data-tour-source="win-modal"
+          method="POST" action="https://formspree.io/f/mbdbggbv" novalidate>
+      <p class="tour-capture__h">Don&rsquo;t see your city on the events page?</p>
+      <p class="tour-capture__sub">Tell us where to throw the next one. We notify the list first when a date drops.</p>
+      <div class="tour-capture__row">
+        <label class="sr-only" for="tour-email-win">Email</label>
+        <input id="tour-email-win" name="email" type="email" required placeholder="you@email.com" autocomplete="email" />
+        <label class="sr-only" for="tour-city-win">City</label>
+        <input id="tour-city-win" name="city" type="text" required placeholder="City, State" autocomplete="address-level2" />
+        <input type="hidden" name="topic" value="tour-demand" />
+        <input type="hidden" name="source" value="win-modal" />
+        <input type="hidden" name="_subject" value="[Take Me Back Bingo] City demand (post-win)" />
+        <button type="submit" class="btn btn--primary">Send it
+          <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <p class="tour-capture__status" data-tour-status role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</div>
+
+<!-- ============ STICKY TOUR-DEMAND BAR ============
+     Appears after 30s of gameplay. Asks for email + city. Dismissible.
+     Doubles as email capture and tour-planning heatmap data source. -->
+<aside class="tour-bar" id="tourBar" role="region" aria-label="Tell us where to come next" hidden>
+  <button type="button" class="tour-bar__close" id="tourBarClose" aria-label="Dismiss">&times;</button>
+  <div class="tour-bar__inner">
+    <div class="tour-bar__copy">
+      <p class="tour-bar__eyebrow">Where should we throw the next one?</p>
+      <p class="tour-bar__sub">Drop your city. We&rsquo;ll let you know when a date hits.</p>
+    </div>
+    <form class="tour-bar__form" data-tour-form data-tour-source="sticky-bar"
+          method="POST" action="https://formspree.io/f/mbdbggbv" novalidate>
+      <label class="sr-only" for="tour-email-bar">Email</label>
+      <input id="tour-email-bar" name="email" type="email" required placeholder="you@email.com" autocomplete="email" />
+      <label class="sr-only" for="tour-city-bar">City</label>
+      <input id="tour-city-bar" name="city" type="text" required placeholder="City, State" autocomplete="address-level2" />
+      <input type="hidden" name="topic" value="tour-demand" />
+      <input type="hidden" name="source" value="sticky-bar" />
+      <input type="hidden" name="_subject" value="[Take Me Back Bingo] City demand (sticky bar)" />
+      <button type="submit" class="btn btn--primary">Notify me
+        <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <p class="tour-bar__status" data-tour-status role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</aside>
+
+<!-- ============ FOOTER (compact, mirrors site) ============ -->
+<footer class="footer" id="contact">
+  <div class="footer__bleed" aria-hidden="true"></div>
+  <div class="footer__inner">
+    <div class="footer__bottom" style="border-top:0; padding-top:var(--s-5);">
+      <div class="footer__bottom-row">
+        <p class="footer__copy">&copy; <span id="year">2026</span> High Class Experience. All rights reserved.</p>
+        <p class="footer__credit">
+          Designed by <a href="https://robertvanliew.com" target="_blank" rel="noopener">robertvanliew.com</a>
+        </p>
+        <p class="footer__legal">
+          <a href="index.html">Home</a>
+          <span class="footer__dot">·</span>
+          <a href="events.html">Events</a>
+          <span class="footer__dot">·</span>
+          <a href="gallery.html">Gallery</a>
+          <span class="footer__dot">·</span>
+          <a href="legal.html#privacy">Privacy</a>
+          <span class="footer__dot">·</span>
+          <a href="legal.html#terms">Terms</a>
+          <span class="footer__dot">·</span>
+          <a href="legal.html#accessibility">Accessibility</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ================================================================
+     SCRIPTS
+================================================================ -->
+<script>
+/* ============================================================
+   TAKE ME BACK BINGO Ã‚Â· PLAY-PAGE LOGIC
+
+   Edit-friendly sections, in order:
+     1. POOLS                  Ã¢â‚¬â€ themed artist sets (live + coming-soon)
+     2. CONFIG                 Ã¢â‚¬â€ clip length, voice phrase, etc.
+     3. Card generation        Ã¢â‚¬â€ random 5x5 selection
+     4. YouTube audio player   Ã¢â‚¬â€ hidden iframe, audio-only
+     5. Audio priming          Ã¢â‚¬â€ defeats mobile autoplay block
+     6. Scroll auto-start      Ã¢â‚¬â€ IntersectionObserver
+     7. Mark / win detection   Ã¢â‚¬â€ click Ã¢â€ â€™ daub Ã¢â€ â€™ 5-in-a-row
+     8. Voice-win              Ã¢â‚¬â€ Web Speech API ("take me back")
+     9. Share card             Ã¢â‚¬â€ 1080x1920 Canvas Ã¢â€ â€™ download/share
+============================================================ */
+
+/* ---------- 1. POOLS (themed artist sets) -------------------------------
+   This is the ONE place to edit the demo's content. Each pool has:
+     Ã¢â‚¬Â¢ label    Ã¢â‚¬â€ human-readable name shown in the era selector
+     Ã¢â‚¬Â¢ status   Ã¢â‚¬â€ "live" (playable) or "coming-soon" (selector shows
+                  the pill but routes the user to the newsletter)
+     Ã¢â‚¬Â¢ artists  Ã¢â‚¬â€ array of { name, tracks: [{ title, bpm? }, ...] }
+                  Each `tracks` entry needs a `title`. The iTunes Search
+                  API resolves `artist + title` Ã¢â€ â€™ 30s preview URL at
+                  runtime (no API key, no YouTube IDs to maintain).
+                  Optional `bpm` (integer) enables the DJ's tempo nudge
+                  during crossfade Ã¢â‚¬â€ when both the outgoing and incoming
+                  tracks have a bpm, the incoming deck's playbackRate is
+                  pulled toward the outgoing tempo (clamped to Ã‚Â±6%) so
+                  the blend feels beat-matched. Tracks without bpm just
+                  play at normal speed. Source bpms from songbpm.com,
+                  GetSongBPM, or by ear Ã¢â‚¬â€ populate gradually.
+
+   Adding a new artist:
+     { name: "Artist Name", tracks: [{ title: "Hit One", bpm: 102 }, { title: "Hit Two" }] }
+
+   Populating a coming-soon pool:
+     1. Fill in its `artists` array using the same shape
+     2. Change its `status` from "coming-soon" to "live"
+     3. That's it Ã¢â‚¬â€ the selector becomes playable, no other code change.
+
+   Curation rules of thumb:
+   Ã¢â‚¬Â¢ Pick 3-5 of the artist's MOST recognizable tracks. Recognition matters
+     more than completeness Ã¢â‚¬â€ players need to know the song from a 30s clip.
+   Ã¢â‚¬Â¢ Use the exact studio title (no "Remastered", no "(feat. X)" unless
+     it's part of the canonical title) Ã¢â‚¬â€ closer match = better iTunes hit.
+   Ã¢â‚¬Â¢ If iTunes returns no preview for a title (rare), the player auto-skips
+     to another track from the same artist; check console for "iTunes
+     lookup failed" warnings and swap that title for a better-known one.
+-------------------------------------------------------------------------- */
+const POOLS = {
+  // ===================== 80s R&B / Soul / Funk =====================
+  "80s-rnb": {
+    label: "80's R&B",
+    status: "live",
+    artists: [
+      { name: "The Gap Band", tracks: [
+        { title: "You Dropped a Bomb on Me" }, { title: "Outstanding" },
+        { title: "Early in the Morning" }, { title: "Burn Rubber on Me" }
+      ]},
+      { name: "Tina Turner", tracks: [
+        { title: "What's Love Got to Do with It" }, { title: "Private Dancer" },
+        { title: "The Best" }, { title: "Better Be Good to Me" }
+      ]},
+      { name: "Anita Baker", tracks: [
+        { title: "Sweet Love" }, { title: "Caught Up in the Rapture" },
+        { title: "Giving You the Best That I Got" }, { title: "No One in the World" }
+      ]},
+      { name: "Stephanie Mills", tracks: [
+        { title: "Never Knew Love Like This Before" }, { title: "Home" },
+        { title: "(You're Puttin') A Rush on Me" },
+        { title: "I Have Learned to Respect the Power of Love" }
+      ]},
+      { name: "Miki Howard", tracks: [
+        { title: "Come Share My Love" }, { title: "Love Under New Management" },
+        { title: "Ain't Nuthin' in the World" }, { title: "Baby, Be Mine" }
+      ]},
+      { name: "Michael Jackson", tracks: [
+        { title: "Billie Jean", bpm: 117 }, { title: "Thriller", bpm: 118 },
+        { title: "Beat It", bpm: 138 },
+        { title: "Don't Stop 'Til You Get Enough", bpm: 119 },
+        { title: "Rock with You", bpm: 113 }
+      ]},
+      { name: "Stevie Wonder", tracks: [
+        { title: "Superstition" }, { title: "I Just Called to Say I Love You" },
+        { title: "Part-Time Lover" }, { title: "Higher Ground" }
+      ]},
+      { name: "Rick James", tracks: [
+        { title: "Super Freak", bpm: 105 }, { title: "Give It to Me Baby" },
+        { title: "Mary Jane" }, { title: "Cold Blooded" }
+      ]},
+      { name: "Al Green", tracks: [
+        { title: "Let's Stay Together" }, { title: "Tired of Being Alone" },
+        { title: "Love and Happiness" }, { title: "I'm Still in Love with You" }
+      ]},
+      { name: "Shalamar", tracks: [
+        { title: "A Night to Remember" }, { title: "The Second Time Around" },
+        { title: "Dead Giveaway" }
+      ]},
+      { name: "The Jets", tracks: [
+        { title: "Crush on You" }, { title: "You Got It All" },
+        { title: "Curiosity" }, { title: "Make It Real" }
+      ]},
+      { name: "Stacy Lattisaw", tracks: [
+        { title: "Let Me Be Your Angel" }, { title: "Jump to the Beat" },
+        { title: "Miracles" }, { title: "Love on a Two-Way Street" }
+      ]},
+      { name: "Gladys Knight", tracks: [
+        { title: "Midnight Train to Georgia" }, { title: "Love Overboard" },
+        { title: "Save the Overtime (for Me)" },
+        { title: "That's What Friends Are For" }
+      ]},
+      { name: "Donna Summer", tracks: [
+        { title: "Hot Stuff" }, { title: "Bad Girls" },
+        { title: "She Works Hard for the Money" }, { title: "Last Dance" }
+      ]},
+      { name: "Teena Marie", tracks: [
+        { title: "Lovergirl" }, { title: "Square Biz" },
+        { title: "Ooo La La La" }, { title: "Behind the Groove" }
+      ]},
+      { name: "Phyllis Hyman", tracks: [
+        { title: "Living All Alone" }, { title: "You Know How to Love Me" },
+        { title: "Don't Wanna Change the World" }, { title: "Old Friend" }
+      ]},
+      { name: "Prince", tracks: [
+        { title: "When Doves Cry" }, { title: "Purple Rain" },
+        { title: "1999" }, { title: "Kiss" }, { title: "Little Red Corvette" }
+      ]},
+      { name: "Teddy Pendergrass", tracks: [
+        { title: "Close the Door" }, { title: "Turn Off the Lights" },
+        { title: "Love T.K.O." }, { title: "Joy" }
+      ]},
+      { name: "Bobby Brown", tracks: [
+        { title: "My Prerogative" }, { title: "Every Little Step" },
+        { title: "Don't Be Cruel" }, { title: "Rock Wit'cha" }
+      ]},
+      { name: "Earth, Wind & Fire", tracks: [
+        { title: "September", bpm: 126 }, { title: "Boogie Wonderland", bpm: 130 },
+        { title: "Let's Groove", bpm: 122 }, { title: "After the Love Has Gone" },
+        { title: "Shining Star" }
+      ]},
+      { name: "The O'Jays", tracks: [
+        { title: "Love Train" }, { title: "For the Love of Money" },
+        { title: "I Love Music" }, { title: "Use ta Be My Girl" }
+      ]},
+      { name: "LeVert", tracks: [
+        { title: "Casanova" }, { title: "(Pop, Pop, Pop, Pop) Goes My Mind" },
+        { title: "ABC-123" }
+      ]},
+      { name: "Patti LaBelle", tracks: [
+        { title: "Lady Marmalade" }, { title: "On My Own" },
+        { title: "New Attitude" }, { title: "If Only You Knew" }
+      ]},
+      { name: "Chaka Khan", tracks: [
+        { title: "I'm Every Woman" }, { title: "Ain't Nobody" },
+        { title: "I Feel for You" }, { title: "Through the Fire" }
+      ]},
+      { name: "Regina Belle", tracks: [
+        { title: "Baby Come to Me" }, { title: "A Whole New World" },
+        { title: "Make It Like It Was" }, { title: "Show Me the Way" }
+      ]},
+      { name: "Roberta Flack & Donny Hathaway", tracks: [
+        { title: "Where Is the Love" }, { title: "The Closer I Get to You" },
+        { title: "You Are My Heaven" }, { title: "Back Together Again" }
+      ]},
+      { name: "Cherrelle", tracks: [
+        { title: "Saturday Love" }, { title: "I Didn't Mean to Turn You On" },
+        { title: "You Look Good to Me" }
+      ]},
+      { name: "Luther Vandross", tracks: [
+        { title: "Never Too Much" }, { title: "So Amazing" },
+        { title: "Here and Now" }, { title: "A House Is Not a Home" },
+        { title: "Stop to Love" }
+      ]},
+      { name: "Billy Ocean", tracks: [
+        { title: "Caribbean Queen (No More Love on the Run)" },
+        { title: "Get Outta My Dreams, Get into My Car" },
+        { title: "When the Going Gets Tough, the Tough Get Going" },
+        { title: "Loverboy" }
+      ]},
+      { name: "Freddie Jackson", tracks: [
+        { title: "Rock Me Tonight (For Old Times Sake)" },
+        { title: "You Are My Lady" },
+        { title: "Have You Ever Loved Somebody" }, { title: "Jam Tonight" }
+      ]},
+      { name: "Cameo", tracks: [
+        { title: "Word Up!", bpm: 113 }, { title: "Candy" },
+        { title: "She's Strange" }, { title: "Single Life" }
+      ]},
+      { name: "DeBarge", tracks: [
+        { title: "Rhythm of the Night" }, { title: "Time Will Reveal" },
+        { title: "All This Love" }, { title: "Who's Holding Donna Now" }
+      ]},
+      { name: "Atlantic Starr", tracks: [
+        { title: "Always" }, { title: "Secret Lovers" },
+        { title: "Masterpiece" }, { title: "Touch a Four Leaf Clover" }
+      ]}
+    ]
+  },
+
+  // ===================== 80s Hip-Hop / Rap =====================
+  "80s-hiphop": {
+    label: "80's Hip-Hop",
+    status: "live",
+    artists: [
+      { name: "A Tribe Called Quest", tracks: [
+        { title: "Can I Kick It?" }, { title: "Bonita Applebum" },
+        { title: "Scenario" }, { title: "Award Tour" }
+      ]},
+      { name: "Public Enemy", tracks: [
+        { title: "Fight the Power" }, { title: "Don't Believe the Hype" },
+        { title: "Bring the Noise" }, { title: "911 Is a Joke" }
+      ]},
+      { name: "De La Soul", tracks: [
+        { title: "Me Myself and I" }, { title: "Eye Know" },
+        { title: "The Magic Number" }, { title: "Buddy" }
+      ]},
+      { name: "Geto Boys", tracks: [
+        { title: "Mind Playing Tricks on Me" },
+        { title: "Damn It Feels Good to Be a Gangsta" },
+        { title: "G Code" }
+      ]},
+      { name: "Kool Moe Dee", tracks: [
+        { title: "Wild Wild West" }, { title: "How Ya Like Me Now" },
+        { title: "Go See the Doctor" }
+      ]},
+      { name: "Slick Rick", tracks: [
+        { title: "Children's Story" }, { title: "Mona Lisa" },
+        { title: "Hey Young World" }, { title: "La Di Da Di" }
+      ]},
+      { name: "Roxanne ShantÃƒÂ©", tracks: [
+        { title: "Roxanne's Revenge" }, { title: "Have a Nice Day" },
+        { title: "Bite This" }
+      ]},
+      { name: "The D.O.C.", tracks: [
+        { title: "It's Funky Enough" }, { title: "The Formula" },
+        { title: "Mind Blowin'" }
+      ]},
+      { name: "Sparky D", tracks: [
+        { title: "Sparky's Turn (Roxanne You're Through)" },
+        { title: "He's My DJ" }, { title: "Throwdown" }
+      ]},
+      { name: "Afrika Bambaataa", tracks: [
+        { title: "Planet Rock" }, { title: "Looking for the Perfect Beat" },
+        { title: "Renegades of Funk" }
+      ]},
+      { name: "Cypress Hill", tracks: [
+        { title: "How I Could Just Kill a Man" }, { title: "Insane in the Brain" },
+        { title: "Hand on the Pump" }, { title: "Latin Lingo" }
+      ]},
+      { name: "Run-D.M.C.", tracks: [
+        { title: "Walk This Way" }, { title: "It's Tricky" },
+        { title: "My Adidas" }, { title: "King of Rock" }
+      ]},
+      { name: "Beastie Boys", tracks: [
+        { title: "Fight for Your Right" }, { title: "No Sleep Till Brooklyn" },
+        { title: "Brass Monkey" }, { title: "Hey Ladies" }
+      ]},
+      { name: "Kurtis Blow", tracks: [
+        { title: "The Breaks" }, { title: "Basketball" },
+        { title: "If I Ruled the World" }, { title: "Christmas Rappin'" }
+      ]},
+      { name: "Big Daddy Kane", tracks: [
+        { title: "Ain't No Half-Steppin'" }, { title: "Smooth Operator" },
+        { title: "Set It Off" }, { title: "Raw" }
+      ]},
+      { name: "Whodini", tracks: [
+        { title: "Friends" }, { title: "Freaks Come Out at Night" },
+        { title: "Five Minutes of Funk" }, { title: "One Love" }
+      ]},
+      { name: "Grandmaster Caz", tracks: [
+        { title: "Yvette" }, { title: "South Bronx Subway Rap" }
+      ]},
+      { name: "Just-Ice", tracks: [
+        { title: "Cold Gettin' Dumb" }, { title: "Going Way Back" },
+        { title: "Latoya" }
+      ]},
+      { name: "Sir Mix-a-Lot", tracks: [
+        { title: "Baby Got Back" }, { title: "Posse on Broadway" },
+        { title: "My Hooptie" }, { title: "Beepers" }
+      ]},
+      { name: "MC Shan", tracks: [
+        { title: "The Bridge" }, { title: "Down by Law" },
+        { title: "Beat Biter" }
+      ]},
+      { name: "N.W.A", tracks: [
+        { title: "Straight Outta Compton" }, { title: "Express Yourself" },
+        { title: "Gangsta Gangsta" }
+      ]},
+      { name: "Salt-N-Pepa", tracks: [
+        { title: "Push It" }, { title: "Shoop" },
+        { title: "Whatta Man" }, { title: "Let's Talk About Sex" },
+        { title: "Tramp" }
+      ]},
+      { name: "Sugarhill Gang", tracks: [
+        { title: "Rapper's Delight" }, { title: "Apache" },
+        { title: "8th Wonder" }
+      ]},
+      { name: "Eric B. & Rakim", tracks: [
+        { title: "Paid in Full" }, { title: "I Know You Got Soul" },
+        { title: "Move the Crowd" }, { title: "Microphone Fiend" },
+        { title: "I Ain't No Joke" }
+      ]},
+      { name: "Doug E. Fresh", tracks: [
+        { title: "The Show" }, { title: "La Di Da Di" },
+        { title: "All the Way to Heaven" }
+      ]},
+      { name: "Biz Markie", tracks: [
+        { title: "Just a Friend" }, { title: "Vapors" },
+        { title: "Make the Music with Your Mouth, Biz" }
+      ]},
+      { name: "MC Lyte", tracks: [
+        { title: "Cha Cha Cha" }, { title: "Lyte as a Rock" },
+        { title: "Paper Thin" }, { title: "Cappucino" }
+      ]},
+      { name: "Ice-T", tracks: [
+        { title: "6 'n the Mornin'" }, { title: "Colors" },
+        { title: "New Jack Hustler" }, { title: "O.G. Original Gangster" }
+      ]},
+      { name: "Rob Base", tracks: [
+        { title: "It Takes Two" }, { title: "Joy and Pain" },
+        { title: "Get on the Dance Floor" }
+      ]},
+      { name: "Schoolly D", tracks: [
+        { title: "P.S.K. What Does It Mean?" }, { title: "Saturday Night" },
+        { title: "Gucci Time" }
+      ]}
+    ]
+  },
+
+  // ===================== 90s R&B / Soul =====================
+  "90s-rnb": {
+    label: "90's R&B",
+    status: "live",
+    artists: [
+      { name: "Mariah Carey", tracks: [
+        { title: "Fantasy" }, { title: "Honey" }, { title: "Heartbreaker" },
+        { title: "Always Be My Baby" }, { title: "Vision of Love" }
+      ]},
+      { name: "Mary J. Blige", tracks: [
+        { title: "Real Love" }, { title: "Be Happy" },
+        { title: "Not Gon' Cry" }, { title: "I Can Love You" }
+      ]},
+      { name: "Toni Braxton", tracks: [
+        { title: "Un-Break My Heart" }, { title: "You're Makin' Me High" },
+        { title: "Another Sad Love Song" }, { title: "Breathe Again" }
+      ]},
+      { name: "Aaliyah", tracks: [
+        { title: "Try Again" }, { title: "Are You That Somebody?" },
+        { title: "If Your Girl Only Knew" }, { title: "One in a Million" }
+      ]},
+      { name: "Brandy", tracks: [
+        { title: "I Wanna Be Down" }, { title: "Sittin' Up in My Room" },
+        { title: "Have You Ever?" }, { title: "The Boy Is Mine" }
+      ]},
+      { name: "Usher", tracks: [
+        { title: "You Make Me Wanna..." }, { title: "Nice & Slow" },
+        { title: "My Way" }
+      ]},
+      { name: "Babyface", tracks: [
+        { title: "When Can I See You" }, { title: "Every Time I Close My Eyes" },
+        { title: "Whip Appeal" }
+      ]},
+      { name: "Johnny Gill", tracks: [
+        { title: "Rub You the Right Way" }, { title: "My, My, My" },
+        { title: "Wrap My Body Tight" }
+      ]},
+      { name: "Brian McKnight", tracks: [
+        { title: "Back at One" }, { title: "Anytime" },
+        { title: "Crazy Love" }, { title: "On the Down Low" }
+      ]},
+      { name: "Keith Sweat", tracks: [
+        { title: "Make It Last Forever" }, { title: "Twisted" },
+        { title: "Nobody" }, { title: "I'll Give All My Love to You" }
+      ]},
+      { name: "Lauryn Hill", tracks: [
+        { title: "Doo Wop (That Thing)" }, { title: "Ex-Factor" },
+        { title: "Everything Is Everything" }
+      ]},
+      { name: "Monica", tracks: [
+        { title: "Don't Take It Personal (Just One of Dem Days)" },
+        { title: "The First Night" }, { title: "For You I Will" }
+      ]},
+      { name: "Faith Evans", tracks: [
+        { title: "You Used to Love Me" }, { title: "Soon as I Get Home" },
+        { title: "Love Like This" }, { title: "I'll Be Missing You" }
+      ]},
+      { name: "Mya", tracks: [
+        { title: "It's All About Me" }, { title: "Movin' On" },
+        { title: "Case of the Ex (Whatcha Gonna Do)" }
+      ]},
+      { name: "Adina Howard", tracks: [
+        { title: "Freak Like Me" }, { title: "T-Shirt & Panties" }
+      ]},
+      { name: "Montell Jordan", tracks: [
+        { title: "This Is How We Do It" }, { title: "Get It On Tonite" },
+        { title: "I Like" }
+      ]},
+      { name: "Maxwell", tracks: [
+        { title: "Ascension (Don't Ever Wonder)" }, { title: "Fortunate" },
+        { title: "Sumthin' Sumthin'" }
+      ]},
+      { name: "D'Angelo", tracks: [
+        { title: "Brown Sugar" }, { title: "Untitled (How Does It Feel)" },
+        { title: "Lady" }
+      ]},
+      { name: "Ginuwine", tracks: [
+        { title: "Pony" }, { title: "Same Ol' G" },
+        { title: "So Anxious" }, { title: "Differences" }
+      ]},
+      { name: "Joe", tracks: [
+        { title: "All the Things (Your Man Won't Do)" },
+        { title: "Don't Wanna Be a Player" }, { title: "Stutter" }
+      ]},
+      { name: "Janet Jackson", tracks: [
+        { title: "That's the Way Love Goes" }, { title: "Together Again" },
+        { title: "Rhythm Nation" }, { title: "Escapade" }
+      ]},
+      { name: "Shanice", tracks: [
+        { title: "I Love Your Smile" }, { title: "Saving Forever for You" }
+      ]},
+      { name: "Tamia", tracks: [
+        { title: "So Into You" }, { title: "You Put a Move on My Heart" },
+        { title: "Stranger in My House" }
+      ]},
+      { name: "Deborah Cox", tracks: [
+        { title: "Nobody's Supposed to Be Here" }, { title: "Sentimental" },
+        { title: "We Can't Be Friends" }
+      ]},
+      { name: "New Edition", tracks: [
+        { title: "Candy Girl" }, { title: "Cool It Now" },
+        { title: "If It Isn't Love" }, { title: "Hit Me Off" }
+      ]},
+      { name: "Bell Biv DeVoe", tracks: [
+        { title: "Poison" }, { title: "Do Me!" }
+      ]},
+      { name: "Total", tracks: [
+        { title: "Can't You See" }, { title: "Trippin'" },
+        { title: "Kissin' You" }
+      ]},
+      { name: "Jodeci", tracks: [
+        { title: "Forever My Lady" }, { title: "Stay" },
+        { title: "Lately" }, { title: "Come and Talk to Me" }
+      ]},
+      { name: "702", tracks: [
+        { title: "Where My Girls At?" }, { title: "Get It Together" },
+        { title: "Steelo" }
+      ]},
+      { name: "Xscape", tracks: [
+        { title: "Just Kickin' It" }, { title: "Who Can I Run To" },
+        { title: "The Arms of the One Who Loves You" }
+      ]},
+      { name: "Mint Condition", tracks: [
+        { title: "Breakin' My Heart (Pretty Brown Eyes)" },
+        { title: "What Kind of Man Would I Be" },
+        { title: "U Send Me Swingin'" }
+      ]},
+      { name: "Brownstone", tracks: [
+        { title: "If You Love Me" }, { title: "Grapevyne" }
+      ]},
+      { name: "Hi-Five", tracks: [
+        { title: "I Like the Way (The Kissing Game)" }, { title: "Quality Time" },
+        { title: "She's Playing Hard to Get" }
+      ]},
+      { name: "ZhanÃƒÂ©", tracks: [
+        { title: "Hey Mr. D.J." }, { title: "Sending My Love" },
+        { title: "Groove Thang" }
+      ]},
+      { name: "Guy", tracks: [
+        { title: "Groove Me" }, { title: "Teddy's Jam" }, { title: "Let's Chill" }
+      ]},
+      { name: "Jade", tracks: [
+        { title: "Don't Walk Away" }, { title: "I Wanna Love You" }
+      ]},
+      { name: "Silk", tracks: [
+        { title: "Freak Me" }, { title: "Lose Control" }
+      ]},
+      { name: "TLC", tracks: [
+        { title: "No Scrubs" }, { title: "Waterfalls" },
+        { title: "Creep" }, { title: "Unpretty" }
+      ]},
+      { name: "En Vogue", tracks: [
+        { title: "Don't Let Go (Love)" }, { title: "Hold On" },
+        { title: "My Lovin' (You're Never Gonna Get It)" },
+        { title: "Free Your Mind" }
+      ]},
+      { name: "SWV", tracks: [
+        { title: "Weak" }, { title: "Right Here" },
+        { title: "I'm So into You" }, { title: "You're the One" }
+      ]},
+      { name: "112", tracks: [
+        { title: "Only You" }, { title: "Cupid" },
+        { title: "Peaches & Cream" }, { title: "Anywhere" }
+      ]},
+      { name: "Blackstreet", tracks: [
+        { title: "No Diggity" }, { title: "Don't Leave Me" },
+        { title: "Before I Let You Go" }
+      ]},
+      { name: "Dru Hill", tracks: [
+        { title: "In My Bed" }, { title: "How Deep Is Your Love" },
+        { title: "Tell Me" }, { title: "These Are the Times" }
+      ]},
+      { name: "Boyz II Men", tracks: [
+        { title: "End of the Road" }, { title: "I'll Make Love to You" },
+        { title: "Motownphilly" }, { title: "On Bended Knee" }
+      ]},
+      { name: "Destiny's Child", tracks: [
+        { title: "Say My Name", bpm: 138 }, { title: "Bills, Bills, Bills", bpm: 89 },
+        { title: "Bug a Boo" }, { title: "Jumpin', Jumpin'" }
+      ]},
+      { name: "Immature", tracks: [
+        { title: "Never Lie" }, { title: "Constantly" },
+        { title: "Watch Me Do My Thing" }
+      ]},
+      { name: "H-Town", tracks: [
+        { title: "Knockin' Da Boots" }, { title: "Lick U Up" },
+        { title: "Emotions" }
+      ]},
+      { name: "Lisa Stansfield", tracks: [
+        { title: "All Around the World" }, { title: "All Woman" }
+      ]},
+      { name: "Tevin Campbell", tracks: [
+        { title: "Can We Talk" }, { title: "Tell Me What You Want Me to Do" },
+        { title: "Always in My Heart" }
+      ]},
+      { name: "Changing Faces", tracks: [
+        { title: "Stroke You Up" }, { title: "G.H.E.T.T.O.U.T." }
+      ]},
+      { name: "Color Me Badd", tracks: [
+        { title: "I Wanna Sex You Up" }, { title: "All 4 Love" },
+        { title: "I Adore Mi Amor" }
+      ]},
+      { name: "Lucy Pearl", tracks: [
+        { title: "Dance Tonight" }, { title: "Don't Mess with My Man" }
+      ]}
+    ]
+  },
+
+  // ===================== 90s Hip-Hop / Rap =====================
+  "90s-hiphop": {
+    label: "90's Hip-Hop",
+    status: "live",
+    artists: [
+      { name: "Tupac Shakur", tracks: [
+        { title: "Dear Mama" }, { title: "California Love" },
+        { title: "Changes" }, { title: "Hit 'Em Up" }, { title: "Hail Mary" }
+      ]},
+      { name: "Dr. Dre", tracks: [
+        { title: "Nuthin' But a 'G' Thang" }, { title: "Still D.R.E." },
+        { title: "The Next Episode" }
+      ]},
+      { name: "Nas", tracks: [
+        { title: "If I Ruled the World (Imagine That)" }, { title: "Nas Is Like" },
+        { title: "Hate Me Now" }, { title: "The World Is Yours" }
+      ]},
+      { name: "Method Man & Mary J. Blige", tracks: [
+        { title: "I'll Be There for You/You're All I Need to Get By" }
+      ]},
+      { name: "DMX", tracks: [
+        { title: "Ruff Ryders' Anthem" }, { title: "Party Up (Up in Here)" },
+        { title: "X Gon' Give It to Ya" }, { title: "Get at Me Dog" }
+      ]},
+      { name: "Eminem", tracks: [
+        { title: "My Name Is" }, { title: "The Real Slim Shady", bpm: 104 },
+        { title: "Stan", bpm: 80 }, { title: "Without Me", bpm: 112 }
+      ]},
+      { name: "MC Hammer", tracks: [
+        { title: "U Can't Touch This" }, { title: "2 Legit 2 Quit" },
+        { title: "Pray" }, { title: "Have You Seen Her" }
+      ]},
+      { name: "Ice Cube", tracks: [
+        { title: "It Was a Good Day" }, { title: "You Know How We Do It" },
+        { title: "Check Yo Self" }
+      ]},
+      { name: "Craig Mack", tracks: [
+        { title: "Flava in Ya Ear" }, { title: "Get Down" }
+      ]},
+      { name: "Queen Latifah", tracks: [
+        { title: "U.N.I.T.Y." }, { title: "Ladies First" },
+        { title: "Just Another Day" }
+      ]},
+      { name: "Snoop Dogg", tracks: [
+        { title: "Gin and Juice" }, { title: "Who Am I (What's My Name?)" },
+        { title: "Murder Was the Case" }
+      ]},
+      { name: "Heavy D & The Boyz", tracks: [
+        { title: "Now That We Found Love" }, { title: "Is It Good to You" },
+        { title: "Nuttin' But Love" }
+      ]},
+      { name: "Jay-Z, Amil & Ja Rule", tracks: [
+        { title: "Can I Get A..." }
+      ]},
+      { name: "Monie Love", tracks: [
+        { title: "It's a Shame (My Sister)" }, { title: "Monie in the Middle" }
+      ]},
+      { name: "Lil' Kim", tracks: [
+        { title: "Crush on You" }, { title: "No Time" },
+        { title: "Lady Marmalade" }, { title: "How Many Licks" }
+      ]},
+      { name: "Redman", tracks: [
+        { title: "Da Rockwilder" }, { title: "Time 4 Sum Aksion" },
+        { title: "I'll Bee Dat!" }
+      ]},
+      { name: "The Notorious B.I.G.", tracks: [
+        { title: "Juicy" }, { title: "Hypnotize" },
+        { title: "Mo Money Mo Problems" }, { title: "Big Poppa" }
+      ]},
+      { name: "Missy Elliott", tracks: [
+        { title: "The Rain (Supa Dupa Fly)" }, { title: "She's a Bitch" },
+        { title: "Hot Boyz" }
+      ]},
+      { name: "LL Cool J", tracks: [
+        { title: "Mama Said Knock You Out" }, { title: "Doin' It" },
+        { title: "Hey Lover" }, { title: "Loungin'" }
+      ]},
+      { name: "Busta Rhymes & Flipmode Squad", tracks: [
+        { title: "Woo Hah!! Got You All in Check" },
+        { title: "Put Your Hands Where My Eyes Could See" },
+        { title: "Cha Cha Cha" }
+      ]},
+      { name: "Arrested Development", tracks: [
+        { title: "Tennessee" }, { title: "People Everyday" },
+        { title: "Mr. Wendal" }
+      ]},
+      { name: "Da Brat", tracks: [
+        { title: "Funkdafied" }, { title: "Give It 2 You" },
+        { title: "What'chu Like" }
+      ]},
+      { name: "Foxy Brown & Blackstreet", tracks: [
+        { title: "Get Me Home" }
+      ]},
+      { name: "Salt-N-Pepa", tracks: [
+        { title: "Whatta Man" }, { title: "Shoop" },
+        { title: "None of Your Business" }
+      ]},
+      { name: "OutKast", tracks: [
+        { title: "Player's Ball" }, { title: "Elevators (Me & You)" },
+        { title: "Rosa Parks" }, { title: "ATLiens" }
+      ]},
+      { name: "Bone Thugs-n-Harmony", tracks: [
+        { title: "Tha Crossroads" }, { title: "1st of tha Month" },
+        { title: "Look into My Eyes" }
+      ]},
+      { name: "Naughty by Nature", tracks: [
+        { title: "O.P.P." }, { title: "Hip Hop Hooray" },
+        { title: "Feel Me Flow" }
+      ]},
+      { name: "The Fugees", tracks: [
+        { title: "Killing Me Softly With His Song" }, { title: "Ready or Not" },
+        { title: "Fu-Gee-La" }
+      ]},
+      { name: "Wu-Tang Clan", tracks: [
+        { title: "C.R.E.A.M." }, { title: "Protect Ya Neck" },
+        { title: "Triumph" }, { title: "Method Man" }
+      ]},
+      { name: "Kid 'n Play", tracks: [
+        { title: "Rollin' with Kid 'n Play" }, { title: "Funhouse" },
+        { title: "Ain't Gonna Hurt Nobody" }
+      ]},
+      { name: "DJ Jazzy Jeff & The Fresh Prince", tracks: [
+        { title: "Summertime" }, { title: "Parents Just Don't Understand" },
+        { title: "Boom! Shake the Room" }
+      ]},
+      { name: "Junior M.A.F.I.A.", tracks: [
+        { title: "Get Money" }, { title: "Player's Anthem" }
+      ]},
+      { name: "2 Live Crew", tracks: [
+        { title: "Me So Horny" }, { title: "Banned in the U.S.A." }
+      ]}
+    ]
+  },
+
+  // ===================== 2000s R&B / Soul =====================
+  "2000s-rnb": {
+    label: "2000s R&B",
+    status: "live",
+    artists: [
+      { name: "Alicia Keys", tracks: [
+        { title: "Fallin'" }, { title: "No One" },
+        { title: "If I Ain't Got You" }, { title: "You Don't Know My Name" },
+        { title: "Karma" }
+      ]},
+      { name: "Destiny's Child", tracks: [
+        { title: "Survivor" }, { title: "Independent Women, Pt. 1" },
+        { title: "Bootylicious" }, { title: "Lose My Breath" },
+        { title: "Say My Name" }
+      ]},
+      { name: "Rihanna", tracks: [
+        { title: "Pon de Replay" }, { title: "SOS" },
+        { title: "Umbrella", bpm: 87 }, { title: "Disturbia", bpm: 125 }, { title: "Take a Bow" }
+      ]},
+      { name: "Mario", tracks: [
+        { title: "Let Me Love You" }, { title: "Just a Friend 2002" },
+        { title: "How Could You" }
+      ]},
+      { name: "Next", tracks: [
+        { title: "Wifey" }, { title: "Too Close" }, { title: "Beauty Queen" }
+      ]},
+      { name: "Profyle", tracks: [
+        { title: "Liar" }, { title: "Damn (Should've Treated U Right)" }
+      ]},
+      { name: "Keyshia Cole", tracks: [
+        { title: "Love" }, { title: "Let It Go" },
+        { title: "I Should Have Cheated" }, { title: "Heaven Sent" }
+      ]},
+      { name: "Ciara & Petey Pablo", tracks: [
+        { title: "Goodies" }
+      ]},
+      { name: "Trey Songz", tracks: [
+        { title: "Can't Help but Wait" }, { title: "Gotta Make It" },
+        { title: "Last Time" }
+      ]},
+      { name: "Chris Brown", tracks: [
+        { title: "Run It!" }, { title: "Yo (Excuse Me Miss)" },
+        { title: "Kiss Kiss" }, { title: "With You" }, { title: "Forever" }
+      ]},
+      { name: "Tank", tracks: [
+        { title: "Maybe I Deserve" }, { title: "Please Don't Go" },
+        { title: "I Deserve" }
+      ]},
+      { name: "Avant", tracks: [
+        { title: "Separated" }, { title: "Read Your Mind" },
+        { title: "My First Love" }, { title: "Don't Take Your Love Away" }
+      ]},
+      { name: "Tyrese", tracks: [
+        { title: "How You Gonna Act Like That" }, { title: "Sweet Lady" },
+        { title: "Signs of Love Makin'" }
+      ]},
+      { name: "Akon", tracks: [
+        { title: "Lonely" }, { title: "Don't Matter" },
+        { title: "Smack That" }, { title: "I Wanna Love You" }
+      ]},
+      { name: "India.Arie", tracks: [
+        { title: "Video" }, { title: "Brown Skin" },
+        { title: "I Am Not My Hair" }
+      ]},
+      { name: "Nelly & Kelly Rowland", tracks: [
+        { title: "Dilemma" }
+      ]},
+      { name: "Tweet", tracks: [
+        { title: "Oops (Oh My)" }, { title: "Call Me" }
+      ]},
+      { name: "Jagged Edge", tracks: [
+        { title: "Where the Party At" }, { title: "Let's Get Married" },
+        { title: "Promise" }, { title: "Walked Outta Heaven" }
+      ]},
+      { name: "Joe", tracks: [
+        { title: "Stutter" }, { title: "I Wanna Know" },
+        { title: "More & More" }
+      ]},
+      { name: "Ne-Yo", tracks: [
+        { title: "So Sick" }, { title: "Sexy Love" },
+        { title: "Because of You" }, { title: "Miss Independent" },
+        { title: "Closer" }
+      ]},
+      { name: "3LW", tracks: [
+        { title: "No More (Baby I'ma Do Right)" },
+        { title: "Playas Gon' Play" },
+        { title: "I Do (Wanna Get Close to You)" }
+      ]},
+      { name: "Sisqo", tracks: [
+        { title: "Thong Song" }, { title: "Incomplete" },
+        { title: "Got to Get It" }
+      ]},
+      { name: "Jaheim", tracks: [
+        { title: "Could It Be" }, { title: "Just in Case" },
+        { title: "Put That Woman First" }, { title: "Anything" }
+      ]},
+      { name: "Floetry", tracks: [
+        { title: "Say Yes" }, { title: "Floetic" }, { title: "Getting Late" }
+      ]},
+      { name: "Jennifer Lopez", tracks: [
+        { title: "If You Had My Love" }, { title: "Waiting for Tonight" },
+        { title: "I'm Real" }, { title: "Jenny from the Block" },
+        { title: "All I Have" }
+      ]},
+      { name: "Beyonce", tracks: [
+        { title: "Crazy in Love", bpm: 99 }, { title: "Baby Boy" },
+        { title: "Naughty Girl", bpm: 100 }, { title: "Irreplaceable" },
+        { title: "Single Ladies (Put a Ring on It)", bpm: 96 }
+      ]},
+      { name: "Musiq Soulchild", tracks: [
+        { title: "Just Friends (Sunny)" }, { title: "Halfcrazy" },
+        { title: "Love" }, { title: "B.U.D.D.Y." }, { title: "Teachme" }
+      ]},
+      { name: "Carl Thomas", tracks: [
+        { title: "I Wish" }, { title: "Emotional" }, { title: "Summer Rain" }
+      ]},
+      { name: "Lloyd", tracks: [
+        { title: "You" }, { title: "Get It Shawty" }, { title: "Southside" }
+      ]},
+      { name: "Robin Thicke & Pharrell", tracks: [
+        { title: "Wanna Love U Girl" }
+      ]},
+      { name: "Mariah Carey", tracks: [
+        { title: "We Belong Together" }, { title: "Don't Forget About Us" },
+        { title: "Touch My Body" }, { title: "Shake It Off" },
+        { title: "Obsessed" }
+      ]},
+      { name: "Ashanti", tracks: [
+        { title: "Foolish" }, { title: "Rock wit U (Awww Baby)" },
+        { title: "Happy" }, { title: "Only U" }
+      ]},
+      { name: "Justin Timberlake", tracks: [
+        { title: "Cry Me a River" }, { title: "Rock Your Body" },
+        { title: "SexyBack", bpm: 117 }, { title: "My Love", bpm: 120 },
+        { title: "What Goes Around...Comes Around" }
+      ]},
+      { name: "Donell Jones", tracks: [
+        { title: "U Know What's Up" }, { title: "Where I Wanna Be" }
+      ]},
+      { name: "B2K", tracks: [
+        { title: "Bump, Bump, Bump" }, { title: "Uh Huh" },
+        { title: "Girlfriend" }
+      ]},
+      { name: "Pretty Ricky", tracks: [
+        { title: "Grind With Me" }, { title: "On the Hotline" },
+        { title: "Your Body" }
+      ]},
+      { name: "Amerie", tracks: [
+        { title: "1 Thing" }, { title: "Why Don't We Fall in Love" },
+        { title: "Talkin' to Me" }
+      ]},
+      { name: "Nivea", tracks: [
+        { title: "Don't Mess with My Man" }, { title: "Laundromat" }
+      ]},
+      { name: "Cherish", tracks: [
+        { title: "Do It to It" }, { title: "Unappreciated" }
+      ]},
+      { name: "Toni Braxton", tracks: [
+        { title: "He Wasn't Man Enough" }, { title: "Hit the Freeway" }
+      ]},
+      { name: "Keri Hilson", tracks: [
+        { title: "Knock You Down" }, { title: "Energy" },
+        { title: "Turnin Me On" }
+      ]},
+      { name: "Lyfe Jennings", tracks: [
+        { title: "Must Be Nice" }, { title: "S.E.X." },
+        { title: "Hypothetically" }
+      ]},
+      { name: "Bobby Valentino", tracks: [
+        { title: "Slow Down" }, { title: "Tell Me" }, { title: "Anonymous" }
+      ]},
+      { name: "Mary J. Blige", tracks: [
+        { title: "Family Affair" }, { title: "Be Without You" },
+        { title: "No More Drama" }, { title: "Just Fine" }
+      ]},
+      { name: "Kevin Lyttle", tracks: [
+        { title: "Turn Me On" }
+      ]}
+    ]
+  },
+
+  // ===================== 2000s Hip-Hop / Rap =====================
+  "2000s-hiphop": {
+    label: "2000s Hip-Hop",
+    status: "live",
+    artists: [
+      { name: "Missy Elliott", tracks: [
+        { title: "Get Ur Freak On" }, { title: "Work It" },
+        { title: "Lose Control" }, { title: "Gossip Folks" }
+      ]},
+      { name: "Usher, Lil Jon & Ludacris", tracks: [
+        { title: "Yeah!", bpm: 105 }
+      ]},
+      { name: "OutKast & Sleepy Brown", tracks: [
+        { title: "The Way You Move" }, { title: "So Fresh, So Clean" }
+      ]},
+      { name: "Field Mob", tracks: [
+        { title: "So What" }, { title: "Sick of Being Lonely" }
+      ]},
+      { name: "Common", tracks: [
+        { title: "The Light" }, { title: "Go!" },
+        { title: "Testify" }, { title: "The Corner" }
+      ]},
+      { name: "50 Cent", tracks: [
+        { title: "In da Club", bpm: 91 }, { title: "21 Questions" },
+        { title: "P.I.M.P.", bpm: 78 }, { title: "Candy Shop", bpm: 70 },
+        { title: "Many Men (Wish Death)" }
+      ]},
+      { name: "Chingy", tracks: [
+        { title: "Right Thurr" }, { title: "One Call Away" },
+        { title: "Holidae In" }, { title: "Pullin' Me Back" }
+      ]},
+      { name: "Juvenile", tracks: [
+        { title: "Slow Motion" }, { title: "Back That Azz Up" },
+        { title: "Set It Off" }
+      ]},
+      { name: "T-Pain", tracks: [
+        { title: "I'm Sprung" }, { title: "Buy U a Drank (Shawty Snappin')" },
+        { title: "Bartender" }, { title: "Can't Believe It" }
+      ]},
+      { name: "Lil Jon", tracks: [
+        { title: "Get Low", bpm: 98 }, { title: "Snap Yo Fingers", bpm: 75 }
+      ]},
+      { name: "Kanye West", tracks: [
+        { title: "Through the Wire" }, { title: "Jesus Walks", bpm: 87 },
+        { title: "Gold Digger", bpm: 92 }, { title: "Stronger", bpm: 104 }, { title: "Heartless", bpm: 88 }
+      ]},
+      { name: "Ying Yang Twins", tracks: [
+        { title: "Salt Shaker" }, { title: "Wait (The Whisper Song)" },
+        { title: "Halftime (Stand Up & Get Crunk)" }
+      ]},
+      { name: "Nelly", tracks: [
+        { title: "Hot in Herre", bpm: 102 }, { title: "Country Grammar (Hot...)" },
+        { title: "Ride wit Me", bpm: 95 }, { title: "Air Force Ones" }
+      ]},
+      { name: "T.I.", tracks: [
+        { title: "What You Know" }, { title: "Bring Em Out" },
+        { title: "Whatever You Like" }, { title: "Live Your Life" }
+      ]},
+      { name: "Ludacris", tracks: [
+        { title: "Move Bitch" }, { title: "Stand Up" },
+        { title: "Money Maker" }, { title: "Splash Waterfalls" }
+      ]},
+      { name: "Mos Def", tracks: [
+        { title: "Ms. Fat Booty" }, { title: "Umi Says" }
+      ]},
+      { name: "Twista", tracks: [
+        { title: "Slow Jamz" }, { title: "Overnight Celebrity" },
+        { title: "Sunshine" }
+      ]},
+      { name: "Terror Squad", tracks: [
+        { title: "Lean Back" }, { title: "Take Me Home" }
+      ]},
+      { name: "Lloyd Banks", tracks: [
+        { title: "On Fire" }, { title: "Karma" }
+      ]},
+      { name: "Bow Wow", tracks: [
+        { title: "Bow Wow (That's My Name)" }, { title: "Like You" },
+        { title: "Let Me Hold You" }, { title: "Bounce with Me" }
+      ]},
+      { name: "The Diplomats", tracks: [
+        { title: "Dipset Anthem" }, { title: "I Really Mean It" }
+      ]},
+      { name: "Fabolous", tracks: [
+        { title: "Can't Let You Go" }, { title: "Into You" },
+        { title: "Make Me Better" }, { title: "Breathe" }
+      ]},
+      { name: "Eminem", tracks: [
+        { title: "Lose Yourself" }, { title: "Mockingbird" },
+        { title: "Like Toy Soldiers" }, { title: "When I'm Gone" }
+      ]},
+      { name: "Ja Rule", tracks: [
+        { title: "Always on Time" }, { title: "Livin' It Up" },
+        { title: "Put It on Me" }, { title: "Mesmerize" }
+      ]},
+      { name: "Lil Wayne", tracks: [
+        { title: "Lollipop", bpm: 78 }, { title: "A Milli", bpm: 80 },
+        { title: "Got Money" }, { title: "Go DJ" }
+      ]},
+      { name: "The Game", tracks: [
+        { title: "How We Do" }, { title: "Hate It or Love It" },
+        { title: "Dreams" }
+      ]},
+      { name: "Jadakiss", tracks: [
+        { title: "Why" }, { title: "U Make Me Wanna" },
+        { title: "Knock Yourself Out" }
+      ]},
+      { name: "Mike Jones", tracks: [
+        { title: "Back Then" }, { title: "Still Tippin'" },
+        { title: "Mr. Jones" }
+      ]},
+      { name: "Da Brat & Tyrese", tracks: [
+        { title: "In Love Wit Chu" }
+      ]}
+    ]
+  }
+};
+
+/* ---------- 2. CONFIG --------------------------------------------------- */
+const CONFIG = {
+  clipMs: 30000,                          // iTunes previews are ~30s Ã¢â‚¬â€ natural full length
+  cardSize: 5,                            // 5x5
+  freeCenter: true,                       // center square is "FREE"
+  voicePhrase: "take me back",            // lowercase substring match
+  voiceLang: "en-US",
+  voiceTimeoutMs: 20000,                  // auto-fall-back to button after 20s of silence
+  audioVolume: 0.8,
+  // --- Game challenge tuning ---
+  maxSongsPerRound: 15,                   // hard cap; show "round over" if no bingo by then
+  // (Removed in artist-based rewrite Ã¢â‚¬â€ DJ now always picks an artist from
+  //  the card; players win by recognizing the artist, not memorizing songs.)
+};
+
+/* ---------- 3. CARD GENERATION ------------------------------------------ */
+const $ = (sel, root=document) => root.querySelector(sel);
+const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+const yearEl = $('#year'); if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+// ----- Active pool + per-round state ---------------------------------
+let currentPoolKey = '80s-rnb';         // default to the first live pool
+let cardSongs = [];                     // 25 cells of { title, artist, free? }
+let marked = new Set();                 // indices daubed
+let playedSongs = [];                   // log of plays this game
+let currentCardIdx = -1;                // card index of currently playing track
+let gameStarted = false;
+let winningLine = null;                 // indices in the winning line
+
+function shuffled(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function activePool() { return POOLS[currentPoolKey]; }
+
+/* Flatten the active pool's nested {artist Ã¢â€ â€™ tracks} into a flat array
+   of cells: each cell is { title, artist }. The card picks 24 random
+   cells; the DJ plays them by querying iTunes for `artist + title`. */
+function flattenActivePool() {
+  const pool = activePool();
+  if (!pool || !pool.artists) return [];
+  const tracks = [];
+  pool.artists.forEach(artist => {
+    (artist.tracks || []).forEach(t => {
+      tracks.push({ title: t.title, artist: artist.name, bpm: t.bpm });
+    });
+  });
+  return tracks;
+}
+
+function generateCard() {
+  const tracks = flattenActivePool();
+  const total = CONFIG.cardSize * CONFIG.cardSize;
+  const needed = CONFIG.freeCenter ? total - 1 : total;
+  // Defensive: if the pool is shorter than needed (shouldn't happen with
+  // either current pool but kept for safety), pad with repeats.
+  let picks = shuffled(tracks).slice(0, needed);
+  while (picks.length < needed && tracks.length > 0) {
+    picks = picks.concat(shuffled(tracks).slice(0, needed - picks.length));
+  }
+  const cells = [];
+  let pi = 0;
+  for (let i = 0; i < total; i++) {
+    if (CONFIG.freeCenter && i === Math.floor(total / 2)) {
+      cells.push({ title: "FREE", artist: "", free: true });
+    } else {
+      cells.push(picks[pi++]);
+    }
+  }
+  return cells;
+}
+
+function renderCard() {
+  const grid = $('#bingoGrid');
+  grid.innerHTML = '';
+  cardSongs.forEach((song, i) => {
+    const sq = document.createElement('button');
+    sq.type = 'button';
+    sq.className = song.free ? 'sq sq--free' : 'sq';
+    sq.setAttribute('role', 'gridcell');
+    sq.setAttribute('data-index', String(i));
+    sq.setAttribute('aria-label', song.free ? 'Free space' : `${song.title} by ${song.artist}`);
+    const inner = document.createElement('span');
+    inner.textContent = song.title;
+    sq.appendChild(inner);
+    if (song.free) {
+      sq.classList.add('is-daubed');
+      marked.add(i);
+    }
+    sq.addEventListener('click', () => onSquareClick(i));
+    grid.appendChild(sq);
+  });
+}
+
+function newGame() {
+  marked = new Set();
+  playedSongs = [];
+  currentCardIdx = -1;
+  winningLine = null;
+  cardSongs = generateCard();
+  renderCard();
+  setBoothIdle('Fresh card. Hit Start the DJ to play.');
+  updateNewCardButton();
+  updateRoundCounter();
+  const ro = $('#roundover');
+  if (ro) ro.hidden = true;
+}
+
+/* ---------- 4. AUDIO PLAYER Ã‚Â· iTunes Preview backend -------------------
+   Apple hosts 30-second preview MP3s for almost every commercially-
+   released track. The iTunes Search API (no key required, CORS enabled)
+   resolves a "title artist" query into a previewUrl that plays in a
+   standard HTML5 <audio> element.
+
+   Why not YouTube: major labels disable embedding on official VEVO
+   uploads, which makes a YouTube-backed demo unreliable.
+   Why not Spotify: requires user OAuth and a Premium account.
+   Why iTunes Preview: free, stable URLs, near-complete catalog.
+---------------------------------------------------------------------- */
+/* Dual-deck setup: two <audio> elements act like a DJ's A/B decks. The
+   one currently playing the song is the "active" deck; the other is
+   "idle" and gets loaded with the next track ~CROSSFADE_MS before the
+   current clip ends. We animate .volume in an equal-power curve so the
+   perceived loudness stays flat through the swap (linear fades would
+   dip in the middle since power = amplitudeÃ‚Â²). */
+const CROSSFADE_MS = 3000;            // total fade window Ã¢â‚¬â€ short so each song stays dominant for ~27 of its 30s slot
+const CROSSFADE_INCOMING_DELAY_MS = 500;   // outgoing fades alone for this long before incoming joins Ã¢â‚¬â€ kept short so the 3s window has room for incoming to ramp up
+const CROSSFADE_TAIL_BUFFER_MS = 500; // legacy â€” kept for back-compat
+const OUTGOING_FADE_TAIL_MS    = 500; // legacy â€” kept for back-compat
+// Sequential transition timing (no overlap between songs).
+const OUTGOING_FADE_OUT_MS = 1500;  // outgoing fades from full â†’ silent over this window, ending at the clip's natural end
+const TRANSITION_GAP_MS    = 200;   // brief intentional silence between songs â€” makes transitions feel deliberate, not glitchy
+const INCOMING_FADE_IN_MS  = 1500;  // incoming fades from silent â†’ full after the gap
+const CROSSFADE_HEAD_SKIP_MS = 1500;  // skip past the incoming clip's intro so what fades in is the meat Ã¢â‚¬â€ smaller = less likely to land mid-phrase
+const BPM_MAX_NUDGE = 0.06;           // max tempo-shift on the incoming deck for BPM matching (Ã‚Â±6% before it sounds weird)
+const audioEl  = $('#audioEl');   // deck A Ã¢â‚¬â€ also kept as the prime target
+const audioElB = $('#audioElB');  // deck B
+const decks = [audioEl, audioElB];
+let activeIdx = 0;
+const activeDeck = () => decks[activeIdx];
+const idleDeck   = () => decks[1 - activeIdx];
+
+audioEl.volume  = CONFIG.audioVolume;
+audioElB.volume = 0;
+
+let clipTimer = null;             // fires CROSSFADE start (or hard skip if no next)
+let timerInterval = null;
+let skipLock = false;             // debounce cascading skips
+let fadeRAF = null;               // active requestAnimationFrame handle
+let crossfading = false;          // true while a fade is mid-flight
+let nextPrefetch = null;          // {song, cardIndex} the picker reserved for the upcoming swap
+
+decks.forEach(d => {
+  d.addEventListener('ended', e => { if (e.target === activeDeck() && !crossfading) skipToNext(); });
+  d.addEventListener('error', e => { if (e.target === activeDeck()) skipToNext('Audio failed Ã¢â‚¬â€ skipping.'); });
+});
+
+/* ---------- Web Audio: bass-swap filter + per-song loudness normalize ----
+   Two cheap DJ-grade upgrades wrapping the existing <audio> decks:
+
+   (1) BASS SWAP Ã¢â‚¬â€ during a crossfade, the outgoing deck's bass is highpass-
+       filtered out (20Hz Ã¢â€ â€™ 250Hz) while the incoming deck rises from the
+       same 250Hz cutoff back to 20Hz (passthrough). Stops two basslines
+       from clashing Ã¢â‚¬â€ the single trick that separates "playlist" from "mix".
+
+   (2) LOUDNESS NORMALIZATION Ã¢â‚¬â€ each song's RMS is sampled for ~1.2s during
+       its dominant phase via an AnalyserNode tap. The deck's `normGain` is
+       set so perceived loudness lands near a fixed target. Quiet songs come
+       up, hot-mastered songs settle down. No pre-analysis, no metadata.
+
+   Per-deck graph:
+     <audio>  Ã¢â€ â€™  MediaElementSource  Ã¢â€ â€™  analyserTap  Ã¢â€ â€™  highpass  Ã¢â€ â€™  normGain  Ã¢â€ â€™  destination
+
+   Element `.volume` is still the crossfade dial (cascades into the graph).
+-------------------------------------------------------------------------- */
+let audioCtx = null;
+const deckNodes = [];                  // [{ source, analyser, highpass, normGain, measureRAF }]
+const NORM_TARGET_RMS = 0.18;          // perceived-loudness aim (full-scale RMS)
+const HP_BASE_HZ = 20;                 // passthrough Ã¢â‚¬â€ no audible filtering
+const HP_DUCK_HZ = 250;                // bass-killed during crossfade
+
+function ensureAudioGraph() {
+  // DISABLED Ã¢â‚¬â€ the MediaElementSource routing was silencing playback in this
+  // environment. Helpers (resetDeckGraph, rampHighpass, startLoudnessMeasure)
+  // all no-op when deckNodes is empty, so the original direct-to-speakers
+  // <audio> playback path is fully restored.
+  return;
+}
+
+function resumeAudioCtx() {
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
+}
+
+/* Sample the deck's analyser for ~1.2s, compute RMS, set normGain so the
+   perceived loudness lands near NORM_TARGET_RMS. Must run while the deck
+   is at full element-volume (dominant phase) so we can divide out .volume. */
+function startLoudnessMeasure(deckIdx) {
+  const nodes = deckNodes[deckIdx];
+  if (!audioCtx || !nodes) return;
+  if (nodes.measureRAF) cancelAnimationFrame(nodes.measureRAF);
+  if (nodes.measureTO)  clearTimeout(nodes.measureTO);
+
+  const buf = new Float32Array(nodes.analyser.fftSize);
+  let sumSq = 0, count = 0;
+  const startedAt = performance.now();
+  const elVolSnap = Math.max(0.01, decks[deckIdx].volume || 1);
+  const targetSamples = Math.floor((audioCtx.sampleRate || 44100) * 1.2);
+
+  const tick = () => {
+    nodes.analyser.getFloatTimeDomainData(buf);
+    for (let i = 0; i < buf.length; i++) sumSq += buf[i] * buf[i];
+    count += buf.length;
+    if (count >= targetSamples || performance.now() - startedAt > 2200) {
+      const rms = Math.sqrt(sumSq / count) / elVolSnap;
+      if (rms < 0.001) {
+        console.log(`Ã°Å¸â€Å  deck ${deckIdx}: RMS unreadable (CORS tainted?) Ã¢â‚¬â€ normGain stays at 1`);
+      } else {
+        const g = Math.max(0.4, Math.min(2.5, NORM_TARGET_RMS / rms));
+        const t = audioCtx.currentTime;
+        nodes.normGain.gain.cancelScheduledValues(t);
+        nodes.normGain.gain.setValueAtTime(nodes.normGain.gain.value, t);
+        nodes.normGain.gain.linearRampToValueAtTime(g, t + 0.2);
+        console.log(`Ã°Å¸â€Å  deck ${deckIdx}: RMS=${rms.toFixed(3)} Ã¢â€ â€™ normGain=${g.toFixed(2)}`);
+      }
+      nodes.measureRAF = null;
+      return;
+    }
+    nodes.measureRAF = requestAnimationFrame(tick);
+  };
+  // Defer ~300ms so we sample the meat, not the very first transient.
+  nodes.measureTO = setTimeout(() => {
+    if (audioCtx) nodes.measureRAF = requestAnimationFrame(tick);
+  }, 300);
+}
+
+function resetDeckGraph(deckIdx) {
+  const nodes = deckNodes[deckIdx];
+  if (!audioCtx || !nodes) return;
+  if (nodes.measureRAF) { cancelAnimationFrame(nodes.measureRAF); nodes.measureRAF = null; }
+  if (nodes.measureTO)  { clearTimeout(nodes.measureTO); nodes.measureTO = null; }
+  const t = audioCtx.currentTime;
+  nodes.normGain.gain.cancelScheduledValues(t);
+  nodes.normGain.gain.setValueAtTime(1.0, t);
+  nodes.highpass.frequency.cancelScheduledValues(t);
+  nodes.highpass.frequency.setValueAtTime(HP_BASE_HZ, t);
+}
+
+/* Schedule a bass-swap ramp on one deck's highpass over `durationMs`. */
+function rampHighpass(deckIdx, fromHz, toHz, durationMs) {
+  const nodes = deckNodes[deckIdx];
+  if (!audioCtx || !nodes) return;
+  const t = audioCtx.currentTime;
+  const f = nodes.highpass.frequency;
+  f.cancelScheduledValues(t);
+  f.setValueAtTime(Math.max(20, fromHz), t);
+  f.exponentialRampToValueAtTime(Math.max(20, toHz), t + durationMs / 1000);
+}
+
+/* Mute toggle Ã¢â‚¬â€ flips .muted on both decks; preserves crossfade volume curve. */
+const muteBtn = $('#muteBtn');
+if (muteBtn) {
+  muteBtn.addEventListener('click', () => {
+    const nextMuted = !decks[0].muted;
+    decks.forEach(d => { d.muted = nextMuted; });
+    muteBtn.classList.toggle('is-muted', nextMuted);
+    muteBtn.setAttribute('aria-pressed', String(nextMuted));
+    muteBtn.setAttribute('aria-label', nextMuted ? 'Unmute audio' : 'Mute audio');
+    muteBtn.setAttribute('title', nextMuted ? 'Unmute' : 'Mute');
+  });
+}
+
+/* Skip button â€” manual escape hatch when iTunes returns a silent or
+   off-target preview. Marks the current song as "previewFailed" so we
+   don't try it again this round, then advances to the next track. */
+const skipBtn = $('#skipBtn');
+if (skipBtn) {
+  skipBtn.addEventListener('click', () => {
+    if (!gameStarted || currentCardIdx < 0) return;
+    const current = cardSongs[currentCardIdx];
+    if (current) current.previewFailed = true;   // exclude from future picks
+    skipToNext('Skipped â€” finding the next one.');
+  });
+}
+
+function cancelFade() {
+  if (fadeRAF) { cancelAnimationFrame(fadeRAF); fadeRAF = null; }
+  crossfading = false;
+}
+
+function stopAllAudio() {
+  cancelFade();
+  decks.forEach(d => { try { d.pause(); } catch (e) {} d.volume = CONFIG.audioVolume; });
+  audioElB.volume = 0;
+  decks.forEach((_, i) => resetDeckGraph(i));
+  nextPrefetch = null;
+}
+
+/* Resolve `artist + track title` Ã¢â€ â€™ iTunes preview URL. Cached on the
+   song object after first lookup so we don't re-search if it recurs. */
+/* iTunes Search returns multiple candidates â€” the top one is often a
+   karaoke / tribute / instrumental cover that has a silent or off-key
+   preview. We score every result on title + artist similarity and
+   penalize known impostor markers so the official studio version wins. */
+const ITUNES_BAD_MARKERS = /(karaoke|tribute|instrumental|made famous by|in the style of|originally performed|cover version|hits of|workout|kidz bop|mix)/i;
+function normaliseForCompare(s) {
+  return (s || '')
+    .toLowerCase()
+    .replace(/\(.*?\)|\[.*?\]/g, '')         // strip parenthetical "(feat. X)" / "(Remastered)"
+    .replace(/[^a-z0-9 ]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+function scoreITunesResult(r, song) {
+  const trackN = normaliseForCompare(r.trackName);
+  const artistN = normaliseForCompare(r.artistName);
+  const wantTitle = normaliseForCompare(song.title);
+  const wantArtist = normaliseForCompare(song.artist).replace(/^the /, '');
+  let score = 0;
+  if (trackN === wantTitle) score += 100;            // exact title match
+  else if (trackN.startsWith(wantTitle)) score += 60;
+  else if (trackN.includes(wantTitle)) score += 30;
+  if (artistN === wantArtist) score += 80;           // exact artist match
+  else if (artistN.includes(wantArtist)) score += 40;
+  if (ITUNES_BAD_MARKERS.test(r.trackName || '')) score -= 200;
+  if (ITUNES_BAD_MARKERS.test(r.artistName || '')) score -= 200;
+  if (ITUNES_BAD_MARKERS.test(r.collectionName || '')) score -= 100;
+  if (!r.previewUrl) score -= 1000;
+  return score;
+}
+
+async function fetchPreviewUrl(song) {
+  if (song.previewUrl) return song.previewUrl;
+  if (song.previewFailed) return null;
+  const q = encodeURIComponent(`${song.title} ${song.artist}`);
+  const url = `https://itunes.apple.com/search?term=${q}&media=music&entity=song&limit=10`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('iTunes status ' + res.status);
+    const data = await res.json();
+    if (!data.results || !data.results.length) throw new Error('No results');
+    // Pick the highest-scoring result, not just the first.
+    const ranked = data.results
+      .map(r => ({ r, score: scoreITunesResult(r, song) }))
+      .sort((a, b) => b.score - a.score);
+    const matched = ranked[0] && ranked[0].score > 0 ? ranked[0].r : null;
+    if (!matched || !matched.previewUrl) throw new Error('No previewUrl');
+    song.previewUrl = matched.previewUrl.replace(/^http:\/\//, 'https://');
+    console.log('ðŸŽµ iTunes match:', song.artist, 'Â·', song.title, 'â†’', matched.trackName, 'by', matched.artistName, '(score ' + ranked[0].score + ')');
+    return song.previewUrl;
+  } catch (err) {
+    console.warn('iTunes lookup failed:', song.artist, 'Â·', song.title, 'Â·', err.message);
+    song.previewFailed = true;
+    return null;
+  }
+}
+
+/* Pick a random unplayed track from the card. Centralised so the
+   crossfade scheduler and the hard-skip path share the same logic. */
+function pickNextCandidate() {
+  const playedIndices = new Set(playedSongs.map(p => p.cardIndex));
+  if (nextPrefetch) playedIndices.add(nextPrefetch.cardIndex);
+  const remaining = cardSongs
+    .map((song, i) => ({ song, cardIndex: i }))
+    .filter(({ song, cardIndex }) =>
+      !song.free &&
+      !playedIndices.has(cardIndex) &&
+      !song.previewFailed
+    );
+  if (!remaining.length) return null;
+  return remaining[Math.floor(Math.random() * remaining.length)];
+}
+
+async function playSongAt(cardIndex) {
+  const song = cardSongs[cardIndex];
+  if (!song || song.free) return false;
+  currentCardIdx = cardIndex;
+  highlightNowPlaying(cardIndex);
+
+  const url = await fetchPreviewUrl(song);
+  if (!url) {
+    return skipToNext('Preview unavailable Ã¢â‚¬â€ skipping.');
+  }
+
+  // Hard-start: cancel any in-flight fade, silence the idle deck, play
+  // on the active deck at full volume.
+  cancelFade();
+  try { idleDeck().pause(); } catch (e) {}
+  idleDeck().volume = 0;
+
+  setBoothPlaying(song);
+  const deck = activeDeck();
+  try {
+    deck.src = url;
+    deck.currentTime = 0;
+    deck.volume = CONFIG.audioVolume;
+    deck.playbackRate = 1;     // reset in case a prior crossfade nudged it
+    deck.preservesPitch = deck.mozPreservesPitch = deck.webkitPreservesPitch = true;
+    console.log('Ã¢â€“Â¶Ã¯Â¸Â Playing:', song.artist, 'Ã‚Â·', song.title);
+    const playPromise = deck.play();
+    if (playPromise && typeof playPromise.then === 'function') await playPromise;
+    hideDjStartBtn();          // confirmed playing â€” safe to hide the affordance
+  } catch (err) {
+    console.warn('Audio play blocked or failed:', err.name, err.message);
+    audioPrimed = false;
+    primePromise = null;       // allow a fresh prime attempt next gesture
+    gameStarted = false;       // re-open the start path
+    showDjStartBtn();          // primary recovery affordance (top of bingo)
+    showTapPrime();            // legacy fallback at the bottom
+    setBoothLabel('Hit Start the DJ to begin audio');
+    return false;
+  }
+
+  playedSongs.push({ ...song, cardIndex });
+  updateRoundCounter();
+  resumeAudioCtx();
+  resetDeckGraph(activeIdx);            // clear prior filter ramps + normGain
+  resetDeckGraph(1 - activeIdx);        // idle deck stays clean too
+  startLoudnessMeasure(activeIdx);      // sample RMS during dominant phase
+  scheduleCrossfade();
+  startTimerBar();
+  return true;
+}
+
+/* Arm the timer that kicks off the next song's crossfade. We start the
+   fade CROSSFADE_MS + CROSSFADE_TAIL_BUFFER_MS before the active deck's
+   true end, so the outgoing audio never runs out mid-fade (which is what
+   makes the previous track feel like it gets chopped off).
+
+   The deck's `duration` is only valid after metadata loads. If it's not
+   ready yet, we fall back to CONFIG.clipMs and rely on a `loadedmetadata`
+   listener to reschedule once we know the real length. */
+/* Beat-snap the crossfade start: if the outgoing song has a known BPM, shift
+   the crossfade start (within Ã‚Â±BEAT_SNAP_MAX_SLIP_MS) so it lands on a beat-1
+   or beat-4 of the song's bar grid. Songs without `bpm` are passed through
+   untouched. Assumes the iTunes preview starts on (or very near) beat 1; an
+   optional `beatOffset` (seconds) lets you anchor differently per song. */
+const BEAT_SNAP_MAX_SLIP_MS = 1200;
+function quantizeLeadToBeat(song, deckCurrentTimeSec, leadMs) {
+  if (!song || !song.bpm || !isFinite(song.bpm) || song.bpm <= 0) return leadMs;
+  const beatSec = 60 / song.bpm;
+  const barSec  = 4 * beatSec;
+  const offset  = song.beatOffset || 0;
+  const idealSec = deckCurrentTimeSec + leadMs / 1000;
+  const rel = idealSec - offset;                        // position within bar grid
+  const nearestBar = Math.round(rel / barSec) * barSec; // nearest beat-1
+  const candidates = [
+    nearestBar,                                         // beat-1
+    nearestBar - beatSec,                               // beat-4 just before
+    nearestBar + barSec,                                // next beat-1
+    nearestBar + barSec - beatSec,                      // beat-4 of next bar
+    nearestBar - barSec,                                // prev beat-1
+  ];
+  let best = rel, bestDist = Infinity;
+  for (const c of candidates) {
+    const d = Math.abs(c - rel);
+    if (d < bestDist && d * 1000 <= BEAT_SNAP_MAX_SLIP_MS) { bestDist = d; best = c; }
+  }
+  const adjustedLeadMs = (best + offset - deckCurrentTimeSec) * 1000;
+  if (adjustedLeadMs !== leadMs) {
+    console.log(`Ã°Å¸Å½Â¯ beat-snap: ${song.artist} @ ${song.bpm}bpm Ã¢â‚¬â€ lead ${Math.round(leadMs)}ms Ã¢â€ â€™ ${Math.round(adjustedLeadMs)}ms`);
+  }
+  return Math.max(0, adjustedLeadMs);
+}
+
+function scheduleCrossfade() {
+  clearTimeout(clipTimer);
+  nextPrefetch = null;
+
+  const deck = activeDeck();
+  const knownDurationMs = (deck.duration && isFinite(deck.duration))
+    ? deck.duration * 1000
+    : CONFIG.clipMs;
+  const clipMs = Math.min(CONFIG.clipMs, knownDurationMs);
+  // Subtract already-elapsed time so the timer fires at the right moment of
+  // THIS song, not as if it just started. Without this the second song
+  // onwards hard-cuts instead of crossfading.
+  const elapsedMs = (deck.currentTime || 0) * 1000;
+  // Sequential model: fire the transition OUTGOING_FADE_OUT_MS before the
+  // clip's natural end so the fade-out completes right as the audio ends.
+  const rawLead = Math.max(0, clipMs - elapsedMs - OUTGOING_FADE_OUT_MS);
+  const outSong = playedSongs[playedSongs.length - 1];
+  const lead = quantizeLeadToBeat(outSong, deck.currentTime || 0, rawLead);
+
+  // If duration wasn't known, reschedule once the browser loads it.
+  if (!deck.duration || !isFinite(deck.duration)) {
+    deck.addEventListener('loadedmetadata', () => {
+      if (!crossfading) scheduleCrossfade();
+    }, { once: true });
+  }
+
+  // Pre-resolve the next track's preview URL in the background.
+  const candidate = pickNextCandidate();
+  if (candidate) {
+    nextPrefetch = candidate;
+    fetchPreviewUrl(candidate.song).catch(() => {});
+  }
+
+  clipTimer = setTimeout(() => {
+    if (playedSongs.length >= CONFIG.maxSongsPerRound) {
+      endRoundNoBingo();
+      return;
+    }
+    startCrossfade();
+  }, lead);
+}
+
+async function startCrossfade() {
+  if (crossfading) return;
+  const next = nextPrefetch || pickNextCandidate();
+  nextPrefetch = null;
+  if (!next) {
+    setBoothIdle('Card exhausted. Generate a new card to keep playing.');
+    return;
+  }
+  const url = await fetchPreviewUrl(next.song);
+  if (!url) return skipToNext('Preview unavailable Ã¢â‚¬â€ skipping.');
+
+  const out = activeDeck();
+  const inn = idleDeck();
+  const outDeckIdx = activeIdx;
+  const inDeckIdx  = 1 - activeIdx;
+
+  // Pre-load incoming silently. We defer .play() to phase 2 so the listener
+  // hears the new song from its proper start, not from wherever it would
+  // have been mid-clip after the outgoing fade-out.
+  try { inn.pause(); } catch (e) {}
+  inn.src = url;
+  // Skip the intro so what fades in is recognisable, not silence/buildup.
+  // Defer setting currentTime until metadata loads Ã¢â‚¬â€ Safari rejects it
+  // otherwise. We start at 0 and seek as soon as we can.
+  inn.currentTime = 0;
+  inn.volume = 0;
+
+  // BPM-aware tempo nudge. If both tracks have a bpm, pull the incoming
+  // deck toward the outgoing tempo (clamped to Ã‚Â±BPM_MAX_NUDGE so the
+  // pitch shift stays imperceptible). preservesPitch keeps it from
+  // chipmunking. Tracks without bpm just play at normal speed.
+  const outSong = playedSongs[playedSongs.length - 1];
+  inn.playbackRate = 1;
+  inn.preservesPitch = inn.mozPreservesPitch = inn.webkitPreservesPitch = true;
+  if (outSong && outSong.bpm && next.song.bpm) {
+    const ratio = outSong.bpm / next.song.bpm;
+    const clamped = Math.max(1 - BPM_MAX_NUDGE, Math.min(1 + BPM_MAX_NUDGE, ratio));
+    inn.playbackRate = clamped;
+    console.log(`Ã°Å¸Â¥Â BPM nudge: ${next.song.bpm} Ã¢â€ â€™ ${(next.song.bpm * clamped).toFixed(1)} (target ${outSong.bpm})`);
+  }
+
+  console.log('ðŸŽš Sequential transition â†’', next.song.artist, 'Â·', next.song.title);
+  crossfading = true;
+
+  // Bass-swap during the fade-out: outgoing's lows roll off as its volume
+  // drops. No-op if Web Audio graph is disabled.
+  resetDeckGraph(inDeckIdx);
+  rampHighpass(outDeckIdx, HP_BASE_HZ, HP_DUCK_HZ, OUTGOING_FADE_OUT_MS);
+
+  const target = CONFIG.audioVolume;
+
+  /* PHASE 1 â€” outgoing fades from full to silence over OUTGOING_FADE_OUT_MS.
+     Lead time is set in scheduleCrossfade so this completes right as the
+     iTunes clip's audio naturally ends. */
+  const phase1Start = performance.now();
+  function phase1FadeOut(now) {
+    const elapsed = now - phase1Start;
+    const p = Math.min(1, elapsed / OUTGOING_FADE_OUT_MS);
+    out.volume = Math.cos(p * Math.PI / 2) * target;
+    if (p < 1) { fadeRAF = requestAnimationFrame(phase1FadeOut); return; }
+    try { out.pause(); } catch (e) {}
+    out.volume = target;
+    out.playbackRate = 1;
+    resetDeckGraph(outDeckIdx);
+    fadeRAF = null;
+    setTimeout(phase2Start, TRANSITION_GAP_MS);
+  }
+
+  /* PHASE 2 â€” incoming starts from the top of the iTunes clip and fades in
+     over INCOMING_FADE_IN_MS. Decks were unlocked at primeAudio time, so
+     calling .play() here doesn't need a fresh user gesture. */
+  function phase2Start() {
+    activeIdx = 1 - activeIdx;
+    currentCardIdx = next.cardIndex;
+    highlightNowPlaying(next.cardIndex);
+    setBoothPlaying(next.song);
+    playedSongs.push({ ...next.song, cardIndex: next.cardIndex });
+    updateRoundCounter();
+    startTimerBar();
+
+    inn.currentTime = 0;
+    inn.volume = 0;
+    const playP = inn.play();
+
+    const beginFadeIn = () => {
+      // Seek past the iTunes preview's intro so the fade-in lands on
+      // recognisable material.
+      const skip = CROSSFADE_HEAD_SKIP_MS / 1000;
+      if (!isNaN(inn.duration) && inn.duration > skip + 2) {
+        try { inn.currentTime = skip; } catch (e) {}
+      } else {
+        inn.addEventListener('loadedmetadata', () => {
+          if (inn.duration > skip + 2) { try { inn.currentTime = skip; } catch (e) {} }
+        }, { once: true });
+      }
+
+      const phase2StartT = performance.now();
+      function phase2FadeIn(now) {
+        const elapsed = now - phase2StartT;
+        const p = Math.min(1, elapsed / INCOMING_FADE_IN_MS);
+        inn.volume = Math.sin(p * Math.PI / 2) * target;
+        if (p < 1) { fadeRAF = requestAnimationFrame(phase2FadeIn); return; }
+        fadeRAF = null;
+        inn.volume = target;
+        crossfading = false;
+        startLoudnessMeasure(activeIdx);
+        scheduleCrossfade();
+      }
+      fadeRAF = requestAnimationFrame(phase2FadeIn);
+    };
+
+    if (playP && typeof playP.then === 'function') {
+      playP.then(beginFadeIn).catch(err => {
+        console.warn('Incoming play blocked at phase 2:', err.name);
+        crossfading = false;
+        skipToNext('Audio failed â€” skipping.');
+      });
+    } else {
+      beginFadeIn();
+    }
+  }
+
+  fadeRAF = requestAnimationFrame(phase1FadeOut);
+}
+
+function skipToNext(reason) {
+  if (skipLock) return;
+  skipLock = true;
+  setTimeout(() => { skipLock = false; }, 600);
+
+  if (reason) setBoothLabel(reason);
+  clearTimeout(clipTimer);
+  cancelFade();
+  try { idleDeck().pause(); } catch (e) {}
+  idleDeck().volume = 0;
+
+  if (playedSongs.length >= CONFIG.maxSongsPerRound) {
+    endRoundNoBingo();
+    return;
+  }
+
+  const next = pickNextCandidate();
+  if (!next) {
+    setBoothIdle('Card exhausted. Generate a new card to keep playing.');
+    return;
+  }
+  playSongAt(next.cardIndex);
+}
+
+function endRoundNoBingo() {
+  clearTimeout(clipTimer);
+  clearInterval(timerInterval);
+  stopAllAudio();
+  setBoothIdle(`Round over Ã‚Â· ${playedSongs.length} songs played, no bingo.`);
+  $$('#bingoGrid .sq').forEach(el => el.classList.add('is-roundover'));
+  $('#roundover').hidden = false;       // modal overlay â€” no scroll needed
+  gameStarted = false;
+  updateNewCardButton();
+  showDjStartBtn();
+}
+
+// "Try a fresh card" inside the round-over panel Ã¢â‚¬â€ same as New Card,
+// but with a more obvious affordance for losers.
+$('#tryAgainBtn').addEventListener('click', () => {
+  $('#roundover').hidden = true;
+  resetGame();
+  primeAudio().then(() => setTimeout(startGame, 100));
+});
+
+// Close (X) button and scrim click dismiss the modal without restarting.
+// Player can then click "Start the DJ" or switch eras at their own pace.
+$('#roundoverClose')?.addEventListener('click', () => {
+  $('#roundover').hidden = true;
+});
+$('#roundover')?.addEventListener('click', (e) => {
+  // Only close if the user clicked the scrim itself, not the card inside.
+  if (e.target.id === 'roundover') $('#roundover').hidden = true;
+});
+
+function startTimerBar() {
+  const bar = $('#boothTimer');
+  if (!bar) return;
+  bar.style.transition = 'none';
+  bar.style.width = '0%';
+  clearInterval(timerInterval);
+  const start = performance.now();
+  timerInterval = setInterval(() => {
+    const pct = Math.min(100, ((performance.now() - start) / CONFIG.clipMs) * 100);
+    bar.style.transition = 'width .25s linear';
+    bar.style.width = pct + '%';
+    if (pct >= 100) clearInterval(timerInterval);
+  }, 200);
+}
+
+/* Booth display: song TITLE large (Bungee, .booth__title) Ã¢â‚¬â€ what the
+   player needs to find on their card Ã¢â‚¬â€ with the ARTIST in italic small
+   underneath as supporting context. */
+function setBoothPlaying(song) {
+  $('#booth').classList.remove('is-idle');
+  $('#boothLabel').textContent = 'Now Playing';
+  $('#boothTitle').textContent = song.title;
+  $('#boothTrack').textContent = song.artist || '';
+}
+function setBoothIdle(msg) {
+  $('#booth').classList.add('is-idle');
+  $('#boothLabel').textContent = 'DJ Booth';
+  $('#boothTitle').textContent = msg || 'Hit Start the DJ to play.';
+  $('#boothTrack').textContent = '';
+  $('#boothTimer').style.width = '0%';
+}
+function setBoothLabel(msg) {
+  $('#boothLabel').textContent = msg;
+}
+
+function highlightNowPlaying(cardIndex) {
+  $$('#bingoGrid .sq').forEach((el, i) => el.classList.toggle('is-now', i === cardIndex));
+}
+
+/* Update the "Song N / 15" counter in the booth. Color escalates as the
+   round tightens Ã¢â‚¬â€ yellow at >60% used, red at >85% used. */
+function updateRoundCounter() {
+  const el = $('#boothCounter');
+  if (!el) return;
+  const n = playedSongs.length;
+  const cap = CONFIG.maxSongsPerRound;
+  el.textContent = `Song ${n} / ${cap}`;
+  el.classList.toggle('is-warning', n / cap > 0.6 && n / cap <= 0.85);
+  el.classList.toggle('is-critical', n / cap > 0.85);
+}
+
+/* ---------- 5. AUDIO PRIMING -------------------------------------------- */
+/* Mobile browsers (and recent desktop Safari) block media playback until a
+   user gesture occurs. We attach a one-time listener for scroll / touch /
+   click / keydown and trigger a silent play to unlock the audio context. */
+let audioPrimed = false;
+let primePromise = null;          // resolves when the silent-play prime completes
+function primeAudio() {
+  if (audioPrimed) return Promise.resolve();
+  if (primePromise) return primePromise;
+  // Unlock playback by calling play() ON THE REAL <audio> element during
+  // a user gesture. We swap to a silent WAV briefly so the play actually
+  // starts and the gesture is "consumed" â€” after this, programmatic
+  // play() calls in any context will work.
+  const silentSrc = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+  // Prime BOTH decks in the same gesture â€” otherwise the idle deck's
+  // first .play() during a crossfade gets blocked on mobile.
+  const primeOne = (el) => {
+    el.src = silentSrc;
+    el.volume = 0;
+    const p = el.play();
+    const finish = () => {
+      try { el.pause(); } catch (e) {}
+      el.removeAttribute('src');
+      el.load();
+    };
+    return (p && typeof p.then === 'function') ? p.then(finish) : (finish(), Promise.resolve());
+  };
+  try {
+    primePromise = Promise.all(decks.map(primeOne))
+      .then(() => {
+        audioEl.volume  = CONFIG.audioVolume;
+        audioElB.volume = 0;
+        audioPrimed = true;
+        ensureAudioGraph();
+        resumeAudioCtx();
+        console.log('ðŸ”“ Audio primed â€” both decks unlocked');
+      })
+      .catch((err) => {
+        console.warn('Audio prime failed (browser blocked play):', err.name);
+        audioEl.volume  = CONFIG.audioVolume;
+        audioElB.volume = 0;
+        primePromise = null;       // allow a retry on next gesture
+      });
+    return primePromise;
+  } catch (e) {
+    console.warn('Audio priming threw', e);
+    primePromise = null;
+    return Promise.resolve();
+  }
+}
+
+const primeEvents = ['scroll', 'touchstart', 'pointerdown', 'click', 'keydown'];
+function attachPrimers() {
+  const handler = () => {
+    primeAudio();
+    primeEvents.forEach(ev => window.removeEventListener(ev, handler, { passive: true }));
+  };
+  primeEvents.forEach(ev => window.addEventListener(ev, handler, { passive: true }));
+}
+
+function showTapPrime() {
+  const btn = $('#tapPrime');
+  btn.classList.add('is-shown');
+  btn.onclick = () => {
+    audioPrimed = false;
+    primeAudio();
+    btn.classList.remove('is-shown');
+    // After priming completes, re-trigger playback. If a game was already
+    // started (current song failed to play), retry the current song;
+    // otherwise begin from scratch.
+    setTimeout(() => {
+      if (gameStarted && currentCardIdx >= 0) {
+        playSongAt(currentCardIdx);
+      } else {
+        startGame();
+      }
+    }, 200);
+  };
+}
+
+/* ---------- 6. SCROLL AUTO-START ---------------------------------------- */
+/* When the bingo card enters the viewport, auto-start the first song. */
+function watchForCardInView() {
+  const target = $('#bingo');
+  if (!('IntersectionObserver' in window)) {
+    setTimeout(startGame, 600);
+    return;
+  }
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !gameStarted) {
+        startGame();
+        io.unobserve(target);
+      }
+    });
+  }, { threshold: 0.4 });
+  io.observe(target);
+}
+
+function startGame() {
+  if (gameStarted) return;
+  gameStarted = true;
+  // Clear any stale flags from a prior round that could swallow this start.
+  skipLock = false;
+  crossfading = false;
+  cancelFade();
+  updateNewCardButton();
+  // NOTE: do NOT hide the DJ button here. We hide it only after a song
+  // actually engages playback (in playSongAt's success path). If playback
+  // fails â€” autoplay block, skipLock race, network hiccup â€” the button
+  // stays visible so the player has a guaranteed retry path.
+  skipToNext(); // picks a random unplayed non-FREE song
+}
+
+/* "Start the DJ" â€” the always-visible primary affordance. Lives under the
+   booth and disappears once the first song plays. Click primes audio
+   (user-gesture-safe) and starts the game. */
+const djStartBtn = $('#djStartBtn');
+function showDjStartBtn() { if (djStartBtn) djStartBtn.hidden = false; }
+function hideDjStartBtn() { if (djStartBtn) djStartBtn.hidden = true; }
+if (djStartBtn) {
+  djStartBtn.addEventListener('click', () => {
+    // If the button is visible we're not actively playing â€” reset any stale
+    // gameStarted flag from a half-broken start attempt and try fresh.
+    gameStarted = false;
+    primeAudio().then(() => setTimeout(startGame, 100));
+  });
+}
+
+/* ---------- 7. MARK / WIN DETECTION ------------------------------------- */
+function onSquareClick(i) {
+  if (cardSongs[i].free) return;        // FREE square always marked
+  const sq = $('#bingoGrid').children[i];
+  // Only allow marking squares whose song the DJ has actually played this round.
+  // Daubs are FINAL, once a square is marked you can't un-mark it. This is
+  // anti-cheat: otherwise a player could un-daub a wrong guess after hearing
+  // later songs and reverse-engineer the right answers.
+  if (marked.has(i)) {
+    sq.classList.remove('shake-nope');
+    void sq.offsetWidth;
+    sq.classList.add('shake-nope');
+    setBoothLabel('Daubs are final, choose carefully!');
+    return;
+  }
+  const playedHere = playedSongs.some(p => p.cardIndex === i);
+  if (!playedHere) {
+    sq.classList.remove('shake-nope');
+    void sq.offsetWidth;              // restart CSS animation
+    sq.classList.add('shake-nope');
+    return;
+  }
+  marked.add(i);
+  sq.classList.toggle('is-daubed', marked.has(i));
+  updateNewCardButton();
+  if (marked.has(i)) checkWin();
+}
+
+function getWinningLine() {
+  const n = CONFIG.cardSize;
+  const lines = [];
+  // rows
+  for (let r = 0; r < n; r++) lines.push(Array.from({ length: n }, (_, c) => r * n + c));
+  // cols
+  for (let c = 0; c < n; c++) lines.push(Array.from({ length: n }, (_, r) => r * n + c));
+  // diagonals
+  lines.push(Array.from({ length: n }, (_, k) => k * n + k));
+  lines.push(Array.from({ length: n }, (_, k) => k * n + (n - 1 - k)));
+  for (const line of lines) {
+    if (line.every(idx => marked.has(idx))) return line;
+  }
+  return null;
+}
+
+function checkWin() {
+  const line = getWinningLine();
+  if (!line) return;
+  winningLine = line;
+  $$('#bingoGrid .sq').forEach((el, i) => el.classList.toggle('is-win', line.includes(i)));
+  openWinModal();
+}
+
+/* ---------- 8. VOICE WIN (Web Speech API) ------------------------------- */
+/* The brand call IS the win condition Ã¢â‚¬â€ players literally yell what the
+   brand is called. To recognize it without backend / API keys we use the
+   browser's native SpeechRecognition. Browser support varies (Chrome and
+   Edge are reliable; Safari historically spotty). On unsupported browsers
+   or mic-denied users we fall back to the "I YELLED IT" button. */
+let recognition = null;
+let recognitionTimeout = null;
+let winClaimed = false;
+
+function getSpeechRecognition() {
+  return window.SpeechRecognition || window.webkitSpeechRecognition;
+}
+
+function openWinModal() {
+  if (winClaimed) return;
+  // Pause the song while the player yells
+  stopAllAudio();
+  clearTimeout(clipTimer);
+  const modal = $('#winm');
+  modal.hidden = false;
+  requestAnimationFrame(() => modal.classList.add('is-open'));
+  startVoiceListening();
+}
+
+function closeWinModal() {
+  const modal = $('#winm');
+  modal.classList.remove('is-open');
+  stopVoiceListening();
+  setTimeout(() => { modal.hidden = true; }, 220);
+}
+
+function startVoiceListening() {
+  const SR = getSpeechRecognition();
+  const micEl = $('#winmMic');
+  const micText = $('#winmMicText');
+
+  if (!SR) {
+    micEl.classList.add('is-error');
+    micText.textContent = 'Voice mode not supported in this browser';
+    return;
+  }
+
+  try {
+    recognition = new SR();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = CONFIG.voiceLang;
+
+    recognition.onresult = (event) => {
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const t = event.results[i][0].transcript.toLowerCase();
+        micText.textContent = 'Ã¢â‚¬Å“' + t.trim() + 'Ã¢â‚¬Â';
+        if (t.includes(CONFIG.voicePhrase)) {
+          claimWin();
+          break;
+        }
+      }
+    };
+    recognition.onerror = (e) => {
+      micEl.classList.add('is-error');
+      if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+        micText.textContent = 'Mic blocked Ã¢â‚¬â€ tap I YELLED IT to claim it';
+      } else if (e.error === 'no-speech') {
+        micText.textContent = 'Still listening for Ã¢â‚¬Å“Take Me BackÃ¢â‚¬ÂÃ¢â‚¬Â¦';
+        micEl.classList.remove('is-error');
+      } else {
+        micText.textContent = 'Voice unavailable Ã¢â‚¬â€ tap the button to claim';
+      }
+    };
+    recognition.onend = () => {
+      // Restart unless we've already claimed
+      if (!winClaimed && !$('#winm').hidden) {
+        try { recognition.start(); } catch (e) {}
+      }
+    };
+    recognition.start();
+    recognitionTimeout = setTimeout(() => {
+      if (!winClaimed) {
+        micEl.classList.add('is-error');
+        micText.textContent = 'Still here Ã¢â‚¬â€ tap I YELLED IT when ready';
+      }
+    }, CONFIG.voiceTimeoutMs);
+  } catch (err) {
+    micEl.classList.add('is-error');
+    micText.textContent = 'Voice unavailable Ã¢â‚¬â€ tap the button to claim';
+  }
+}
+
+function stopVoiceListening() {
+  clearTimeout(recognitionTimeout);
+  if (recognition) {
+    try { recognition.onend = null; recognition.stop(); } catch (e) {}
+    recognition = null;
+  }
+}
+
+function claimWin() {
+  if (winClaimed) return;
+  winClaimed = true;
+  updateNewCardButton();
+  stopVoiceListening();
+  closeWinModal();
+  showCelebration();
+}
+
+$('#yelledItBtn').addEventListener('click', claimWin);
+
+/* ---------- 9. SHARE CARD (Canvas Ã¢â€ â€™ PNG Ã¢â€ â€™ download/share) --------------- */
+/* Generates a 1080x1920 portrait image optimized for Instagram Stories.
+   Pure Canvas Ã¢â‚¬â€ no external dependencies. To edit the design (colors,
+   layout, copy), modify the `drawShareCard` function below. */
+
+function drawShareCard() {
+  const W = 1080, H = 1920;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  // Brand tokens (mirror styles.css so design stays on-brand)
+  const BG          = '#141111';
+  const BG_ELEV     = '#1B1717';
+  const SURFACE     = '#EFE5D2';
+  const INK         = '#181212';
+  const PRIMARY     = '#7B2D8E';
+  const PRIMARY_700 = '#5E2270';
+  const TAPE_HOT    = '#FFD84D';
+  const ACCENT      = '#C9962B';
+  const TEXT        = '#F2EADB';
+  const TEXT_MUTED  = '#A89C8A';
+
+  // Background Ã¢â‚¬â€ radial gradient + grain feel via overlay rect
+  const bgGrad = ctx.createRadialGradient(W/2, H*0.18, 0, W/2, H*0.18, H*0.9);
+  bgGrad.addColorStop(0, '#3a1748');
+  bgGrad.addColorStop(0.45, '#1c0d24');
+  bgGrad.addColorStop(1, BG);
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Top eyebrow band
+  ctx.fillStyle = TAPE_HOT;
+  ctx.font = '500 28px "JetBrains Mono", ui-monospace, monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('Ã‚Â· TAKE ME BACK BINGO Ã‚Â·', W/2, 110);
+
+  // Headline
+  ctx.fillStyle = TEXT;
+  ctx.font = '900 120px "Bungee", system-ui, sans-serif';
+  ctx.textBaseline = 'top';
+  ctx.fillText('I YELLED', W/2, 150);
+
+  ctx.fillStyle = TAPE_HOT;
+  ctx.font = '400 130px "Permanent Marker", cursive';
+  ctx.fillText('"Take Me Back!"', W/2, 280);
+
+  // Stat line
+  ctx.fillStyle = TEXT_MUTED;
+  ctx.font = '500 36px "Sora", system-ui, sans-serif';
+  const statText = `Hit bingo in ${playedSongs.length} song${playedSongs.length === 1 ? '' : 's'}.`;
+  ctx.fillText(statText, W/2, 440);
+
+  // 5x5 card Ã¢â‚¬â€ paper background.
+  // cardH is computed from cellSize so the grid never overflows the card.
+  const cardX = 80, cardY = 540, cardW = W - 160;
+  const cardPadX = 40;
+  const cellSize = (cardW - cardPadX * 2) / 5;     // 168
+  const gridSize = cellSize * 5;                    // 840
+  const headerHeight = 100;                         // space for B I N G O row
+  const headerGap = 30;
+  const cardPadTop = 60;
+  const cardPadBottom = 60;
+  const cardH = cardPadTop + headerHeight + headerGap + gridSize + cardPadBottom;
+
+  ctx.fillStyle = SURFACE;
+  roundRect(ctx, cardX, cardY, cardW, cardH, 28);
+  ctx.fill();
+
+  // B I N G O header
+  ctx.fillStyle = PRIMARY;
+  ctx.font = '400 90px "Bungee", system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  const headers = ['B','I','N','G','O'];
+  const headerY = cardY + cardPadTop;
+  headers.forEach((h, i) => {
+    const cx = cardX + cardPadX + cellSize * (i + 0.5);
+    ctx.fillText(h, cx, headerY);
+  });
+
+  // Grid cells
+  const gridTop = headerY + headerHeight + headerGap;
+  const gap = 12;
+
+  for (let r = 0; r < 5; r++) {
+    for (let c = 0; c < 5; c++) {
+      const idx = r * 5 + c;
+      const x = cardX + cardPadX + c * cellSize + gap/2;
+      const y = gridTop + r * cellSize + gap/2;
+      const w = cellSize - gap;
+      const h = cellSize - gap;
+      const isWin = winningLine && winningLine.includes(idx);
+      const isMarked = marked.has(idx);
+      const song = cardSongs[idx];
+
+      // Cell background based on state
+      if (isWin || song.free) {
+        ctx.fillStyle = PRIMARY;
+      } else if (isMarked) {
+        const tintGrad = ctx.createLinearGradient(x, y, x, y + h);
+        tintGrad.addColorStop(0, '#FFE57A');
+        tintGrad.addColorStop(1, TAPE_HOT);
+        ctx.fillStyle = tintGrad;
+      } else {
+        ctx.fillStyle = 'rgba(24,18,18,0.06)';
+      }
+      roundRect(ctx, x, y, w, h, 12);
+      ctx.fill();
+
+      // Corner dauber stamp for marked (non-win, non-free) squares
+      if (isMarked && !song.free && !isWin) {
+        const sx = x + w - 22, sy = y + 22, sr = 11;
+        ctx.fillStyle = ACCENT;
+        ctx.beginPath();
+        ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,0.55)';
+        ctx.beginPath();
+        ctx.arc(sx - 3, sy - 3, 3.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Song title Ã¢â‚¬â€ Bungee (marquee feel), dark on yellow/cream,
+      // white on purple. Wraps to fit longer titles.
+      const labelText = song.free ? 'FREE' : song.title;
+      const textColor = (isWin || song.free) ? '#fff' : INK;
+      ctx.fillStyle = textColor;
+      ctx.font = song.free ? '900 36px "Bungee", system-ui' : '900 22px "Bungee", system-ui';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      wrapText(ctx, labelText, x + w/2, y + h/2, w - 16, 24);
+    }
+  }
+
+  // Bottom CTA strip Ã¢â‚¬â€ sits below the card with a fixed gap.
+  // cardH is now dynamic (sized to the grid), so ctaY follows it cleanly.
+  const ctaY = cardY + cardH + 50;
+  ctx.fillStyle = TEXT;
+  ctx.font = '900 50px "Bungee", system-ui';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText('CATCH THE REAL THING.', W/2, ctaY);
+
+  ctx.fillStyle = TAPE_HOT;
+  ctx.font = '500 34px "JetBrains Mono", ui-monospace, monospace';
+  ctx.fillText('takemebackbingo.com/events', W/2, ctaY + 78);
+
+  ctx.fillStyle = TEXT_MUTED;
+  ctx.font = '400 24px "Sora", system-ui, sans-serif';
+  ctx.fillText('@takemebackbingo  Ã‚Â·  Live Hip-Hop & R&B Bingo  Ã‚Â·  21+', W/2, ctaY + 140);
+
+  return canvas;
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y,     x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x,     y + h, r);
+  ctx.arcTo(x,     y + h, x,     y,     r);
+  ctx.arcTo(x,     y,     x + w, y,     r);
+  ctx.closePath();
+}
+
+function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+  const words = String(text).split(' ');
+  const lines = [];
+  let line = '';
+  for (const word of words) {
+    const test = line ? line + ' ' + word : word;
+    if (ctx.measureText(test).width > maxWidth && line) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = test;
+    }
+  }
+  if (line) lines.push(line);
+  const totalH = lines.length * lineHeight;
+  let cursorY = y - totalH / 2 + lineHeight / 2;
+  for (const ln of lines) {
+    ctx.fillText(ln, x, cursorY);
+    cursorY += lineHeight;
+  }
+}
+
+let lastShareBlob = null;
+function showCelebration() {
+  $('#celebration').hidden = false;
+  // Slight delay so the page settles before the heavy canvas paint
+  setTimeout(() => {
+    try {
+      const canvas = drawShareCard();
+      canvas.toBlob((blob) => {
+        if (!blob) { showCelebrationTextOnly(); return; }
+        lastShareBlob = blob;
+        const url = URL.createObjectURL(blob);
+        $('#shareCardPreview').src = url;
+      }, 'image/png', 0.92);
+    } catch (err) {
+      console.warn('Canvas share-card failed', err);
+      showCelebrationTextOnly();
+    }
+  }, 100);
+}
+
+function showCelebrationTextOnly() {
+  // Canvas failed (very rare). Hide the preview, keep the CTAs working
+  // with text-only share / no image.
+  $('#shareCardPreview').style.display = 'none';
+  $('#shareBtn').textContent = 'Share';
+  $('#downloadBtn').style.display = 'none';
+}
+
+$('#downloadBtn').addEventListener('click', () => {
+  if (!lastShareBlob) return;
+  const url = URL.createObjectURL(lastShareBlob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'take-me-back-bingo-win.png';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
+
+$('#shareBtn').addEventListener('click', async () => {
+  const shareData = {
+    title: 'I won Take Me Back Bingo',
+    text: 'Yelled "Take Me Back!" and won. Catch the real night Ã¢â€ â€™ takemebackbingo.com/events',
+    url:  'https://takemebackbingo.com/events',
+  };
+  // navigator.share with file (mobile)
+  if (lastShareBlob && navigator.canShare) {
+    try {
+      const file = new File([lastShareBlob], 'take-me-back-bingo-win.png', { type: 'image/png' });
+      if (navigator.canShare({ files: [file] })) {
+        await navigator.share({ ...shareData, files: [file] });
+        return;
+      }
+    } catch (err) {
+      if (err.name === 'AbortError') return;
+      console.warn('Share with file failed', err);
+    }
+  }
+  // Text-only share fallback
+  if (navigator.share) {
+    try { await navigator.share(shareData); return; }
+    catch (err) { if (err.name === 'AbortError') return; }
+  }
+  // Desktop fallback Ã¢â‚¬â€ just trigger download
+  $('#downloadBtn').click();
+});
+
+$('#playAgainBtn').addEventListener('click', () => {
+  $('#celebration').hidden = true;
+  resetGame();
+  // Auto-start next round since we know audio is already primed
+  setTimeout(startGame, 400);
+});
+
+/* ---------- ANTI-CHEAT Ã‚Â· disable "New Card" mid-round -------------------
+   Once the DJ has started playing (or the player has marked a square)
+   you can't bail out and re-roll for an easier card. The button only
+   becomes available again after a win is claimed, or before the first
+   song plays. */
+function isRoundInProgress() {
+  if (winClaimed) return false;
+  if (!gameStarted) return false;   // round hasn't started or has ended (e.g. 15-song cap hit)
+  if (playedSongs.length > 0) return true;
+  // Any non-free daub counts as "started playing"
+  for (const i of marked) if (cardSongs[i] && !cardSongs[i].free) return true;
+  return false;
+}
+
+function updateNewCardButton() {
+  const btn = $('#newCardBtn');
+  if (!btn) return;
+  const lock = isRoundInProgress();
+  btn.disabled = lock;
+  btn.setAttribute('aria-disabled', lock ? 'true' : 'false');
+  btn.title = lock ? 'Finish the round (or yell TAKE ME BACK) before re-rolling' : 'Generate a fresh card';
+  btn.classList.toggle('is-locked', lock);
+}
+
+$('#newCardBtn').addEventListener('click', () => {
+  if (isRoundInProgress()) {
+    // Visual nudge Ã¢â‚¬â€ quick shake on the locked button
+    const btn = $('#newCardBtn');
+    btn.classList.remove('shake'); void btn.offsetWidth; btn.classList.add('shake');
+    setBoothLabel('Finish the round first.');
+    return;
+  }
+  resetGame();
+  primeAudio().then(() => setTimeout(startGame, 100));
+});
+
+function resetGame() {
+  stopAllAudio();
+  clearTimeout(clipTimer);
+  clearInterval(timerInterval);
+  winClaimed = false;
+  gameStarted = false;
+  $$('#bingoGrid .sq').forEach(el => el.classList.remove('is-win', 'is-daubed', 'is-now', 'is-roundover'));
+  newGame();
+  updateNewCardButton();
+  showDjStartBtn();
+}
+
+/* ---------- ERA SELECTOR + COMING-SOON TOOLTIP -------------------------
+   Clicking a live pill switches the active pool and regenerates the card.
+   Clicking (or hovering) a coming-soon pill shows the tooltip pointing
+   the user at the newsletter signup so they get notified at launch. */
+(function initEraSelector() {
+  const pills = $$('.era-pill');
+  const tooltip = $('#eraTooltip');
+  let tooltipTimer = null;
+
+  function showTooltip(anchorEl) {
+    if (!tooltip) return;
+    tooltip.hidden = false;
+    // Position tooltip below the clicked/hovered pill
+    const rect = anchorEl.getBoundingClientRect();
+    const parentRect = anchorEl.parentElement.getBoundingClientRect();
+    const left = rect.left + rect.width / 2 - parentRect.left;
+    tooltip.style.left = left + 'px';
+    requestAnimationFrame(() => tooltip.classList.add('is-shown'));
+    clearTimeout(tooltipTimer);
+    tooltipTimer = setTimeout(hideTooltip, 4000);  // auto-dismiss after 4s
+  }
+  function hideTooltip() {
+    if (!tooltip) return;
+    tooltip.classList.remove('is-shown');
+    setTimeout(() => { tooltip.hidden = true; }, 200);
+  }
+
+  pills.forEach(pill => {
+    pill.addEventListener('click', e => {
+      const era = pill.getAttribute('data-era');
+      if (pill.hasAttribute('data-coming-soon')) {
+        e.preventDefault();
+        showTooltip(pill);
+        return;
+      }
+      if (era === currentPoolKey) return;  // already active
+      currentPoolKey = era;
+      pills.forEach(p => {
+        const isActive = p.getAttribute('data-era') === era;
+        p.classList.toggle('is-active', isActive);
+        p.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+      // Switching pool = fresh round. Chain on primeAudio so the start fires
+      // reliably whether or not the audio was already primed â€” the click
+      // itself counts as a user gesture, so a not-yet-primed audio gets
+      // unlocked here and the new pool's first song plays as soon as it's ready.
+      resetGame();
+      primeAudio().then(() => setTimeout(startGame, 100));
+    });
+    pill.addEventListener('mouseenter', () => {
+      if (pill.hasAttribute('data-coming-soon')) showTooltip(pill);
+    });
+    pill.addEventListener('mouseleave', () => {
+      // Slight delay so users can move into the tooltip to click the link
+      clearTimeout(tooltipTimer);
+      tooltipTimer = setTimeout(hideTooltip, 250);
+    });
+  });
+
+  // Keep tooltip open if user is hovering it
+  if (tooltip) {
+    tooltip.addEventListener('mouseenter', () => clearTimeout(tooltipTimer));
+    tooltip.addEventListener('mouseleave', hideTooltip);
+  }
+
+  // The "drop your email to be notified" link inside the tooltip goes to
+  // index.html#contact (the homepage newsletter form). Default browser
+  // navigation handles it Ã¢â‚¬â€ no JS hook needed.
+})();
+
+/* ---------- BOOT --------------------------------------------------------- */
+document.documentElement.classList.remove('no-js');
+document.documentElement.classList.add('js');
+
+/* Anti-theft: block right-click on imagery + asset drag-start.
+   Cosmetic friction only - devtools always wins - but it stops the casual
+   right-click-save-image-as crowd. */
+document.addEventListener('contextmenu', function (e) {
+  var t = e.target;
+  if (t && (t.tagName === 'IMG' || t.tagName === 'VIDEO' || t.tagName === 'CANVAS' || (t.closest && t.closest('.bingo, .booth, .sq, .winm, .celebration')))) {
+    e.preventDefault();
+  }
+});
+document.addEventListener('dragstart', function (e) {
+  if (e.target && (e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO')) e.preventDefault();
+});
+
+newGame();
+attachPrimers();
+watchForCardInView();
+
+/* ====================================================================
+   TOUR-DEMAND CAPTURE - sticky bar timer + Formspree submit
+   - Sticky bar slides up 30s after a song starts playing.
+   - Dismissal is remembered for the session (sessionStorage).
+   - On successful submit (either form), thank-you message + auto-hide.
+   ==================================================================== */
+(function () {
+  var tourBar = document.getElementById('tourBar');
+  var tourClose = document.getElementById('tourBarClose');
+  var DISMISS_KEY = 'tmbb_tour_dismissed';
+  var SUBMIT_KEY  = 'tmbb_tour_submitted';
+
+  function alreadyHandled() {
+    try {
+      return sessionStorage.getItem(DISMISS_KEY) === '1'
+          || sessionStorage.getItem(SUBMIT_KEY)  === '1';
+    } catch (e) { return false; }
+  }
+  function showTourBar() {
+    if (!tourBar || alreadyHandled()) return;
+    tourBar.hidden = false;
+    // double rAF so the transition fires after layout, not on initial display
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { tourBar.classList.add('is-shown'); });
+    });
+  }
+  function hideTourBar(persist) {
+    if (!tourBar) return;
+    tourBar.classList.remove('is-shown');
+    setTimeout(function () { tourBar.hidden = true; }, 500);
+    if (persist) {
+      try { sessionStorage.setItem(DISMISS_KEY, '1'); } catch (e) {}
+    }
+  }
+  if (tourClose) tourClose.addEventListener('click', function () { hideTourBar(true); });
+
+  /* 30-second delay AFTER the first real song actually starts playing.
+     We hook into playSongAt's success path indirectly by listening on the
+     deck's `playing` event. First fire only - then we arm a 30s timeout. */
+  var tourTimerArmed = false;
+  function armTourTimer() {
+    if (tourTimerArmed || alreadyHandled()) return;
+    tourTimerArmed = true;
+    setTimeout(showTourBar, 30000);
+  }
+  decks.forEach(function (d) {
+    d.addEventListener('playing', armTourTimer, { once: false });
+  });
+
+  /* When the win celebration opens, suppress the sticky bar so it doesn't
+     compete with the inline form inside the modal. Watch the `hidden`
+     attribute on #celebration since openWinModal is a lexical-scope fn. */
+  var celebEl = document.getElementById('celebration');
+  if (celebEl && 'MutationObserver' in window) {
+    var mo = new MutationObserver(function (mutations) {
+      mutations.forEach(function (m) {
+        if (m.attributeName === 'hidden' && !celebEl.hidden) {
+          try { sessionStorage.setItem(DISMISS_KEY, '1'); } catch (e) {}
+          hideTourBar(false);
+        }
+      });
+    });
+    mo.observe(celebEl, { attributes: true, attributeFilter: ['hidden'] });
+  }
+
+  /* Generic submit handler for ALL [data-tour-form] elements (sticky + win) */
+  document.querySelectorAll('[data-tour-form]').forEach(function (form) {
+    var statusEl = form.querySelector('[data-tour-status]');
+    var btn = form.querySelector('button[type="submit"]');
+    var btnDefault = btn ? btn.innerHTML : '';
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (statusEl) { statusEl.classList.remove('is-error'); statusEl.textContent = ''; }
+      if (btn) { btn.disabled = true; btn.textContent = 'Sending...'; }
+      var endpoint = form.getAttribute('action') || 'https://formspree.io/f/mbdbggbv';
+      var payload = {};
+      new FormData(form).forEach(function (v, k) { payload[k] = v; });
+      fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error('Formspree ' + res.status);
+          if (statusEl) statusEl.textContent = "Got it. We'll let you know.";
+          try { sessionStorage.setItem(SUBMIT_KEY, '1'); } catch (e) {}
+          form.reset();
+          // If this was the sticky bar, slide it away after a beat
+          if (form.getAttribute('data-tour-source') === 'sticky-bar') {
+            setTimeout(function () { hideTourBar(false); }, 1800);
+          }
+        })
+        .catch(function () {
+          if (statusEl) {
+            statusEl.classList.add('is-error');
+            statusEl.textContent = "That didn't send. Try again or email info@takemebackbingo.com.";
+          }
+        })
+        .then(function () {
+          if (btn) { btn.disabled = false; btn.innerHTML = btnDefault; }
+        });
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

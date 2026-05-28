@@ -1,0 +1,13 @@
+# Oversized source / intermediate video — exceed GitHub's 100MB limit.
+# The web-ready 2-min Video/hero.mp4 IS tracked; these raw versions are not.
+Video/new bingo high class.MP4
+Video/hero-reel.mp4
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.log
+
+# Dependencies / tooling
+node_modules/
+.vercel/
