@@ -1012,6 +1012,18 @@
     .sq { padding: 3px 2px; line-height: 1.05; }
     .sq > span { font-size: clamp(9px, 16cqi, 14px); }
   }
+
+  /* ── Interaction polish (design-eng pass): tactile press feedback +
+        no sticky hover on touch for the play controls. ── */
+  .dj-start:active { transform: scale(0.97); }
+  .era-pill:active { transform: scale(0.97); }
+  .booth__mute, .booth__skip {
+    transition: color .15s ease, border-color .15s ease, background .15s ease, transform .12s ease;
+  }
+  .booth__mute:active, .booth__skip:active { transform: scale(0.9); }
+  @media (hover: none) {
+    .dj-start:hover { transform: none; }
+  }
 </style>
 </head>
 <body>
@@ -2993,6 +3005,20 @@ function setBoothPlaying(song) {
   $('#boothLabel').textContent = 'Now Playing';
   $('#boothTitle').textContent = song.title;
   $('#boothTrack').textContent = song.artist || '';
+  // Each song change gets a small fade + slide-up so the now-playing swap reads
+  // as a beat, not a silent text replace. Staggered title→artist, strong
+  // ease-out, under 300ms, and skipped under reduced motion.
+  var rm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!rm) {
+    [$('#boothTitle'), $('#boothTrack')].forEach(function (el, i) {
+      if (el && el.animate) {
+        el.animate(
+          [{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'translateY(0)' }],
+          { duration: 260, delay: i * 40, easing: 'cubic-bezier(.16, 1, .3, 1)', fill: 'backwards' }
+        );
+      }
+    });
+  }
 }
 function setBoothIdle(msg) {
   $('#booth').classList.add('is-idle');
