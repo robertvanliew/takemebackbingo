@@ -581,6 +581,71 @@
   }
   .tour-capture__row .btn { white-space: nowrap; }
 
+  /* Winner discount capture — the prominent post-win CTA. Gold-accented
+     so it reads as the primary action on the celebration screen. */
+  .winner-capture {
+    margin: var(--s-5) auto 0;
+    max-width: 560px;
+    padding: var(--s-4);
+    background:
+      radial-gradient(120% 100% at 50% 0%, rgba(201,150,43,.14), transparent 70%),
+      rgba(255,255,255,.04);
+    border: 1px solid rgba(201,150,43,.45);
+    border-radius: 14px;
+    text-align: left;
+    box-shadow: 0 0 0 1px rgba(201,150,43,.10), 0 18px 36px -20px rgba(0,0,0,.6);
+  }
+  .winner-capture__h {
+    font-family: var(--font-display);
+    font-size: var(--fs-20);
+    color: var(--text);
+    margin: 0 0 4px;
+  }
+  .winner-capture__h strong { color: var(--tape-yellow); }
+  .winner-capture__sub {
+    font-family: var(--font-body);
+    font-size: var(--fs-14);
+    color: var(--text-muted);
+    margin: 0 0 var(--s-3);
+    line-height: 1.5;
+  }
+  .winner-capture__sub strong { color: var(--text); }
+  .winner-capture__row {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr auto;
+    gap: 8px;
+  }
+  .winner-capture__row input {
+    background: rgba(255,255,255,.05);
+    border: 1px solid var(--rule);
+    color: var(--text);
+    padding: 12px 13px;
+    border-radius: 9px;
+    font-family: var(--font-body);
+    font-size: var(--fs-16);
+    outline: none;
+    min-width: 0;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .winner-capture__row input:focus {
+    border-color: var(--tape-yellow);
+    background: rgba(255,255,255,.08);
+  }
+  .winner-capture__row .btn { white-space: nowrap; }
+  .winner-capture__status {
+    font-family: var(--font-mono);
+    font-size: var(--fs-12);
+    letter-spacing: .02em;
+    color: var(--tape-yellow);
+    margin: var(--s-3) 0 0;
+    min-height: 1.2em;
+  }
+  .winner-capture__status.is-error { color: #FF8A6E; }
+  .winner-capture.is-done .winner-capture__row { display: none; }
+  @media (max-width: 560px) {
+    .winner-capture__row { grid-template-columns: 1fr; }
+  }
+
   @media (max-width: 760px) {
     .tour-bar__inner { grid-template-columns: 1fr; padding: 14px 44px 14px 16px; }
     .tour-bar__form input[type="email"],
@@ -810,7 +875,7 @@
     font-size: var(--fs-11);
     letter-spacing: .22em;
     text-transform: uppercase;
-    color: var(--text-muted);
+    color: var(--primary);
     text-align: center;
     margin: 0 0 var(--s-3);
   }
@@ -1058,12 +1123,12 @@
       </h1>
       <p class="play__lede">
         Thirty seconds of throwback hip-hop and R&amp;B per round. Mark the song on your card.
-        Hit five in a row, yell <strong>&ldquo;TAKE ME BACK!&rdquo;</strong>, we&rsquo;ll be listening.
+        Hit five in a row, yell <strong style="color: var(--primary);">&ldquo;TAKE ME BACK!&rdquo;</strong>, we&rsquo;ll be listening.
       </p>
     </header>
 
     <!-- One-line explainer · sets expectations in 5 words -->
-    <p class="play__explainer">Hear the song &middot; Mark your card &middot; Yell &ldquo;Take Me Back!&rdquo;</p>
+    <p class="play__explainer">Hear the song &middot; Mark your card<br>Yell &ldquo;Take Me Back!&rdquo;</p>
 
     <!-- Era selector · 6 live pools (80s/90s/2000s × R&B/Hip-Hop) -->
     <div class="era-selector" role="tablist" aria-label="Bingo era">
@@ -1212,6 +1277,24 @@
       Drop your win card on your story, tag <strong>@takemebackbingo</strong> and we&rsquo;ll
       reshare. Then come catch the real night.
     </p>
+
+    <!-- WINNER DISCOUNT CAPTURE · feeds Brevo "Bingo Winners" list, which
+         triggers the 24h/47h THROWBACK10 follow-up automation. -->
+    <form class="winner-capture" id="winnerCaptureForm" novalidate>
+      <p class="winner-capture__h">You unlocked <strong>10% off</strong> a real ticket.</p>
+      <p class="winner-capture__sub">Drop your email and we&rsquo;ll send your code <strong>THROWBACK10</strong> &mdash; takes a ticket from $40 to $36.</p>
+      <div class="winner-capture__row">
+        <label class="sr-only" for="winner-firstname">First name</label>
+        <input id="winner-firstname" name="firstName" type="text" placeholder="First name" autocomplete="given-name" />
+        <label class="sr-only" for="winner-email">Email</label>
+        <input id="winner-email" name="email" type="email" required placeholder="you@email.com" autocomplete="email" inputmode="email" />
+        <button type="submit" class="btn btn--primary" id="winnerCaptureBtn">Send my code
+          <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <p class="winner-capture__status" id="winnerCaptureStatus" role="status" aria-live="polite"></p>
+    </form>
+
     <figure class="celebration__preview">
       <img id="shareCardPreview" alt="Your Take Me Back Bingo win card" />
     </figure>
@@ -3839,6 +3922,53 @@ watchForCardInView();
         });
     });
   });
+
+  /* Winner discount capture — posts to our /api/winner serverless function,
+     which adds the contact to the Brevo "Bingo Winners" list and kicks off
+     the THROWBACK10 follow-up automation. */
+  (function () {
+    var form = document.getElementById('winnerCaptureForm');
+    if (!form) return;
+    var statusEl = document.getElementById('winnerCaptureStatus');
+    var btn = document.getElementById('winnerCaptureBtn');
+    var btnDefault = btn ? btn.innerHTML : '';
+    var emailEl = document.getElementById('winner-email');
+    var firstEl = document.getElementById('winner-firstname');
+    function setStatus(msg, isError) {
+      if (!statusEl) return;
+      statusEl.textContent = msg;
+      statusEl.classList.toggle('is-error', !!isError);
+    }
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var email = (emailEl.value || '').trim();
+      var firstName = (firstEl.value || '').trim();
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+        setStatus('Enter a valid email so we can send your code.', true);
+        emailEl.focus();
+        return;
+      }
+      if (btn) { btn.disabled = true; btn.textContent = 'Sending...'; }
+      setStatus('', false);
+      fetch('/api/winner', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ email: email, firstName: firstName })
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error('winner api ' + res.status);
+          return res.json().catch(function () { return {}; });
+        })
+        .then(function () {
+          form.classList.add('is-done');
+          setStatus('Check your inbox — your THROWBACK10 code is on the way.', false);
+        })
+        .catch(function () {
+          if (btn) { btn.disabled = false; btn.innerHTML = btnDefault; }
+          setStatus("Couldn't save that. Try again, or email info@takemebackbingo.com.", true);
+        });
+    });
+  })();
 })();
 </script>
 
