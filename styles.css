@@ -643,7 +643,7 @@ ul, ol { list-style: none; padding: 0; margin: 0; }
 .bingocard {
   margin: 0 0 var(--s-6);
   max-width: 580px;
-  perspective: 1800px;
+  perspective: 1200px;
 }
 .bingocard__flipper {
   position: relative;
@@ -656,7 +656,7 @@ ul, ol { list-style: none; padding: 0; margin: 0; }
   border: 0;
   cursor: pointer;
   transform-style: preserve-3d;
-  transition: transform 900ms cubic-bezier(.65,.05,.36,1);
+  transition: transform 500ms cubic-bezier(.77, 0, .175, 1);
   text-align: left;
   font: inherit;
   color: inherit;
@@ -677,11 +677,17 @@ ul, ol { list-style: none; padding: 0; margin: 0; }
   /* iOS Safari intermittently ignores backface-visibility on 3D flips, which
      lets the bingo grid bleed through the photo. Belt-and-suspenders: hard-hide
      the inactive face with opacity, swapped instantly at the flip midpoint
-     (~half of the 900ms rotate) so neither face ever shows through the other. */
-  transition: opacity 0s linear 450ms;
+     (~half of the 500ms rotate, when the card is edge-on) so neither face ever
+     shows through the other. */
+  transition: opacity 0s linear 250ms;
 }
 .bingocard:not([data-flipped="true"]) .bingocard__face--back { opacity: 0; }
 .bingocard[data-flipped="true"] .bingocard__face--front { opacity: 0; }
+/* Reduced motion: no spin — turn instantly and cross-fade the faces. */
+@media (prefers-reduced-motion: reduce) {
+  .bingocard__flipper { transition: none; }
+  .bingocard__face { transition: opacity 220ms ease; }
+}
 .bingocard__face--front { display: flex; }
 .bingocard__face--front .bingocard__paper {
   width: 100%;
