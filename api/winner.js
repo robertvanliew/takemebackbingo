@@ -66,6 +66,12 @@ module.exports = async (req, res) => {
       return;
     }
     const detail = await r.text().catch(() => '');
+    // Surface Brevo's error in Vercel logs so we can diagnose without DevTools.
+    console.error('brevo create contact failed', {
+      status: r.status,
+      listId: listId,
+      detail: detail.slice(0, 500),
+    });
     res.status(502).json({ error: 'brevo ' + r.status, detail: detail.slice(0, 200) });
   } catch (e) {
     res.status(502).json({ error: 'fetch failed' });
