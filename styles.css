@@ -3845,7 +3845,37 @@ html.js ul.meta-strip[data-reveal].is-in > li {
 }
 
 /* =========================================================
-   28. TAG US · gallery UGC ask (light surface)
+   28. ABOUT · brand origin (light surface)
+   ========================================================= */
+.about {
+  background: var(--surface-light);
+  color: var(--ink);
+  padding: var(--s-9) var(--s-6);
+  position: relative;
+}
+.about__inner { max-width: 1180px; margin: 0 auto; }
+.about__copy { max-width: 64ch; }
+.about__lede {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: var(--fs-20);
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin: var(--s-4) 0 var(--s-4);
+  text-wrap: pretty;
+}
+.about__tag {
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin: 0;
+  line-height: 1.5;
+  max-width: 52ch;
+}
+
+/* =========================================================
+   29. TAG US · gallery UGC ask (light surface)
    ========================================================= */
 .taggram {
   background: var(--surface-light);
