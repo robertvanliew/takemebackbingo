@@ -59,6 +59,12 @@
   },
   "publisher": {
     "@id": "https://takemebackbingo.com/#organization"
+  },
+  "author": {
+    "@id": "https://robertvanliew.com/#person"
+  },
+  "creator": {
+    "@id": "https://robertvanliew.com/#person"
   }
 }
 </script>
@@ -915,6 +921,25 @@
     color: var(--tape-yellow);
     border-bottom: 1px solid rgba(239,197,58,.4);
   }
+  .celebration__credit {
+    margin: var(--s-6) auto 0;
+    font-family: var(--font-mono);
+    font-size: var(--fs-11);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    opacity: .7;
+  }
+  .celebration__credit a {
+    color: var(--tape-yellow);
+    text-decoration: none;
+    border-bottom: 1px dotted rgba(239,197,58,.4);
+    transition: color .15s ease, border-bottom-color .15s ease;
+  }
+  .celebration__credit a:hover {
+    color: var(--tape-yellow-hot);
+    border-bottom-color: var(--tape-yellow-hot);
+  }
 
   /* --- One-line explainer · all caps mono, sits above era selector --- */
   .play__explainer {
@@ -1377,6 +1402,12 @@
       </div>
       <p class="tour-capture__status" data-tour-status role="status" aria-live="polite"></p>
     </form>
+
+    <!-- Tiny sign-off credit · visible only to actual winners, sits below
+         everything else on the celebration screen. -->
+    <p class="celebration__credit">
+      Designed &amp; built by <a href="https://robertvanliew.com/" target="_blank" rel="author noopener">Robert Van Liew</a>
+    </p>
   </div>
 </div>
 
