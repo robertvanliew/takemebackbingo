@@ -14,9 +14,15 @@
 //
 // Required env vars in Vercel:
 //   RESEND_API_KEY        Resend API key (secret) — needs contacts:write + emails:send
-//   RESEND_AUDIENCE_ID    The Resend Audience ID created in the dashboard
 //
 // Optional env vars:
+//   RESEND_AUDIENCE_ID    The Resend Audience ID. If omitted, the function
+//                         fetches GET /audiences on the first invocation and
+//                         uses the first one (Resend's dashboard hides the
+//                         audience ID, so this is the path of least friction
+//                         for single-audience accounts — and it's cached in
+//                         module scope so subsequent warm invocations skip
+//                         the lookup).
 //   NEWSLETTER_FROM       e.g. "Take Me Back Bingo <hello@takemebackbingo.com>"
 //                         Must be on a domain you've verified in Resend.
 //                         Defaults to "Take Me Back Bingo <onboarding@resend.dev>"
@@ -37,6 +43,24 @@ function readBody(req) {
     req.on('end', () => { try { resolve(JSON.parse(data || '{}')); } catch (e) { resolve({}); } });
     req.on('error', () => resolve({}));
   });
+}
+
+// Cached across warm invocations of the same serverless container, so we only
+// hit GET /audiences once per cold start when RESEND_AUDIENCE_ID isn't set.
+let cachedAudienceId = null;
+
+async function resolveAudienceId(apiKey) {
+  if (process.env.RESEND_AUDIENCE_ID) return process.env.RESEND_AUDIENCE_ID;
+  if (cachedAudienceId) return cachedAudienceId;
+  const r = await fetch('https://api.resend.com/audiences', {
+    headers: { Authorization: 'Bearer ' + apiKey },
+  });
+  if (!r.ok) throw new Error('audience lookup failed: ' + r.status);
+  const json = await r.json().catch(() => ({}));
+  const list = (json && json.data) || [];
+  if (!list.length) throw new Error('no audiences found on this Resend account');
+  cachedAudienceId = list[0].id;
+  return cachedAudienceId;
 }
 
 const WELCOME_SUBJECT = "You're on the list — dates drop soon.";
@@ -92,10 +116,18 @@ module.exports = async (req, res) => {
   }
 
   const apiKey = process.env.RESEND_API_KEY;
-  const audienceId = process.env.RESEND_AUDIENCE_ID;
-  if (!apiKey || !audienceId) {
-    console.error('subscribe: missing RESEND_API_KEY or RESEND_AUDIENCE_ID');
+  if (!apiKey) {
+    console.error('subscribe: missing RESEND_API_KEY');
     res.status(500).json({ error: 'server not configured' });
+    return;
+  }
+
+  let audienceId;
+  try {
+    audienceId = await resolveAudienceId(apiKey);
+  } catch (e) {
+    console.error('subscribe: ' + (e && e.message));
+    res.status(500).json({ error: 'audience unavailable' });
     return;
   }
 
