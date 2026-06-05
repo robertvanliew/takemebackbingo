@@ -2725,24 +2725,54 @@ h3.faq__q,
 .modal__status.is-shown { opacity: 1; }
 .modal__status.is-error { color: #FF8A6E; }
 
-/* Footer newsletter status â€” sits below the pill, doesn't inflate it */
+/* Footer newsletter status — visually hidden, kept in the DOM so the
+   aria-live="polite" announcement still reaches screen readers when the
+   subscribe call completes. Sighted users see the .toast instead. */
 .footer__newsletter-status {
   position: absolute;
-  left: 0;
-  top: calc(100% + 6px);
-  margin: 0;
-  max-width: 360px;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Toast — floats in from below, auto-dismisses after a few seconds.
+   Used by the newsletter handler so the success/error message doesn't
+   need to share vertical space with anything in the footer column. */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%) translateY(16px);
+  z-index: 1000;
+  max-width: min(90vw, 420px);
+  padding: 14px 22px;
+  background: var(--bg-elev);
+  color: var(--text);
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  box-shadow: 0 12px 36px rgba(0,0,0,.45);
   font-family: var(--font-mono);
-  font-size: var(--fs-11);
-  letter-spacing: .04em;
-  color: var(--text-muted);
-  min-height: 1em;
+  font-size: var(--fs-12);
+  letter-spacing: .06em;
+  text-align: center;
+  line-height: 1.45;
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--dur-base) var(--ease-out);
+  transition: opacity .35s var(--ease-out), transform .35s var(--ease-out);
 }
-.footer__newsletter-status.is-shown { opacity: 1; }
-.footer__newsletter-status.is-error { color: #FF8A6E; }
+.toast.is-shown {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.toast--error {
+  border-color: #FF8A6E;
+  color: #FFD3C7;
+}
 
 /* =========================================================
    FOOTER Â· hero band + columns + bottom bar
@@ -2874,9 +2904,6 @@ h3.faq__q,
   border-radius: var(--r-pill);
   padding: 6px 6px 6px 18px;
   max-width: 360px;
-  /* Reserve room for the absolutely-positioned status text below so a
-     two-line success/error message doesn't overlap the contact links. */
-  margin-bottom: 44px;
   transition: border-color var(--dur-fast) var(--ease-out);
   margin-bottom: var(--s-4);
 }

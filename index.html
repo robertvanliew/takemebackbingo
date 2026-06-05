@@ -1577,11 +1577,36 @@
       var newsletterBtn = newsletterForm.querySelector('button[type="submit"]');
       var newsletterBtnDefault = newsletterBtn ? newsletterBtn.innerHTML : '';
 
+      // Floating toast: created on first use, reused thereafter. The inline
+      // [data-newsletter-status] node is kept as an sr-only aria-live target
+      // so the announcement still reaches screen readers.
+      var newsletterToast = null;
+      var newsletterToastTimer = null;
+      function showNewsletterToast(msg, isError) {
+        if (!msg) return;
+        if (!newsletterToast) {
+          newsletterToast = document.createElement('div');
+          newsletterToast.className = 'toast';
+          newsletterToast.setAttribute('role', 'status');
+          document.body.appendChild(newsletterToast);
+        }
+        newsletterToast.textContent = msg;
+        newsletterToast.classList.toggle('toast--error', !!isError);
+        // Force reflow so the transition fires on re-show
+        void newsletterToast.offsetWidth;
+        newsletterToast.classList.add('is-shown');
+        if (newsletterToastTimer) clearTimeout(newsletterToastTimer);
+        newsletterToastTimer = setTimeout(function () {
+          if (newsletterToast) newsletterToast.classList.remove('is-shown');
+        }, 4500);
+      }
       function setNewsletterStatus(msg, isError) {
-        if (!newsletterStatus) return;
-        newsletterStatus.textContent = msg;
-        newsletterStatus.classList.toggle('is-error', !!isError);
-        newsletterStatus.classList.add('is-shown');
+        if (newsletterStatus) {
+          newsletterStatus.textContent = msg;
+          newsletterStatus.classList.toggle('is-error', !!isError);
+          newsletterStatus.classList.add('is-shown');
+        }
+        if (msg) showNewsletterToast(msg, isError);
       }
 
       newsletterForm.addEventListener('submit', function (e) {
