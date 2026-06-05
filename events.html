@@ -427,6 +427,9 @@
           <a href="https://www.instagram.com/takemebackbingo" target="_blank" rel="noopener" aria-label="Instagram">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
           </a>
+          <a href="https://www.tiktok.com/@take.me.back.bing" target="_blank" rel="noopener" aria-label="TikTok">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 8.5a8.05 8.05 0 0 1-5-2v8.5a6.5 6.5 0 1 1-6.5-6.5h.5v3.5a3 3 0 1 0 3 3V3h3.5a4.5 4.5 0 0 0 4.5 4.5z"/></svg>
+          </a>
           <a href="https://www.facebook.com/share/14YvCAxPKQL/" target="_blank" rel="noopener" aria-label="Facebook">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
           </a>
@@ -603,7 +606,7 @@
         var normalized = topic.replace(/—/g, '-').toLowerCase();
         var isBooking = normalized.indexOf('private booking') === 0;
         inquiryModal.querySelectorAll('[data-booking-only]').forEach(function (el) {
-          el.hidden = !isBooking;
+          el.style.display = isBooking ? '' : 'none';
         });
       }
 
@@ -627,7 +630,6 @@
             opt.text = topic; opt.value = topic; opt.selected = true;
             inquirySelectEl.appendChild(opt);
           }
-          if (inquiryTitleEl) inquiryTitleEl.textContent = topic + '.';
           if (inquirySubjEl) inquirySubjEl.value = '[Take Me Back Bingo] ' + topic;
         }
         if (context) {
