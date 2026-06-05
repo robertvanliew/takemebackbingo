@@ -3667,3 +3667,179 @@ html.js ul.meta-strip[data-reveal].is-in > li {
   .btn--primary:hover,
   .btn--ghost:hover { transform: none; }
 }
+
+/* =========================================================
+   26. BETWEEN THE ROUNDS · the challenges (dark surface)
+   ========================================================= */
+.challenges {
+  background: var(--bg);
+  color: var(--text);
+  padding: var(--s-9) var(--s-6);
+  position: relative;
+  border-top: 1px solid var(--rule);
+}
+.challenges__inner { max-width: 1180px; margin: 0 auto; }
+.challenges__head { max-width: 760px; margin: 0 0 var(--s-7); }
+.challenges__intro {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: var(--fs-20);
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin: var(--s-4) 0 0;
+  max-width: 60ch;
+  text-wrap: pretty;
+}
+.challenges__grid {
+  list-style: none;
+  padding: 0;
+  margin: var(--s-7) 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--s-5);
+}
+.challenges__card {
+  position: relative;
+  padding: var(--s-6) var(--s-5);
+  background: var(--bg-elev);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  transition: border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+.challenges__card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+.challenges__tag {
+  font-family: var(--font-mono);
+  font-size: var(--fs-11);
+  font-weight: 700;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 var(--s-3);
+}
+.challenges__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-24);
+  letter-spacing: -.01em;
+  margin: 0 0 var(--s-3);
+  line-height: 1.1;
+  color: var(--text);
+}
+.challenges__copy {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: var(--fs-16);
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0;
+  text-wrap: pretty;
+}
+@media (max-width: 900px) {
+  .challenges__grid { grid-template-columns: 1fr; gap: var(--s-4); }
+}
+
+/* =========================================================
+   27. BOOK YOUR PARTY · private events CTA (light surface)
+   ========================================================= */
+.booking {
+  background: var(--surface-light);
+  color: var(--ink);
+  padding: var(--s-9) var(--s-6);
+  position: relative;
+}
+.booking__inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: var(--s-7);
+  align-items: start;
+}
+.booking__copy { max-width: 60ch; }
+.booking__lede {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: var(--fs-20);
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin: var(--s-4) 0 0;
+  text-wrap: pretty;
+}
+.booking__urgency {
+  font-family: var(--font-display);
+  font-size: var(--fs-24);
+  line-height: 1.15;
+  color: var(--primary);
+  margin: var(--s-5) 0 var(--s-3);
+  letter-spacing: -.01em;
+}
+.booking__fine {
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  letter-spacing: .04em;
+  color: var(--ink-soft);
+  margin: 0 0 var(--s-5);
+  line-height: 1.55;
+  max-width: 52ch;
+}
+.booking__cta {
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+  flex-wrap: wrap;
+}
+.booking__phone {
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.booking__phone:hover { color: var(--primary); }
+.booking__list {
+  background: rgba(24,18,18,.04);
+  border: 1px solid rgba(24,18,18,.10);
+  border-left: 3px solid var(--primary);
+  border-radius: 12px;
+  padding: var(--s-6);
+}
+.booking__list-label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-11);
+  font-weight: 700;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin: 0 0 var(--s-3);
+}
+.booking__list-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.booking__list-items li {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: var(--fs-16);
+  color: var(--ink-soft);
+  line-height: 1.5;
+  padding-left: 18px;
+  position: relative;
+}
+.booking__list-items li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: .65em;
+  width: 8px;
+  height: 2px;
+  background: var(--accent);
+}
+@media (max-width: 820px) {
+  .booking__inner { grid-template-columns: 1fr; gap: var(--s-6); }
+}
