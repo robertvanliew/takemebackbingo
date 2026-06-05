@@ -2874,6 +2874,9 @@ h3.faq__q,
   border-radius: var(--r-pill);
   padding: 6px 6px 6px 18px;
   max-width: 360px;
+  /* Reserve room for the absolutely-positioned status text below so a
+     two-line success/error message doesn't overlap the contact links. */
+  margin-bottom: 44px;
   transition: border-color var(--dur-fast) var(--ease-out);
   margin-bottom: var(--s-4);
 }
