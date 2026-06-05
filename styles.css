@@ -3844,6 +3844,11 @@ html.js ul.meta-strip[data-reveal].is-in > li {
   .booking__inner { grid-template-columns: 1fr; gap: var(--s-6); }
 }
 
+/* Anchor target for the "Get Notified" CTAs (dates-pending mode). The id
+   sits on the form itself but we want the heading + descriptive copy
+   visible above it when the user lands, so add a scroll headroom. */
+#newsletter { scroll-margin-top: 120px; }
+
 /* =========================================================
    28. ABOUT · brand origin (light surface)
    ========================================================= */

@@ -29,6 +29,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Permanent+Marker&family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="styles.css?v=2" />
+
+<!-- DATES-PENDING toggle (single source of truth for the "Buy Tickets" → newsletter
+     redirect while the calendar is down). See /dates-pending.js. -->
+<script src="/dates-pending.js" defer></script>
 </head>
 <body>
 
@@ -44,7 +48,7 @@
     <a href="gallery.html">Gallery</a>
     <a href="index.html#contact">Contact</a>
   </nav>
-  <a href="events.html" class="btn btn--primary nav__cta">Buy Tickets</a>
+  <a href="#newsletter" class="btn btn--primary nav__cta" data-cta-when-live="buy" data-href-live="events.html" data-text-live="Buy Tickets">Get Notified</a>
   <button type="button" class="nav__toggle" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav" onclick="(function(b){var n=b.closest('.nav');var o=n.getAttribute('data-nav-open')==='true';n.setAttribute('data-nav-open',o?'false':'true');b.setAttribute('aria-expanded',o?'false':'true');b.setAttribute('aria-label',o?'Open menu':'Close menu');})(this)"><span class="nav__toggle-bars" aria-hidden="true"></span></button>
 </header>
 
@@ -375,7 +379,7 @@
         </p>
         <p class="footer__sub">Hip-Hop &amp; R&amp;B bingo, live in your city. Dance battles, prizes, throwbacks all night.</p>
         <div class="footer__cta-row">
-          <a href="events.html" class="btn btn--primary btn--lg">Buy Tickets</a>
+          <a href="#newsletter" class="btn btn--primary btn--lg" data-cta-when-live="buy" data-href-live="events.html" data-text-live="Buy Tickets">Get Notified</a>
           <a href="#contact" class="btn btn--ghost btn--lg" data-open-inquiry data-inquiry-topic="Private booking — Other event">Book a Private Night</a>
         </div>
       </div>
@@ -403,11 +407,9 @@
       <div class="footer__col">
         <h4 class="footer__h">Stay In The Loop</h4>
         <p class="footer__newsletter-copy">New cities, new dates, early ticket drops. No spam.</p>
-        <form class="footer__newsletter" data-newsletter-form method="POST" action="https://formspree.io/f/mbdbggbv" novalidate>
+        <form id="newsletter" class="footer__newsletter" data-newsletter-form method="POST" action="/api/subscribe" novalidate>
           <label class="sr-only" for="footer-email">Email address</label>
           <input id="footer-email" name="email" type="email" required placeholder="you@email.com" autocomplete="email" />
-          <input type="hidden" name="topic" value="newsletter" />
-          <input type="hidden" name="_subject" value="[Take Me Back Bingo] Newsletter signup" />
           <button type="submit" aria-label="Subscribe">
             <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
@@ -694,7 +696,7 @@
         e.preventDefault();
         if (newsletterBtn) { newsletterBtn.disabled = true; newsletterBtn.textContent = '…'; }
         setNewsletterStatus('', false);
-        var endpoint = newsletterForm.getAttribute('action') || 'https://formspree.io/f/mbdbggbv';
+        var endpoint = newsletterForm.getAttribute('action') || '/api/subscribe';
         var payload = {};
         new FormData(newsletterForm).forEach(function (v, k) { payload[k] = v; });
         fetch(endpoint, {
@@ -703,8 +705,8 @@
           body: JSON.stringify(payload)
         })
           .then(function (res) {
-            if (!res.ok) throw new Error('Formspree ' + res.status);
-            setNewsletterStatus('Thanks, you\'re on the list.', false);
+            if (!res.ok) throw new Error('subscribe ' + res.status);
+            setNewsletterStatus('You\'re on the list — dates drop soon. Check your inbox.', false);
             newsletterForm.reset();
             if (newsletterBtn) newsletterBtn.innerHTML = newsletterBtnDefault;
           })

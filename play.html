@@ -1382,6 +1382,10 @@
     .dj-start:hover { transform: none; }
   }
 </style>
+
+<!-- DATES-PENDING toggle (single source of truth for the "Buy Tickets" → newsletter
+     redirect while the calendar is down). See /dates-pending.js. -->
+<script src="/dates-pending.js" defer></script>
 </head>
 <body>
 
@@ -1397,7 +1401,7 @@
     <a href="index.html#faq">FAQ</a>
     <a href="index.html#contact">Contact</a>
   </nav>
-  <a href="events.html" class="btn btn--primary nav__cta">Buy Tickets</a>
+  <a href="index.html#newsletter" class="btn btn--primary nav__cta" data-cta-when-live="buy" data-href-live="events.html" data-text-live="Buy Tickets">Get Notified</a>
   <button type="button" class="nav__toggle" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav" onclick="(function(b){var n=b.closest('.nav');var o=n.getAttribute('data-nav-open')==='true';n.setAttribute('data-nav-open',o?'false':'true');b.setAttribute('aria-expanded',o?'false':'true');b.setAttribute('aria-label',o?'Open menu':'Close menu');})(this)"><span class="nav__toggle-bars" aria-hidden="true"></span></button>
 </header>
 
