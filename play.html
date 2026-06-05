@@ -71,6 +71,9 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<!-- canvas-confetti · loaded once, fired on win celebration open -->
+<script defer src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Permanent+Marker&family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="styles.css?v=2" />
@@ -930,6 +933,223 @@
     color: var(--text-muted);
     opacity: .7;
   }
+
+  /* ====== Conversion block · spec'd Win modal redesign ====== */
+  .celebration__close {
+    position: absolute;
+    top: clamp(14px, 3vw, 22px);
+    right: clamp(14px, 3vw, 22px);
+    width: 40px;
+    height: 40px;
+    display: inline-grid;
+    place-items: center;
+    background: rgba(255,255,255,.06);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    color: var(--text-muted);
+    cursor: pointer;
+    z-index: 5;
+    transition: color .15s ease, border-color .15s ease, background .15s ease, transform .15s ease;
+  }
+  .celebration__close:hover {
+    color: var(--text);
+    border-color: var(--text);
+    background: rgba(255,255,255,.10);
+    transform: rotate(90deg);
+  }
+  .celebration__subhead {
+    font-family: var(--font-mono);
+    font-size: var(--fs-12);
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 var(--s-5);
+  }
+  .celebration__reward {
+    margin: 0 auto var(--s-4);
+    max-width: 540px;
+    padding: var(--s-4) var(--s-5);
+    background:
+      radial-gradient(120% 100% at 50% 0%, rgba(201,150,43,.18), transparent 70%),
+      rgba(255,255,255,.04);
+    border: 1px solid rgba(201,150,43,.45);
+    border-radius: 14px;
+    box-shadow:
+      0 0 0 1px rgba(201,150,43,.10),
+      0 18px 36px -20px rgba(0,0,0,.6);
+    text-align: center;
+  }
+  .celebration__reward-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-11);
+    font-weight: 700;
+    letter-spacing: .26em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 var(--s-2);
+  }
+  .celebration__reward-h {
+    font-family: var(--font-display);
+    font-size: clamp(var(--fs-18), 3vw, var(--fs-24));
+    color: var(--text);
+    margin: 0 0 var(--s-3);
+    line-height: 1.15;
+    letter-spacing: -.005em;
+  }
+  .celebration__reward-price {
+    font-family: var(--font-display);
+    font-size: clamp(var(--fs-24), 4vw, var(--fs-38));
+    color: var(--text);
+    margin: 0;
+    line-height: 1;
+    letter-spacing: .02em;
+  }
+  .celebration__reward-price .strike {
+    color: var(--text-muted);
+    text-decoration: line-through;
+    text-decoration-thickness: 2px;
+    opacity: .7;
+    margin-right: .15em;
+  }
+  .celebration__reward-price .arrow {
+    color: var(--accent);
+    margin: 0 .12em;
+  }
+  .celebration__reward-price strong {
+    color: var(--tape-yellow-hot);
+    font-weight: 400;
+  }
+
+  /* Code chip + Copy button */
+  .celebration__code-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: center;
+    gap: 10px;
+    margin: 0 auto var(--s-3);
+    max-width: 540px;
+  }
+  .celebration__code-chip {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 18px;
+    background: var(--bg);
+    border: 1px dashed rgba(201,150,43,.55);
+    border-radius: 10px;
+    text-align: left;
+  }
+  .celebration__code-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-11);
+    letter-spacing: .26em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .celebration__code-value {
+    font-family: var(--font-display);
+    font-size: clamp(var(--fs-20), 3.5vw, var(--fs-30));
+    letter-spacing: .08em;
+    color: var(--tape-yellow-hot);
+    line-height: 1.1;
+    user-select: all;
+  }
+  .celebration__copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 22px;
+    background: var(--accent);
+    color: var(--ink);
+    border: 1px solid var(--accent-600);
+    border-radius: 10px;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: var(--fs-14);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background .15s ease, transform .15s ease, border-color .15s ease;
+    flex-shrink: 0;
+  }
+  .celebration__copy-btn:hover { background: var(--tape-yellow-hot); }
+  .celebration__copy-btn:active { transform: translateY(1px); }
+  .celebration__copy-btn.is-copied {
+    background: rgba(46, 204, 113, .18);
+    border-color: rgba(46, 204, 113, .55);
+    color: #4be080;
+  }
+  .celebration__copy-btn.is-copied .celebration__copy-btn-icon { display: none; }
+  .celebration__copy-btn svg { flex-shrink: 0; }
+
+  .celebration__urgency {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-12);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #FFB37A;
+    margin: 0 auto var(--s-5);
+  }
+  .celebration__urgency svg { stroke: #FFB37A; }
+
+  .celebration__footer-text {
+    font-family: 'Newsreader', Georgia, serif;
+    font-style: italic;
+    font-size: var(--fs-16);
+    color: var(--text-muted);
+    margin: var(--s-5) auto 0;
+    max-width: 38ch;
+    line-height: 1.5;
+  }
+
+  .celebration__divider {
+    width: 100%;
+    max-width: 540px;
+    height: 1px;
+    margin: var(--s-6) auto;
+    background: linear-gradient(90deg, transparent, var(--rule-strong), transparent);
+  }
+
+  .celebration__actions--secondary {
+    margin-top: var(--s-4);
+  }
+
+  /* Copy toast */
+  .copy-toast {
+    position: fixed;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    padding: 12px 20px;
+    background: var(--ink);
+    color: var(--tape-yellow-hot);
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-12);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    box-shadow: 0 18px 36px -12px rgba(0,0,0,.6);
+    z-index: 300;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease, transform .25s ease;
+  }
+  .copy-toast.is-shown {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .celebration__close:hover { transform: none; }
+    .copy-toast { transition: opacity .15s ease; transform: translateX(-50%) translateY(0); }
+  }
+
   .celebration__credit a {
     color: var(--tape-yellow);
     text-decoration: none;
@@ -1340,27 +1560,63 @@
   </div>
 </div>
 
-<!-- ============ WIN CELEBRATION + SHARE CARD ============ -->
+<!-- ============ WIN CELEBRATION · CONVERSION MOMENT ============ -->
 <div class="celebration" id="celebration" hidden>
+  <button type="button" class="celebration__close" id="celebrationClose" aria-label="Close">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+  </button>
   <div class="celebration__inner">
     <p class="eyebrow"><span class="eyebrow__dot"></span> Confirmed</p>
-    <h1 class="celebration__h2">YOU <em>won</em>.</h1>
-    <p class="celebration__copy">
-      Drop your win card on your story, tag <strong>@takemebackbingo</strong> and we&rsquo;ll
-      reshare. Then come catch the real night.
+    <h1 class="celebration__h2"><em>TAKE ME BACK!</em><br>YOU WON</h1>
+    <p class="celebration__subhead">You just beat our <span id="celebrationEraText">80&rsquo;s R&amp;B</span> round.</p>
+
+    <!-- REWARD BLOCK · 10% off discount unlock -->
+    <div class="celebration__reward">
+      <p class="celebration__reward-label">YOUR REWARD UNLOCKED</p>
+      <p class="celebration__reward-h">10% OFF your next Take Me Back Bingo Night ticket</p>
+      <p class="celebration__reward-price"><span class="strike">$40</span> <span class="arrow" aria-hidden="true">&rarr;</span> <strong>$36</strong></p>
+    </div>
+
+    <!-- CODE + COPY · the moment of conversion -->
+    <div class="celebration__code-row">
+      <div class="celebration__code-chip">
+        <span class="celebration__code-label">CODE</span>
+        <span class="celebration__code-value" id="celebrationCodeValue">THROWBACK10</span>
+      </div>
+      <button type="button" class="celebration__copy-btn" id="celebrationCopyBtn" data-code="THROWBACK10" aria-label="Copy discount code">
+        <span class="celebration__copy-btn-text">Copy Code</span>
+        <svg class="celebration__copy-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      </button>
+    </div>
+
+    <p class="celebration__urgency">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Expires in 48 hours
     </p>
 
-    <!-- WINNER DISCOUNT CAPTURE · feeds Brevo "Bingo Winners" list, which
-         triggers the 24h/47h THROWBACK10 follow-up automation. -->
+    <div class="celebration__actions">
+      <a class="btn btn--primary btn--lg" href="events.html?discount=THROWBACK10" id="celebrationCTA">
+        Get My Ticket &mdash; $36
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <button type="button" class="btn btn--ghost btn--lg" id="playAgainBtn">Play Again</button>
+    </div>
+
+    <p class="celebration__footer-text">Hear these songs live with 200 people screaming every word.</p>
+
+    <!-- ── Secondary section · email capture + share moment, below the fold ── -->
+    <div class="celebration__divider" aria-hidden="true"></div>
+
+    <!-- WINNER EMAIL CAPTURE · backup the code + feeds Brevo Bingo Winners list -->
     <form class="winner-capture" id="winnerCaptureForm" novalidate>
-      <p class="winner-capture__h">You unlocked <strong>10% off</strong> a real ticket.</p>
-      <p class="winner-capture__sub">Drop your email and we&rsquo;ll send your code <strong>THROWBACK10</strong> &mdash; takes a ticket from $40 to $36.</p>
+      <p class="winner-capture__h">Email me a backup of this code</p>
+      <p class="winner-capture__sub">We&rsquo;ll send <strong>THROWBACK10</strong> to your inbox in case you lose this page. No spam, just the reminder.</p>
       <div class="winner-capture__row">
         <label class="sr-only" for="winner-firstname">First name</label>
         <input id="winner-firstname" name="firstName" type="text" placeholder="First name" autocomplete="given-name" />
         <label class="sr-only" for="winner-email">Email</label>
         <input id="winner-email" name="email" type="email" required placeholder="you@email.com" autocomplete="email" inputmode="email" />
-        <button type="submit" class="btn btn--primary" id="winnerCaptureBtn">Send my code
+        <button type="submit" class="btn btn--primary" id="winnerCaptureBtn">Send it
           <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
       </div>
@@ -1370,18 +1626,10 @@
     <figure class="celebration__preview">
       <img id="shareCardPreview" alt="Your Take Me Back Bingo win card" />
     </figure>
-    <div class="celebration__actions">
-      <a href="events.html" class="btn btn--primary btn--lg">
-        See upcoming nights
-        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
+    <div class="celebration__actions celebration__actions--secondary">
       <button type="button" class="btn btn--ghost btn--lg" id="shareBtn">Share to Instagram</button>
       <button type="button" class="btn btn--ghost btn--lg" id="downloadBtn">Download Card</button>
-      <button type="button" class="btn btn--ghost btn--lg" id="playAgainBtn">Play Again</button>
     </div>
-    <p class="celebration__cta">
-      You just won the home version. Imagine the real night.
-    </p>
 
     <!-- Tour demand capture inside the win modal — peak conversion moment. -->
     <form class="tour-capture" data-tour-form data-tour-source="win-modal"
@@ -1410,6 +1658,14 @@
     </p>
   </div>
 </div>
+
+<!-- Toast popup · short-lived feedback for the Copy Code interaction -->
+<div class="copy-toast" id="copyToast" role="status" aria-live="polite" hidden>Copied! Paste at checkout</div>
+
+<!-- Win audio · plays "TAKE ME BACK!" on celebration open if the file
+     exists. Fails silently with onerror until the audio file is dropped
+     into /audio/ — placeholder src points there. -->
+<audio id="winYellAudio" preload="none" src="audio/take-me-back.mp3" onerror="this.dataset.unavailable='1'"></audio>
 
 <!-- ============ STICKY TOUR-DEMAND BAR ============
      Appears after 30s of gameplay. Asks for email + city. Dismissible.
@@ -3686,6 +3942,45 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
 let lastShareBlob = null;
 function showCelebration() {
   $('#celebration').hidden = false;
+
+  // Dynamic era subhead — "You just beat our [era] round."
+  try {
+    const activeEra = document.querySelector('.era-pill.is-active .era-pill__label');
+    const eraEl = $('#celebrationEraText');
+    if (activeEra && eraEl) eraEl.textContent = activeEra.textContent.trim();
+  } catch (e) {}
+
+  // Confetti burst — only once per celebration open, no animation on
+  // reduced-motion users.
+  try {
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduceMotion && typeof window.confetti === 'function') {
+      // Two-burst cannon for a richer effect than the default single pop
+      const fire = (origin, particleRatio, opts) => window.confetti(Object.assign({
+        origin: origin,
+        particleCount: Math.floor(180 * particleRatio),
+        spread: 70,
+        startVelocity: 45,
+        ticks: 200,
+        zIndex: 250,
+        colors: ['#C9962B', '#FFD84D', '#7B2D8E', '#FBF5E6']
+      }, opts));
+      fire({ x: 0.2, y: 0.85 }, 0.45, { angle: 60 });
+      fire({ x: 0.8, y: 0.85 }, 0.45, { angle: 120 });
+      fire({ x: 0.5, y: 0.55 }, 0.30, { spread: 100, startVelocity: 35 });
+    }
+  } catch (e) {}
+
+  // "TAKE ME BACK!" audio clip — fails silently if file not present.
+  try {
+    const audio = $('#winYellAudio');
+    if (audio && audio.dataset.unavailable !== '1') {
+      audio.currentTime = 0;
+      const p = audio.play();
+      if (p && typeof p.catch === 'function') p.catch(() => {});
+    }
+  } catch (e) {}
+
   // Slight delay so the page settles before the heavy canvas paint
   setTimeout(() => {
     try {
@@ -3757,6 +4052,65 @@ $('#playAgainBtn').addEventListener('click', () => {
   // Auto-start next round since we know audio is already primed
   setTimeout(startGame, 400);
 });
+
+/* ---------- Close button on celebration screen -------------------------
+   Hides the celebration so the user falls back to the bingo card view.
+   Does not reset the game — they can hit Play Again or just leave. */
+const celebrationCloseBtn = $('#celebrationClose');
+if (celebrationCloseBtn) {
+  celebrationCloseBtn.addEventListener('click', () => {
+    $('#celebration').hidden = true;
+  });
+}
+
+/* ---------- Copy Code button · the conversion moment ------------------
+   Clipboard API with a textarea fallback for older browsers. Button text
+   flips to "✓ Copied", a toast pops, and after 1.8s both reset. */
+const copyToastEl = $('#copyToast');
+function showCopyToast() {
+  if (!copyToastEl) return;
+  copyToastEl.hidden = false;
+  // Force reflow so the transition fires
+  void copyToastEl.offsetWidth;
+  copyToastEl.classList.add('is-shown');
+  clearTimeout(showCopyToast._hideT);
+  showCopyToast._hideT = setTimeout(() => {
+    copyToastEl.classList.remove('is-shown');
+    setTimeout(() => { copyToastEl.hidden = true; }, 260);
+  }, 1800);
+}
+const celebrationCopyBtn = $('#celebrationCopyBtn');
+if (celebrationCopyBtn) {
+  const labelEl = celebrationCopyBtn.querySelector('.celebration__copy-btn-text');
+  const defaultLabel = labelEl ? labelEl.textContent : 'Copy Code';
+  celebrationCopyBtn.addEventListener('click', () => {
+    const code = celebrationCopyBtn.getAttribute('data-code') || 'THROWBACK10';
+    const onSuccess = () => {
+      celebrationCopyBtn.classList.add('is-copied');
+      if (labelEl) labelEl.textContent = '✓ Copied';
+      showCopyToast();
+      setTimeout(() => {
+        celebrationCopyBtn.classList.remove('is-copied');
+        if (labelEl) labelEl.textContent = defaultLabel;
+      }, 1800);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(onSuccess, copyFallback);
+    } else {
+      copyFallback();
+    }
+    function copyFallback() {
+      const ta = document.createElement('textarea');
+      ta.value = code;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); onSuccess(); } catch (_) {}
+      document.body.removeChild(ta);
+    }
+  });
+}
 
 /* ---------- ANTI-CHEAT · disable "New Card" mid-round -------------------
    Once the DJ has started playing (or the player has marked a square)
