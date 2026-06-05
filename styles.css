@@ -2627,6 +2627,8 @@ h3.faq__q,
   display: flex;
   flex-direction: column;
   gap: 6px;
+  /* Let the grid column shrink below the widest <option>'s intrinsic width */
+  min-width: 0;
 }
 .modal__label {
   font-family: var(--font-mono);
@@ -2655,6 +2657,11 @@ h3.faq__q,
   font-size: var(--fs-16);
   transition: border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
   outline: 0;
+  /* Constrain controls to their column — selects otherwise widen to fit
+     their longest <option> and break out of the modal. */
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 .modal__field select { appearance: none;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'><path d='M1 1l5 5 5-5' stroke='%23C9962B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
