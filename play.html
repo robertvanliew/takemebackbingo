@@ -3956,18 +3956,25 @@ function showCelebration() {
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!reduceMotion && typeof window.confetti === 'function') {
       // Two-burst cannon for a richer effect than the default single pop
+      // z-index 290: above the celebration overlay (260), below the
+      // copy-toast (300). Without this, particles render behind the modal.
       const fire = (origin, particleRatio, opts) => window.confetti(Object.assign({
         origin: origin,
-        particleCount: Math.floor(180 * particleRatio),
-        spread: 70,
-        startVelocity: 45,
-        ticks: 200,
-        zIndex: 250,
-        colors: ['#C9962B', '#FFD84D', '#7B2D8E', '#FBF5E6']
+        particleCount: Math.floor(220 * particleRatio),
+        spread: 80,
+        startVelocity: 55,
+        ticks: 260,
+        zIndex: 290,
+        colors: ['#C9962B', '#FFD84D', '#7B2D8E', '#FBF5E6', '#EFC53A']
       }, opts));
-      fire({ x: 0.2, y: 0.85 }, 0.45, { angle: 60 });
-      fire({ x: 0.8, y: 0.85 }, 0.45, { angle: 120 });
-      fire({ x: 0.5, y: 0.55 }, 0.30, { spread: 100, startVelocity: 35 });
+      // Big bottom-left & bottom-right cannons + a rain burst from the top
+      fire({ x: 0.2, y: 0.9 }, 0.45, { angle: 60 });
+      fire({ x: 0.8, y: 0.9 }, 0.45, { angle: 120 });
+      fire({ x: 0.5, y: 0 },   0.35, { spread: 180, startVelocity: 40, gravity: 0.8 });
+      // Echo burst ~600ms later for a richer, lingering effect
+      setTimeout(() => {
+        fire({ x: 0.5, y: 0.5 }, 0.30, { spread: 120, startVelocity: 30 });
+      }, 600);
     }
   } catch (e) {}
 
