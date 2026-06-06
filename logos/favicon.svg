@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Take Me Back Bingo · favicon
-     The "B" from the BINGO card, with the Bungee-style 3D drop-shadow
-     treatment: cream face, brand-purple shadow offset down + right.
-     Transparent background so the B reads cleanly on light or dark
-     browser tab surfaces. Path-drawn (no font dependency) so it
-     renders crisp at 16x16. -->
+     Brand mark: gold radial-gradient dauber disc with the BINGO "B"
+     punched out as negative space. Same pattern as Spotify, Slack,
+     Vercel: solid container shape + letterform cutout. The dauber is
+     the brand's signature visual element (the moment of winning), so
+     it carries the icon; the B says what brand it is. Reads cleanly
+     at 16x16. Adapts to light/dark browser tabs and home-screen
+     wallpapers via the transparent letter cutout. -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- Purple drop-shadow "B" (behind, offset +3px down/right) -->
-  <path fill="#7B2D8E" fill-rule="evenodd" d="M 17 15 H 38 C 46 15 50 19 50 26 C 50 30 48 32 46 33.5 C 49 35 51 38 51 42 C 51 49 47 53 38 53 H 17 Z M 25 22 V 30 H 37 C 40 30 41.5 28.5 41.5 26 C 41.5 23.5 40 22 37 22 Z M 25 37 V 46 H 38 C 42 46 43.5 44 43.5 41.5 C 43.5 39 42 37 38 37 Z"/>
-
-  <!-- Brand-gold "B" face on top (same accent used for eyebrows and CTAs) -->
-  <path fill="#C9962B" fill-rule="evenodd" d="M 14 12 H 35 C 43 12 47 16 47 23 C 47 27 45 29 43 30.5 C 46 32 48 35 48 39 C 48 46 44 50 35 50 H 14 Z M 22 19 V 27 H 34 C 37 27 38.5 25.5 38.5 23 C 38.5 20.5 37 19 34 19 Z M 22 34 V 43 H 35 C 39 43 40.5 41 40.5 38.5 C 40.5 36 39 34 35 34 Z"/>
+  <defs>
+    <radialGradient id="daub" cx="0.35" cy="0.3" r="0.75">
+      <stop offset="0%" stop-color="#F5D976"/>
+      <stop offset="55%" stop-color="#C9962B"/>
+      <stop offset="100%" stop-color="#A87B1E"/>
+    </radialGradient>
+    <!-- Mask: white area renders the gold; black B carves a hole -->
+    <mask id="bCutout">
+      <rect width="64" height="64" fill="white"/>
+      <path fill="black" fill-rule="evenodd" d="M 19 17 H 36 C 42.5 17 46 20.5 46 26 C 46 29 44.5 31 43 31.8 C 45.5 32.8 47 35 47 38.5 C 47 44 43.5 47.5 36 47.5 H 19 Z M 26 23.5 V 30 H 34.5 C 36.8 30 38 28.7 38 26.7 C 38 24.7 36.8 23.5 34.5 23.5 Z M 26 35 V 41.5 H 35.5 C 38 41.5 39.2 40.2 39.2 38.2 C 39.2 36.2 38 35 35.5 35 Z"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="28" fill="url(#daub)" mask="url(#bCutout)"/>
 </svg>
