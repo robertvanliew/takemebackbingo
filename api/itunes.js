@@ -1,4 +1,4 @@
-// Vercel serverless function — proxies the iTunes Search API.
+// Vercel serverless function - proxies the iTunes Search API.
 //
 // Why this exists: the play-page game resolves each song to a 30s preview by
 // querying Apple's iTunes Search API. Calling itunes.apple.com directly from

@@ -606,7 +606,7 @@ ul, ol { list-style: none; padding: 0; margin: 0; }
   color: var(--text);
   -webkit-text-stroke: 2px var(--accent);
   paint-order: stroke fill;
-  /* Solid 3D extrude — dense 1px steps so the purple side reads as one clean
+  /* Solid 3D extrude - dense 1px steps so the purple side reads as one clean
      block (the old 5px/10px pair left gaps that looked stepped on curves),
      front half lighter, back half darker, plus a soft cast shadow for depth. */
   text-shadow:
@@ -683,7 +683,7 @@ ul, ol { list-style: none; padding: 0; margin: 0; }
 }
 .bingocard:not([data-flipped="true"]) .bingocard__face--back { opacity: 0; }
 .bingocard[data-flipped="true"] .bingocard__face--front { opacity: 0; }
-/* Reduced motion: no spin — turn instantly and cross-fade the faces. */
+/* Reduced motion: no spin - turn instantly and cross-fade the faces. */
 @media (prefers-reduced-motion: reduce) {
   .bingocard__flipper { transition: none; }
   .bingocard__face { transition: opacity 220ms ease; }
@@ -716,7 +716,7 @@ ul, ol { list-style: none; padding: 0; margin: 0; }
     0 32px 64px -24px rgba(0,0,0,.55);
 }
 
-/* "Click to flip" affordance — sits in the flow, centered, just above the
+/* "Click to flip" affordance - sits in the flow, centered, just above the
    HIP-HOP footer. Always visible (mobile has no hover), brightens slightly on
    hover/focus of the card. */
 .bingocard__hint {
@@ -908,7 +908,7 @@ ul, ol { list-style: none; padding: 0; margin: 0; }
     0 2px 4px rgba(0,0,0,.2);
 }
 
-/* daubed square — gold ink stamp. Sized by WIDTH with aspect-ratio:1 and
+/* daubed square - gold ink stamp. Sized by WIDTH with aspect-ratio:1 and
    centered, so it's a perfect circle of identical size in every cell
    regardless of the cell's exact proportions. */
 .sq.is-daubed::before {
@@ -950,7 +950,7 @@ ul, ol { list-style: none; padding: 0; margin: 0; }
   pointer-events: none;
   z-index: 1;
 }
-/* Text on top of the gold ball — cleaner ink treatment */
+/* Text on top of the gold ball - cleaner ink treatment */
 .sq.is-daubed > * {
   position: relative;
   z-index: 2;
@@ -1699,7 +1699,7 @@ ul, ol { list-style: none; padding: 0; margin: 0; }
 }
 /* Narrow phones: stack the CTA buttons full-width. The buttons carry
    white-space:nowrap, so when they're forced to shrink in a row the label
-   spills outside the button — stacking gives each its own full-width row
+   spills outside the button - stacking gives each its own full-width row
    and the text never breaks out of the card. */
 @media (max-width: 560px) {
   .event-card__cta-row { flex-direction: column; align-items: stretch; }
@@ -1904,12 +1904,12 @@ a.event-card__flyer:hover img { transform: scale(1.03); }
   text-align: center;
   justify-content: center;
 }
-/* Share wrapper — icon-only label on small screens */
+/* Share wrapper - icon-only label on small screens */
 .event-card__cta-row .share {
   flex: 0 0 auto;
 }
 @media (max-width: 520px) {
-  /* On very small screens, hide the Share text label — keep only the icon */
+  /* On very small screens, hide the Share text label - keep only the icon */
   .event-card__cta-row [data-share-trigger] .share-label { display: none; }
 }
 .event-card__note {
@@ -2263,7 +2263,7 @@ a.event-card__flyer:hover img { transform: scale(1.03); }
 @media (max-width: 640px) {
   /* Phones get the same horizontal swipe slider as desktop. Cards are sized
      so the next photo peeks in at the edge, which signals the row scrolls
-     (avoids the old "looks like one static photo" problem) — swipe or tap the
+     (avoids the old "looks like one static photo" problem) - swipe or tap the
      arrows to move through the set. */
   .reel__track {
     grid-auto-flow: column;
@@ -2657,7 +2657,7 @@ h3.faq__q,
   font-size: var(--fs-16);
   transition: border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
   outline: 0;
-  /* Constrain controls to their column — selects otherwise widen to fit
+  /* Constrain controls to their column - selects otherwise widen to fit
      their longest <option> and break out of the modal. */
   width: 100%;
   min-width: 0;
@@ -2725,7 +2725,7 @@ h3.faq__q,
 .modal__status.is-shown { opacity: 1; }
 .modal__status.is-error { color: #FF8A6E; }
 
-/* Footer newsletter status — visually hidden, kept in the DOM so the
+/* Footer newsletter status - visually hidden, kept in the DOM so the
    aria-live="polite" announcement still reaches screen readers when the
    subscribe call completes. Sighted users see the .toast instead. */
 .footer__newsletter-status {
@@ -2740,7 +2740,7 @@ h3.faq__q,
   border: 0;
 }
 
-/* Toast — floats in from below, auto-dismisses after a few seconds.
+/* Toast - floats in from below, auto-dismisses after a few seconds.
    Used by the newsletter handler so the success/error message doesn't
    need to share vertical space with anything in the footer column. */
 .toast {
@@ -3075,11 +3075,11 @@ h3.faq__q,
 }
 
 /* =========================================================
-   MOBILE POLISH (2026-05-26) — scoped, additive
+   MOBILE POLISH (2026-05-26) - scoped, additive
    Padding, font bumps, hero title clamp, hamburger dropdown
    ========================================================= */
 
-/* Hamburger toggle button — same gold pill treatment as .btn--primary
+/* Hamburger toggle button - same gold pill treatment as .btn--primary
    so it visually matches Buy Tickets. Stays fixed (no lift on tap). */
 .nav__toggle {
   display: none;
@@ -3186,7 +3186,7 @@ h3.faq__q,
      to logo + single hamburger so it reads clean on phones. */
   .nav__cta { display: none; }
 
-  /* Dropdown panel — replaces hidden state when toggled open */
+  /* Dropdown panel - replaces hidden state when toggled open */
   .nav__links {
     display: none;
     position: absolute;
@@ -3234,7 +3234,7 @@ h3.faq__q,
 }
 
 /* =========================================================
-   SHARE — per-event share button + dropdown popover
+   SHARE - per-event share button + dropdown popover
    ========================================================= */
 .share { position: relative; display: inline-flex; }
 .share__btn {
@@ -3692,7 +3692,7 @@ html.js ul.meta-strip[data-reveal].is-in > li {
    Tactile press feedback + no sticky hover on touch. */
 .btn:active { transform: scale(0.97); }
 @media (hover: none) {
-  /* On touch, :hover fires on tap and sticks — kill the hover lift so buttons
+  /* On touch, :hover fires on tap and sticks - kill the hover lift so buttons
      settle cleanly after a tap (press feedback comes from :active above). */
   .btn--primary:hover,
   .btn--ghost:hover { transform: none; }

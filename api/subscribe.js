@@ -1,4 +1,4 @@
-// Vercel serverless function — newsletter signup.
+// Vercel serverless function - newsletter signup.
 //
 // Same-origin POST from the footer newsletter form (/api/subscribe), so no
 // CORS. CommonJS on purpose: this project has no deployed package.json, so
@@ -13,21 +13,21 @@
 //      success/error inline without changing the markup
 //
 // Required env vars in Vercel:
-//   RESEND_API_KEY        Resend API key (secret) — needs contacts:write + emails:send
+//   RESEND_API_KEY        Resend API key (secret) - needs contacts:write + emails:send
 //
 // Optional env vars:
 //   RESEND_AUDIENCE_ID    The Resend Audience ID. If omitted, the function
 //                         fetches GET /audiences on the first invocation and
 //                         uses the first one (Resend's dashboard hides the
 //                         audience ID, so this is the path of least friction
-//                         for single-audience accounts — and it's cached in
+//                         for single-audience accounts - and it's cached in
 //                         module scope so subsequent warm invocations skip
 //                         the lookup).
 //   NEWSLETTER_FROM       e.g. "Take Me Back Bingo <hello@takemebackbingo.com>"
 //                         Must be on a domain you've verified in Resend.
 //                         Defaults to "Take Me Back Bingo <onboarding@resend.dev>"
 //                         which only works for sending to your own verified
-//                         account email — fine for testing, not production.
+//                         account email - fine for testing, not production.
 //   NEWSLETTER_REPLY_TO   e.g. "info@takemebackbingo.com" (optional)
 //
 // The inquiry/booking forms stay on Formspree. Do NOT route them through here.
@@ -63,7 +63,7 @@ async function resolveAudienceId(apiKey) {
   return cachedAudienceId;
 }
 
-const WELCOME_SUBJECT = "You're on the list — dates drop soon.";
+const WELCOME_SUBJECT = "You're on the list. Dates drop soon.";
 
 function welcomeHtml() {
   // Plain, on-brand. No images, no tracking pixels. Keep it short.
@@ -74,7 +74,7 @@ function welcomeHtml() {
     '<h1 style="font-size:22px;letter-spacing:-.01em;margin:0 0 16px;color:#F2EADB;">You’re on the list.</h1>',
     '<p style="font-size:16px;line-height:1.55;margin:0 0 14px;color:#A89C8A;">',
     'Thanks for signing up to Take Me Back Bingo. We’re finalizing the next ',
-    'round of dates right now — you’ll be among the first to know when they drop.',
+    'round of dates right now. You’ll be among the first to know when they drop.',
     '</p>',
     '<p style="font-size:16px;line-height:1.55;margin:0 0 14px;color:#A89C8A;">',
     'Want to book a private night before then? Hit reply or text 732.646.7073.',
@@ -91,7 +91,7 @@ function welcomeText() {
     "You're on the list.",
     '',
     "Thanks for signing up to Take Me Back Bingo. We're finalizing the next round",
-    "of dates right now — you'll be among the first to know when they drop.",
+    "of dates right now. You'll be among the first to know when they drop.",
     '',
     "Want to book a private night before then? Hit reply or text 732.646.7073.",
     '',
@@ -109,7 +109,7 @@ module.exports = async (req, res) => {
   const email = (body.email || '').toString().trim().toLowerCase();
   const firstName = (body.firstName || '').toString().trim();
 
-  // Server-side validation — never trust the client.
+  // Server-side validation - never trust the client.
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || email.length > 254) {
     res.status(400).json({ error: 'invalid email' });
     return;
@@ -156,7 +156,7 @@ module.exports = async (req, res) => {
     );
 
     // 200 / 201 are both success. Resend may also return a 200 with an
-    // existing contact id — that's fine.
+    // existing contact id - that's fine.
     if (!addRes.ok && addRes.status !== 422 /* already exists */) {
       const detail = await addRes.text().catch(() => '');
       console.error('subscribe: resend add-contact failed', {
@@ -190,7 +190,7 @@ module.exports = async (req, res) => {
       }),
     });
     if (!sendRes.ok) {
-      // Don't fail the request — the contact is on the list, the welcome
+      // Don't fail the request - the contact is on the list, the welcome
       // email is a nice-to-have. Log so we can diagnose in Vercel logs.
       const detail = await sendRes.text().catch(() => '');
       console.warn('subscribe: welcome send failed', {

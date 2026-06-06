@@ -1,5 +1,5 @@
 /* =============================================================
- * DATES-PENDING TOGGLE — single source of truth.
+ * DATES-PENDING TOGGLE - single source of truth.
  *
  * The public event calendar is intentionally down right now while
  * the client finalizes dates. While that's true, every primary
@@ -11,8 +11,8 @@
  *   1. Set TMB_DATES_PENDING below to false.
  *   2. That's it. On the next deploy, every CTA marked
  *      data-cta-when-live="buy" reverts to its long-term state
- *      (href = data-href-live, text = data-text-live) — i.e.
- *      "Buy Tickets" → events.html — and the newsletter focus
+ *      (href = data-href-live, text = data-text-live) - i.e.
+ *      "Buy Tickets" → events.html - and the newsletter focus
  *      behavior turns off.
  *
  *   You don't need to touch the HTML. The "Buy Tickets" + URL

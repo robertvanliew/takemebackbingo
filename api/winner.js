@@ -1,4 +1,4 @@
-// Vercel serverless function — captures a bingo winner's email and adds them
+// Vercel serverless function - captures a bingo winner's email and adds them
 // to the Brevo "Bingo Winners" contact list, which triggers the 24h/47h
 // THROWBACK10 follow-up automation built in Brevo.
 //
@@ -6,7 +6,7 @@
 // CommonJS on purpose: this project has no deployed package.json, so Vercel
 // runs .js functions as CommonJS. (global fetch is available on Node 18+.)
 //
-// Required env var in Vercel:  BREVO_API_KEY  (Brevo v3 API key — secret)
+// Required env var in Vercel:  BREVO_API_KEY  (Brevo v3 API key - secret)
 // Optional env var:           BREVO_WINNERS_LIST_ID  (defaults to 3)
 
 function readBody(req) {

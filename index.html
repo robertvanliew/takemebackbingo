@@ -205,7 +205,7 @@
   @media (max-width: 768px) {
     .logo-anim__video { aspect-ratio: 3 / 4; }
     /* The cassette is hidden (experimental block above), but .tape-stage is a
-       grid with `grid-template-rows: auto 1fr` + row-gap — the now-empty 1fr
+       grid with `grid-template-rows: auto 1fr` + row-gap; the now-empty 1fr
        row and its gap leave a dead band below the animation video. Collapse
        to a single auto row and pull the meta-strip flush so the video reaches
        all the way down to the J-card spine line with no gap. */
@@ -249,7 +249,7 @@
   "alternateName": "TMB Bingo",
   "url": "https://takemebackbingo.com/",
   "logo": "https://takemebackbingo.com/logos/logo-yellow.png",
-  "description": "Hip-Hop and R&B live music bingo nights — throwback hits, dance battles, and prizes.",
+  "description": "Hip-Hop and R&B live music bingo nights with throwback hits, dance battles, and prizes.",
   "email": "info@takemebackbingo.com",
   "telephone": "+1-732-646-7073",
   "sameAs": [
@@ -1019,7 +1019,7 @@
               We&rsquo;re mobile. We&rsquo;ll pull up to your venue, office, or house
               nationwide. Standard rate covers New York and New Jersey within
               about 50 miles of NYC; further out, travel fees apply. Hit the
-              <a href="#contact" data-open-inquiry data-inquiry-topic="Private booking &mdash; Other event">booking form</a>
+              <a href="#contact" data-open-inquiry data-inquiry-topic="Private booking - Other event">booking form</a>
               with your city and we&rsquo;ll come back with a quote.
             </p>
           </div>
@@ -1125,7 +1125,7 @@
         <a class="btn btn--primary"
            href="#contact"
            data-open-inquiry
-           data-inquiry-topic="Private booking &mdash; Other event">
+           data-inquiry-topic="Private booking - Other event">
           Book a Private Night
         </a>
         <a class="booking__phone" href="sms:+17326467073">
@@ -1165,7 +1165,7 @@
         </p>
         <div class="footer__cta-row">
           <a href="#newsletter" class="btn btn--primary btn--lg" data-cta-when-live="buy" data-href-live="events.html" data-text-live="Buy Tickets">Get Notified</a>
-          <a href="#contact" class="btn btn--ghost btn--lg" data-open-inquiry data-inquiry-topic="Private booking — Other event">Book a Private Night</a>
+          <a href="#contact" class="btn btn--ghost btn--lg" data-open-inquiry data-inquiry-topic="Private booking - Other event">Book a Private Night</a>
         </div>
       </div>
     </div>
@@ -1186,7 +1186,7 @@
       <div class="footer__col">
         <h4 class="footer__h">Work With Us</h4>
         <ul class="footer__list">
-          <li><a href="#contact" data-open-inquiry data-inquiry-topic="Private booking — Other event">Private &amp; Corporate Bookings</a></li>
+          <li><a href="#contact" data-open-inquiry data-inquiry-topic="Private booking - Other event">Private &amp; Corporate Bookings</a></li>
           <li><a href="#contact" data-open-inquiry data-inquiry-topic="Brand partnerships">Brand Partnerships</a></li>
           <li><a href="#contact" data-open-inquiry data-inquiry-topic="Bring us to your city">Bring Us To Your City</a></li>
           <li><a href="#contact" data-open-inquiry data-inquiry-topic="Press &amp; media">Press &amp; Media</a></li>
@@ -1266,7 +1266,7 @@
       <h2 id="inquiry-modal-title" class="modal__title">Let&rsquo;s Make Some Noise.</h2>
       <p class="modal__sub">
         Want Take Me Back Bingo at your venue, office, or birthday?
-        Slide into our inbox &mdash; we reply within 24 hours.
+        Slide into our inbox. We reply within 24 hours.
       </p>
     </header>
 
@@ -1296,11 +1296,11 @@
           <select name="topic" required>
             <option value="" disabled selected>Choose one</option>
             <optgroup label="Private bookings">
-              <option>Private booking &mdash; Bar / Nightclub</option>
-              <option>Private booking &mdash; Corporate / Office</option>
-              <option>Private booking &mdash; Birthday</option>
-              <option>Private booking &mdash; Wedding</option>
-              <option>Private booking &mdash; Other event</option>
+              <option>Private booking - Bar / Nightclub</option>
+              <option>Private booking - Corporate / Office</option>
+              <option>Private booking - Birthday</option>
+              <option>Private booking - Wedding</option>
+              <option>Private booking - Other event</option>
             </optgroup>
             <optgroup label="Public events">
               <option>Reserve a table</option>
@@ -1338,7 +1338,7 @@
 
       <label class="modal__field">
         <span class="modal__label">Message</span>
-        <textarea name="message" rows="5" required placeholder="Tell us about your event &mdash; venue type, vibe, must-haves."></textarea>
+        <textarea name="message" rows="5" required placeholder="Tell us about your event: venue type, vibe, must-haves."></textarea>
       </label>
 
       <div class="modal__actions">
@@ -1350,7 +1350,7 @@
       </div>
 
       <p class="modal__hint modal__caveat">
-        Based in NY/NJ &mdash; travel fees apply outside.
+        Based in NY/NJ. Travel fees apply outside.
         Need tickets instead? <a href="events.html">See upcoming nights &rarr;</a>
       </p>
 
@@ -1448,11 +1448,10 @@
 
       function toggleBookingFields() {
         var topic = inquirySelectEl ? (inquirySelectEl.value || '') : '';
-        // Normalize em dash so the prefix check works regardless of encoding
-        var normalized = topic.replace(/—/g, '-').toLowerCase();
+        var normalized = topic.toLowerCase();
         var isBooking = normalized.indexOf('private booking') === 0;
         inquiryModal.querySelectorAll('[data-booking-only]').forEach(function (el) {
-          // Use inline display rather than the [hidden] attribute — modal__row /
+          // Use inline display rather than the [hidden] attribute; modal__row /
           // modal__field set display:grid/flex in CSS, which overrides [hidden].
           el.style.display = isBooking ? '' : 'none';
         });
@@ -1483,7 +1482,7 @@
             opt.text = topic; opt.value = topic; opt.selected = true;
             inquirySelectEl.appendChild(opt);
           }
-          // Keep the headline constant ("Let's Make Some Noise.") — it's brand,
+          // Keep the headline constant ("Let's Make Some Noise."), it's brand,
           // not a context label. The topic is conveyed by the pre-selected option.
           if (inquirySubjEl) inquirySubjEl.value = '[Take Me Back Bingo] ' + topic;
         }
@@ -1569,7 +1568,7 @@
       });
     }
 
-    // === Footer newsletter — POSTs JSON to /api/subscribe (Resend Audience) ===
+    // === Footer newsletter, POSTs JSON to /api/subscribe (Resend Audience) ===
     // Inquiry/booking forms remain on Formspree; only the newsletter moved.
     var newsletterForm = document.querySelector('[data-newsletter-form]');
     if (newsletterForm) {
@@ -1628,7 +1627,7 @@
         })
           .then(function (res) {
             if (!res.ok) throw new Error('subscribe responded ' + res.status);
-            setNewsletterStatus('You’re on the list — dates drop soon. Check your inbox.', false);
+            setNewsletterStatus('You’re on the list. Dates drop soon, check your inbox.', false);
             newsletterForm.reset();
             if (newsletterBtn) newsletterBtn.innerHTML = newsletterBtnDefault;
           })

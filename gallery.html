@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Gallery &middot; Take Me Back Bingo</title>
-<meta name="description" content="Photos from past Take Me Back Bingo nights &mdash; winners, hosts, dance floors." />
+<meta name="description" content="Photos from past Take Me Back Bingo nights: winners, hosts, dance floors." />
 <meta name="robots" content="index,follow,max-image-preview:large" />
 <meta name="theme-color" content="#141111" />
 <link rel="canonical" href="https://takemebackbingo.com/gallery.html" />
@@ -209,7 +209,7 @@
       <a class="btn btn--ghost"
          href="#contact"
          data-open-inquiry
-         data-inquiry-topic="Private booking &mdash; Other event">
+         data-inquiry-topic="Private booking - Other event">
         Book a private party
       </a>
     </div>
@@ -229,7 +229,7 @@
         <p class="footer__sub">Hip-Hop &amp; R&amp;B bingo, live in your city. Dance battles, prizes, throwbacks all night.</p>
         <div class="footer__cta-row">
           <a href="#newsletter" class="btn btn--primary btn--lg" data-cta-when-live="buy" data-href-live="events.html" data-text-live="Buy Tickets">Get Notified</a>
-          <a href="#contact" class="btn btn--ghost btn--lg" data-open-inquiry data-inquiry-topic="Private booking — Other event">Book a Private Night</a>
+          <a href="#contact" class="btn btn--ghost btn--lg" data-open-inquiry data-inquiry-topic="Private booking - Other event">Book a Private Night</a>
         </div>
       </div>
     </div>
@@ -247,7 +247,7 @@
       <div class="footer__col">
         <h4 class="footer__h">Work With Us</h4>
         <ul class="footer__list">
-          <li><a href="#contact" data-open-inquiry data-inquiry-topic="Private booking — Other event">Private &amp; Corporate Bookings</a></li>
+          <li><a href="#contact" data-open-inquiry data-inquiry-topic="Private booking - Other event">Private &amp; Corporate Bookings</a></li>
           <li><a href="#contact" data-open-inquiry data-inquiry-topic="Brand partnerships">Brand Partnerships</a></li>
           <li><a href="#contact" data-open-inquiry data-inquiry-topic="Bring us to your city">Bring Us To Your City</a></li>
           <li><a href="#contact" data-open-inquiry data-inquiry-topic="Press &amp; media">Press &amp; Media</a></li>
@@ -318,7 +318,7 @@
     <header class="modal__head">
       <p class="eyebrow"><span class="eyebrow__dot"></span> Get in Touch</p>
       <h2 id="inquiry-modal-title" class="modal__title">Let&rsquo;s Make Some Noise.</h2>
-      <p class="modal__sub">Want Take Me Back Bingo at your venue, office, or birthday? Slide into our inbox &mdash; we reply within 24 hours.</p>
+      <p class="modal__sub">Want Take Me Back Bingo at your venue, office, or birthday? Slide into our inbox. We reply within 24 hours.</p>
     </header>
     <form class="modal__form" data-inquiry-form method="POST" action="https://formspree.io/f/mbdbggbv" novalidate>
       <input type="hidden" name="_subject" data-inquiry-subject-field value="[Take Me Back Bingo] Inquiry" />
@@ -333,11 +333,11 @@
           <select name="topic" required>
             <option value="" disabled selected>Choose one</option>
             <optgroup label="Private bookings">
-              <option>Private booking &mdash; Bar / Nightclub</option>
-              <option>Private booking &mdash; Corporate / Office</option>
-              <option>Private booking &mdash; Birthday</option>
-              <option>Private booking &mdash; Wedding</option>
-              <option>Private booking &mdash; Other event</option>
+              <option>Private booking - Bar / Nightclub</option>
+              <option>Private booking - Corporate / Office</option>
+              <option>Private booking - Birthday</option>
+              <option>Private booking - Wedding</option>
+              <option>Private booking - Other event</option>
             </optgroup>
             <optgroup label="Public events">
               <option>Reserve a table</option>
@@ -362,14 +362,14 @@
         <label class="modal__field"><span class="modal__label">City, State</span><input type="text" name="city" placeholder="Newark, NJ" autocomplete="address-level2" /></label>
       </div>
       <label class="modal__field" data-booking-only hidden><span class="modal__label">Expected Headcount</span><input type="number" name="headcount" placeholder="e.g. 75" min="1" inputmode="numeric" /></label>
-      <label class="modal__field"><span class="modal__label">Message</span><textarea name="message" rows="5" required placeholder="Tell us about your event &mdash; venue type, vibe, must-haves."></textarea></label>
+      <label class="modal__field"><span class="modal__label">Message</span><textarea name="message" rows="5" required placeholder="Tell us about your event: venue type, vibe, must-haves."></textarea></label>
       <div class="modal__actions">
         <button type="submit" class="btn btn--primary btn--lg">Send Inquiry
           <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <p class="modal__hint">Or call/text <a href="tel:+17326467073">732.646.7073</a></p>
       </div>
-      <p class="modal__hint modal__caveat">Based in NY/NJ &mdash; travel fees apply outside. Need tickets instead? <a href="events.html">See upcoming nights &rarr;</a></p>
+      <p class="modal__hint modal__caveat">Based in NY/NJ. Travel fees apply outside. Need tickets instead? <a href="events.html">See upcoming nights &rarr;</a></p>
       <p class="modal__status" data-inquiry-status role="status"></p>
     </form>
   </div>
@@ -474,7 +474,7 @@
 
       function toggleBookingFields() {
         var topic = inquirySelectEl ? (inquirySelectEl.value || '') : '';
-        var normalized = topic.replace(/—/g, '-').toLowerCase();
+        var normalized = topic.toLowerCase();
         var isBooking = normalized.indexOf('private booking') === 0;
         inquiryModal.querySelectorAll('[data-booking-only]').forEach(function (el) {
           el.style.display = isBooking ? '' : 'none';
@@ -595,7 +595,7 @@
         })
           .then(function (res) {
             if (!res.ok) throw new Error('subscribe ' + res.status);
-            setNewsletterStatus('You’re on the list — dates drop soon. Check your inbox.', false);
+            setNewsletterStatus('You’re on the list. Dates drop soon, check your inbox.', false);
             newsletterForm.reset();
             if (newsletterBtn) newsletterBtn.innerHTML = newsletterBtnDefault;
           })
