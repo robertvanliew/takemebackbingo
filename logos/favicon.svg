@@ -2,12 +2,10 @@
 <!-- Take Me Back Bingo · favicon
      The "B" from the BINGO card, with the Bungee-style 3D drop-shadow
      treatment: cream face, brand-purple shadow offset down + right.
-     Sits on the dark cassette-body backdrop so the cream pops.
-     Path-drawn (no font dependency) so it renders crisp at 16x16. -->
+     Transparent background so the B reads cleanly on light or dark
+     browser tab surfaces. Path-drawn (no font dependency) so it
+     renders crisp at 16x16. -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- Dark cassette body, slightly rounded -->
-  <rect width="64" height="64" rx="10" fill="#141111"/>
-
   <!-- Purple drop-shadow "B" (behind, offset +3px down/right) -->
   <path fill="#7B2D8E" fill-rule="evenodd" d="M 17 15 H 38 C 46 15 50 19 50 26 C 50 30 48 32 46 33.5 C 49 35 51 38 51 42 C 51 49 47 53 38 53 H 17 Z M 25 22 V 30 H 37 C 40 30 41.5 28.5 41.5 26 C 41.5 23.5 40 22 37 22 Z M 25 37 V 46 H 38 C 42 46 43.5 44 43.5 41.5 C 43.5 39 42 37 38 37 Z"/>
 
