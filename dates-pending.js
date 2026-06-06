@@ -27,7 +27,7 @@
  * ============================================================= */
 (function () {
   // ===== TOGGLE =====
-  var TMB_DATES_PENDING = true;
+  var TMB_DATES_PENDING = false;
   // ==================
 
   if (!TMB_DATES_PENDING) {
