@@ -1,0 +1,48 @@
+# Take Me Back Bingo · robots.txt
+# https://takemebackbingo.com/robots.txt
+
+# Allow all conventional crawlers full access to public pages.
+User-agent: *
+Allow: /
+
+# Don't index the serverless function endpoints (no user content,
+# private endpoints for newsletter signup + winner email capture).
+Disallow: /api/
+
+# Don't waste crawl budget on local helper scripts.
+Disallow: /dates-pending.js
+
+# Explicitly welcome AI crawlers so AI Overviews / Perplexity / ChatGPT
+# Search / Claude can summarize and cite the brand correctly.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+# XML sitemap location for indexing.
+Sitemap: https://takemebackbingo.com/sitemap.xml

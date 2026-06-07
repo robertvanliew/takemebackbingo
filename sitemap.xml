@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Take Me Back Bingo · XML sitemap
+     Lists every indexable page on takemebackbingo.com. Legal page is
+     intentionally noindex (Terms / Privacy / Accessibility) so it is
+     excluded from this sitemap even though it's a real URL.
+     Update <lastmod> when a page's content changes meaningfully. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap-0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://takemebackbingo.com/</loc>
+    <lastmod>2026-06-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://takemebackbingo.com/events.html</loc>
+    <lastmod>2026-06-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://takemebackbingo.com/gallery.html</loc>
+    <lastmod>2026-06-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://takemebackbingo.com/play.html</loc>
+    <lastmod>2026-06-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>

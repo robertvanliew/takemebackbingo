@@ -239,6 +239,21 @@
 }
 </script>
 
+<!-- WebSite schema · enables the Google sitelinks search box for branded
+     queries ("take me back bingo") and declares the canonical home URL. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": "https://takemebackbingo.com/#website",
+  "url": "https://takemebackbingo.com/",
+  "name": "Take Me Back Bingo",
+  "description": "Hip-hop and R&B live music bingo nights with throwback hits, dance battles, and prizes.",
+  "publisher": { "@id": "https://takemebackbingo.com/#organization" },
+  "inLanguage": "en-US"
+}
+</script>
+
 <!-- Organization schema · brand-level entity that Event JSON-LD references
      as `organizer` so Google connects nights to one canonical brand. -->
 <script type="application/ld+json">
