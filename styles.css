@@ -4036,8 +4036,10 @@ html.js ul.meta-strip[data-reveal].is-in > li {
 .demo-reel__stage {
   position: relative;
   margin: 0 auto;
-  max-width: 520px;
-  aspect-ratio: 1 / 1;
+  /* New recording is portrait (454x670). Narrower container + taller
+     aspect ratio so the video fills the frame without crop or stretch. */
+  max-width: 380px;
+  aspect-ratio: 454 / 670;
   background: var(--bg);
   border-radius: 18px;
   overflow: hidden;
