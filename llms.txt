@@ -20,7 +20,7 @@ mixtape visual identity.
 - [Homepage](https://takemebackbingo.com/): brand overview, how the night works, the four challenges (dance battles, lip sync wars, sing-alongs), FAQ, and the booking inquiry form
 - [Events](https://takemebackbingo.com/events): upcoming nights on sale + past sold-out shows (Thriller Bingo, Reminisce Bingo)
 - [Gallery](https://takemebackbingo.com/gallery): crowd shots and winner photos from past nights
-- [Play](https://takemebackbingo.com/play): free browser-based music bingo demo with real song clips. Winners get a discount code for live tickets.
+- [Play](https://takemebackbingo.com/play): the full Take Me Back Bingo game playable free in any browser. Real song clips from the iTunes catalog, voice-detected wins (yell "TAKE ME BACK"), shareable win cards. Winners unlock a 10% discount code for a real Take Me Back Bingo ticket.
 
 ## How a night works
 
