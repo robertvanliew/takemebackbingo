@@ -890,6 +890,52 @@
   </div>
 </section>
 
+<!-- ============ SEE IT IN ACTION · 15s gameplay demo (dark surface) ============
+     Embedded gameplay screen recording. The video file ships with its
+     native black backdrop, but mix-blend-mode:lighten on the dark page
+     surface makes that black blend away so only the cream card + gold
+     daubers + purple FREE square float through. Scoped class names
+     (.demo-reel*) so this section can't collide with any existing CSS. -->
+<section class="demo-reel" id="see-it-in-action">
+  <div class="demo-reel__inner">
+    <header class="demo-reel__head">
+      <p class="eyebrow" data-reveal>
+        <span class="eyebrow__dot"></span>
+        See it in action
+      </p>
+      <h2 class="h2" data-reveal>
+        Fifteen seconds of the real thing.
+      </h2>
+      <p class="demo-reel__sub" data-reveal>
+        An 80s R&amp;B card mid-round. Songs daub themselves once the DJ
+        plays them. You yell &ldquo;Take Me Back&rdquo; when you line up five.
+        Try the full demo free, no signup.
+      </p>
+    </header>
+
+    <figure class="demo-reel__stage" data-reveal>
+      <video
+        class="demo-reel__video"
+        src="videos/play-gameplay-demo.mp4"
+        poster="videos/play-gameplay-poster.jpg"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        aria-label="Live gameplay of Take Me Back Bingo: a 5x5 bingo card with song titles, daubed gold circles, and a purple FREE space.">
+      </video>
+    </figure>
+
+    <div class="demo-reel__cta" data-reveal>
+      <a class="btn btn--primary btn--lg" href="play.html">
+        Play the full demo
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
 <!-- ============ ABOUT · brand origin (light surface) ============ -->
 <section class="about" id="about">
   <div class="about__inner">
