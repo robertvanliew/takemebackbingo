@@ -13,14 +13,14 @@ mixtape visual identity.
 
 ## Upcoming events
 
-- [Take Me Back Bingo: Summer Jam](https://takemebackbingo.com/events.html#evt-summer-jam-2026): Friday, June 26, 2026 at Lake Chateau Banquets (1002 US-9, Woodbridge Township, NJ 07095). DJ Tameil on the decks. Hosted by Comedian Talent (Def Comedy Jam, BET's Comic View, The Apollo). 80s, 90s, 00s music with dance battles and lip sync battles between rounds. Doors 6 PM. Show 7 PM. After-party 10 PM to 12 AM. Early bird $40. 21+. Tickets: https://www.simpletix.com/e/take-me-back-bingo-summer-jam-tickets-278482
+- [Take Me Back Bingo: Summer Jam](https://takemebackbingo.com/events#evt-summer-jam-2026): Friday, June 26, 2026 at Lake Chateau Banquets (1002 US-9, Woodbridge Township, NJ 07095). DJ Tameil on the decks. Hosted by Comedian Talent (Def Comedy Jam, BET's Comic View, The Apollo). 80s, 90s, 00s music with dance battles and lip sync battles between rounds. Doors 6 PM. Show 7 PM. After-party 10 PM to 12 AM. Early bird $40. 21+. Tickets: https://www.simpletix.com/e/take-me-back-bingo-summer-jam-tickets-278482
 
 ## Core pages
 
 - [Homepage](https://takemebackbingo.com/): brand overview, how the night works, the four challenges (dance battles, lip sync wars, sing-alongs), FAQ, and the booking inquiry form
-- [Events](https://takemebackbingo.com/events.html): upcoming nights on sale + past sold-out shows (Thriller Bingo, Reminisce Bingo)
-- [Gallery](https://takemebackbingo.com/gallery.html): crowd shots and winner photos from past nights
-- [Play](https://takemebackbingo.com/play.html): free browser-based music bingo demo with real song clips. Winners get a discount code for live tickets.
+- [Events](https://takemebackbingo.com/events): upcoming nights on sale + past sold-out shows (Thriller Bingo, Reminisce Bingo)
+- [Gallery](https://takemebackbingo.com/gallery): crowd shots and winner photos from past nights
+- [Play](https://takemebackbingo.com/play): free browser-based music bingo demo with real song clips. Winners get a discount code for live tickets.
 
 ## How a night works
 
