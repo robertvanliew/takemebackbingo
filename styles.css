@@ -628,6 +628,34 @@ ul, ol { list-style: none; padding: 0; margin: 0; }
   font-style: normal;
   color: var(--text);
 }
+/* Smaller secondary block ('NIGHTS.') so the trademarked name reads as
+   "Take Me Back Bingo Nights" while keeping BINGO as the visual hero. */
+.jcard__title-block--small {
+  font-size: calc(var(--fs-display) * 0.5);
+  margin-top: -.05em;
+  /* The smaller variant uses a softer 3D extrude so its weight doesn't
+     compete with the dominant BINGO above it. */
+  -webkit-text-stroke: 1.5px var(--accent);
+  text-shadow:
+    1px 1px 0 var(--primary),
+    2px 2px 0 var(--primary),
+    3px 3px 0 var(--primary),
+    4px 4px 0 var(--primary-700),
+    5px 5px 0 var(--primary-700),
+    6px 8px 8px rgba(0,0,0,.34);
+}
+@media (max-width: 480px) {
+  .jcard__title-block--small {
+    font-size: calc(var(--fs-display) * 0.55);
+    -webkit-text-stroke: 1px var(--accent);
+    text-shadow:
+      1px 1px 0 var(--primary),
+      2px 2px 0 var(--primary),
+      3px 3px 0 var(--primary-700),
+      4px 4px 0 var(--primary-700),
+      5px 6px 6px rgba(0,0,0,.34);
+  }
+}
 
 .jcard__lede {
   font-family: 'Newsreader', Georgia, serif;
