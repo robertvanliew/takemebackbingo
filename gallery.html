@@ -548,6 +548,12 @@
           .then(function (res) {
             if (!res.ok) throw new Error('Formspree ' + res.status);
             inquiryStatus.textContent = 'Thanks, we got it. We’ll be back within one business day.';
+            try {
+              if (typeof gtag === 'function') {
+                var inquiryTopic = (inquirySelectEl && inquirySelectEl.value) || 'unspecified';
+                gtag('event', 'inquiry_submit', { topic: inquiryTopic });
+              }
+            } catch (e) {}
             inquiryForm.reset();
             setTimeout(function () { if (!inquiryModal.hidden) closeInquiry(); }, 2000);
           })
@@ -608,6 +614,7 @@
           .then(function (res) {
             if (!res.ok) throw new Error('subscribe ' + res.status);
             setNewsletterStatus('You’re on the list. Dates drop soon, check your inbox.', false);
+            try { if (typeof gtag === 'function') gtag('event', 'newsletter_signup', { method: 'footer_form' }); } catch (e) {}
             newsletterForm.reset();
             if (newsletterBtn) newsletterBtn.innerHTML = newsletterBtnDefault;
           })

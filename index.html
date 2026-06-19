@@ -1681,6 +1681,13 @@
           .then(function (res) {
             if (!res.ok) throw new Error('Formspree responded ' + res.status);
             inquiryStatus.textContent = 'Thanks, we got it. We’ll be back within one business day.';
+            // GA4 conversion: an inquiry was submitted (track the topic for funnel slicing)
+            try {
+              if (typeof gtag === 'function') {
+                var inquiryTopic = (inquirySelectEl && inquirySelectEl.value) || 'unspecified';
+                gtag('event', 'inquiry_submit', { topic: inquiryTopic });
+              }
+            } catch (e) {}
             inquiryForm.reset();
             // Keep the modal open for ~2s so the user actually sees the confirmation,
             // then auto-close. (closeInquiry restores focus and unlocks scroll.)
@@ -1763,6 +1770,8 @@
             setNewsletterStatus('You’re on the list. Dates drop soon, check your inbox.', false);
             newsletterForm.reset();
             if (newsletterBtn) newsletterBtn.innerHTML = newsletterBtnDefault;
+            // GA4 conversion: a real subscriber added
+            try { if (typeof gtag === 'function') gtag('event', 'newsletter_signup', { method: 'footer_form' }); } catch (e) {}
           })
           .catch(function () {
             setNewsletterStatus('Couldn’t subscribe. Try again or email info@takemebackbingo.com.', true);

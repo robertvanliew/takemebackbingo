@@ -4009,6 +4009,16 @@ let lastShareBlob = null;
 function showCelebration() {
   $('#celebration').hidden = false;
 
+  // GA4: bingo_win event (highest-engagement signal on the play page)
+  try {
+    if (typeof gtag === 'function') {
+      const winEra = document.querySelector('.era-pill.is-active .era-pill__label');
+      gtag('event', 'bingo_win', {
+        era: winEra ? winEra.textContent.trim() : 'unknown'
+      });
+    }
+  } catch (e) {}
+
   // Dynamic era subhead - "You just beat our [era] round."
   try {
     const activeEra = document.querySelector('.era-pill.is-active .era-pill__label');
@@ -4125,6 +4135,24 @@ $('#playAgainBtn').addEventListener('click', () => {
   // Auto-start next round since we know audio is already primed
   setTimeout(startGame, 400);
 });
+
+// GA4: track the win-screen 'Get My Ticket' click - highest-intent conversion
+// signal in the funnel. Fires before the new tab opens.
+const celebrationCTAEl = document.getElementById('celebrationCTA');
+if (celebrationCTAEl) {
+  celebrationCTAEl.addEventListener('click', () => {
+    try {
+      if (typeof gtag === 'function') {
+        gtag('event', 'buy_tickets_click', {
+          source: 'win_screen',
+          event_title: 'Summer Jam',
+          destination: 'simpletix',
+          discount_code: 'THROWBACK10'
+        });
+      }
+    } catch (e) {}
+  });
+}
 
 /* ---------- Close button on celebration screen -------------------------
    Hides the celebration so the user falls back to the bingo card view.
