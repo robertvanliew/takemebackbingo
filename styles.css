@@ -4141,3 +4141,126 @@ html.js ul.meta-strip[data-reveal].is-in > li {
   transition: color var(--dur-fast) var(--ease-out);
 }
 .play-about a:hover { color: var(--text); }
+
+/* =========================================================
+   32. SONGS · /songs tracklist page (dark surface)
+   Long-tail SEO landing for music bingo song-list queries.
+   Mixtape/J-card aesthetic: numbered tracks, mono kicker,
+   serif title + sans artist on each row.
+   ========================================================= */
+.songs-page {
+  background: var(--bg);
+  color: var(--text);
+  padding: clamp(80px, 12vw, 140px) var(--s-6) var(--s-9);
+}
+.songs-page__inner {
+  max-width: 880px;
+  margin: 0 auto;
+}
+.songs-page__head { margin-bottom: var(--s-9); }
+.songs-page__h1 {
+  margin: var(--s-3) 0 var(--s-5);
+}
+.songs-page__sub {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: var(--fs-20);
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin: 0 0 var(--s-4);
+  max-width: 60ch;
+  text-wrap: pretty;
+}
+.songs-page__sub a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 1px;
+}
+.songs-page__sub a:hover { color: var(--text); }
+
+.songs-era {
+  margin: 0 0 var(--s-9);
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--rule);
+}
+.songs-era__h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  letter-spacing: -.01em;
+  line-height: 1;
+  margin: var(--s-3) 0 var(--s-5);
+  color: var(--text);
+}
+
+.songs-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: song;
+}
+.songs-list li {
+  counter-increment: song;
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-3);
+  padding: var(--s-3) 0;
+  border-bottom: 1px solid rgba(242,234,219,.08);
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: var(--fs-18);
+}
+.songs-list li::before {
+  content: counter(song, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: var(--fs-11);
+  letter-spacing: .18em;
+  color: var(--accent);
+  flex-shrink: 0;
+  min-width: 2.5em;
+  font-feature-settings: 'tnum';
+}
+.songs-list__title {
+  font-weight: 600;
+  color: var(--text);
+}
+.songs-list__artist {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.songs-cta {
+  margin-top: var(--s-9);
+  padding: var(--s-7) var(--s-6);
+  background: var(--bg-elev);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  text-align: center;
+}
+.songs-cta__h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+  letter-spacing: -.01em;
+  line-height: 1.05;
+  margin: 0 0 var(--s-3);
+  color: var(--text);
+}
+.songs-cta__copy {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: var(--fs-18);
+  line-height: 1.55;
+  color: var(--text-muted);
+  margin: 0 auto var(--s-5);
+  max-width: 50ch;
+  text-wrap: pretty;
+}
+.songs-cta__row {
+  display: inline-flex;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+@media (max-width: 640px) {
+  .songs-list li {
+    flex-wrap: wrap;
+    gap: 4px var(--s-3);
+  }
+}
