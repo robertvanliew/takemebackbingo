@@ -628,32 +628,33 @@ ul, ol { list-style: none; padding: 0; margin: 0; }
   font-style: normal;
   color: var(--text);
 }
-/* Smaller secondary block ('NIGHTS.') so the trademarked name reads as
-   "Take Me Back Bingo Nights" while keeping BINGO as the visual hero. */
-.jcard__title-block--small {
-  font-size: calc(var(--fs-display) * 0.5);
-  margin-top: -.05em;
-  /* The smaller variant uses a softer 3D extrude so its weight doesn't
-     compete with the dominant BINGO above it. */
-  -webkit-text-stroke: 1.5px var(--accent);
+/* 'Nights' cursive flourish - vintage club / Studio 54 sign vibe.
+   Allura is an elegant calligraphic Google Font; we render it in
+   brand gold with a soft drop-shadow so it reads as illuminated
+   signage rather than competing with the block BINGO above. */
+.jcard__title-cursive {
+  display: block;
+  font-family: 'Allura', 'Great Vibes', 'Brush Script MT', cursive;
+  font-size: calc(var(--fs-display) * 0.85);
+  color: var(--accent);
+  font-weight: 400;
+  font-style: normal; /* Allura is naturally calligraphic, no italics needed */
+  letter-spacing: -.01em;
+  line-height: .9;
+  margin-top: -.08em;
+  /* Soft warm-gold glow + small dark drop, evokes neon/illuminated club signage */
   text-shadow:
-    1px 1px 0 var(--primary),
-    2px 2px 0 var(--primary),
-    3px 3px 0 var(--primary),
-    4px 4px 0 var(--primary-700),
-    5px 5px 0 var(--primary-700),
-    6px 8px 8px rgba(0,0,0,.34);
+    2px 4px 8px rgba(0,0,0,.45),
+    0 0 24px rgba(201,150,43,.25);
+  text-transform: none; /* cursive must stay mixed-case to read elegantly */
 }
 @media (max-width: 480px) {
-  .jcard__title-block--small {
-    font-size: calc(var(--fs-display) * 0.55);
-    -webkit-text-stroke: 1px var(--accent);
+  .jcard__title-cursive {
+    font-size: calc(var(--fs-display) * 1);
+    margin-top: -.04em;
     text-shadow:
-      1px 1px 0 var(--primary),
-      2px 2px 0 var(--primary),
-      3px 3px 0 var(--primary-700),
-      4px 4px 0 var(--primary-700),
-      5px 6px 6px rgba(0,0,0,.34);
+      1px 2px 5px rgba(0,0,0,.4),
+      0 0 16px rgba(201,150,43,.2);
   }
 }
 
