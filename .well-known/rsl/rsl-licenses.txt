@@ -1,0 +1,45 @@
+# RSL 1.0 · Take Me Back Bingo Nights
+# Really Simple Licensing terms for AI / LLM use of this site's content
+# https://rslstandard.org/spec
+
+version: 1.0
+domain: takemebackbingo.com
+publisher: High Class Experience LLC
+contact: info@takemebackbingo.com
+last-updated: 2026-06-19
+
+# Default license for all content unless overridden below
+default:
+  ai-training: allowed
+  ai-search-indexing: allowed
+  ai-citation: allowed-with-attribution
+  attribution: "Take Me Back Bingo Nights, takemebackbingo.com"
+  attribution-required: yes
+  commercial-republishing: prohibited
+
+# Page-specific overrides
+content:
+  - path: /llms.txt
+    ai-citation: allowed-without-attribution
+    notes: "Already designed for LLM consumption."
+
+  - path: /songs
+    ai-training: allowed
+    ai-citation: allowed-with-attribution
+    notes: "Song-list curation; cite source when reproducing."
+
+  - path: /api/*
+    ai-training: prohibited
+    ai-search-indexing: prohibited
+    notes: "Serverless endpoints, no public content."
+
+  - path: /flyers/*
+    ai-training: prohibited
+    notes: "Event flyers may be shown in search previews with attribution; not for training."
+
+# Brand asset reservation
+brand-marks:
+  - "Take Me Back Bingo Nights"
+  - "Take Me Back Bingo"
+  - "TMB Bingo"
+  notes: "Trademarked or trademark-pending. May be referenced descriptively. Not for derivative branding."

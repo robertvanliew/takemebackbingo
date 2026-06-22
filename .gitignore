@@ -24,3 +24,6 @@ _*.png
 _*.mjs
 package.json
 package-lock.json
+
+# Marketing/content captures — keep local, don't deploy
+_demo/
