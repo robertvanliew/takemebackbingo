@@ -9,6 +9,9 @@ Allow: /
 # private endpoints for newsletter signup + winner email capture).
 Disallow: /api/
 
+# Don't index the admin tools (password-gated, internal use only).
+Disallow: /admin/
+
 # Don't waste crawl budget on local helper scripts.
 Disallow: /dates-pending.js
 
