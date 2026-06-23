@@ -257,8 +257,8 @@
         <div class="field">
           <label for="cardsPerPage">Cards Per Page</label>
           <select id="cardsPerPage">
-            <option value="1">1 (large, easy to read)</option>
-            <option value="2" selected>2 (standard, fits Letter)</option>
+            <option value="1">1 per page · portrait, 7.1" × 10"</option>
+            <option value="2" selected>2 per page · landscape, 5.5" × 7.75" each</option>
           </select>
         </div>
 
@@ -802,29 +802,43 @@ async function generatePdf() {
     const cards = generateUniqueCards(pool, count);
 
     const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF({ unit: "in", format: "letter", orientation: "portrait" });
-    const pageW = 8.5, pageH = 11;
-    const cardW = perPage === 1 ? 7.5 : 5;
-    const cardH = perPage === 1 ? 10 : 5;
-    // Hmm — Letter is 8.5 x 11. For perPage=2 portrait stacked: each card 7.5w x 5h with 0.5 margins
-    // Simpler & better readable: portrait page with cards stacked, each 7.5w x 5h
-    // For perPage=1: a single card 7.5 x 10
-    // We'll fit each rendered card to its target box.
-    let layoutW, layoutH, layoutX, slotYs;
+
+    // The HTML card is 5:7 (width:height). The PDF slots MUST match that
+    // aspect or the printed card will be stretched. Letter = 8.5 x 11.
+    const ASPECT = 5 / 7; // width / height
+    let pdf, pageW, pageH, cardW, cardH, slots;
+
     if (perPage === 1) {
-      layoutW = 7.5; layoutH = 10; layoutX = (pageW - layoutW) / 2;
-      slotYs = [(pageH - layoutH) / 2];
+      // Portrait Letter, one big card centered with ~0.5" margins.
+      pdf = new jsPDF({ unit: "in", format: "letter", orientation: "portrait" });
+      pageW = 8.5; pageH = 11;
+      cardH = 10;                          // 0.5" top + 0.5" bottom margins
+      cardW = cardH * ASPECT;              // 7.14"
+      slots = [{ x: (pageW - cardW) / 2, y: (pageH - cardH) / 2 }];
     } else {
-      layoutW = 7.5; layoutH = 5;
-      layoutX = (pageW - layoutW) / 2;
-      slotYs = [0.4, 5.6];
+      // Landscape Letter, two cards side-by-side. Stacking portrait 5:7 cards
+      // vertically would need 14"+ of height which doesn't fit, so we rotate
+      // the page and place them horizontally — each card stays large and readable.
+      pdf = new jsPDF({ unit: "in", format: "letter", orientation: "landscape" });
+      pageW = 11; pageH = 8.5;
+      cardH = 7.75;                        // 0.375" top/bottom margins
+      cardW = cardH * ASPECT;              // 5.54"
+      const gap = 0.4;
+      const totalW = cardW * 2 + gap;
+      const startX = (pageW - totalW) / 2;
+      const y = (pageH - cardH) / 2;
+      slots = [
+        { x: startX,                 y: y },
+        { x: startX + cardW + gap,   y: y }
+      ];
     }
 
     const stage = document.getElementById("renderStage");
 
     for (let i = 0; i < cards.length; i++) {
-      const slotIdx = i % perPage;
+      const slotIdx = i % slots.length;
       if (i > 0 && slotIdx === 0) pdf.addPage();
+      const slot = slots[slotIdx];
 
       const el = renderCardEl(cards[i], { eventName, eventDate, cardNum: i + 1, totalCards: cards.length, qrDataUrl, handle, logoDataUrl: LOGO_DATA_URL });
       stage.innerHTML = "";
@@ -835,7 +849,7 @@ async function generatePdf() {
 
       const canvas = await html2canvas(el, { backgroundColor: null, scale: 3, logging: false, useCORS: true });
       const imgData = canvas.toDataURL("image/jpeg", 0.96);
-      pdf.addImage(imgData, "JPEG", layoutX, slotYs[slotIdx], layoutW, layoutH, undefined, "FAST");
+      pdf.addImage(imgData, "JPEG", slot.x, slot.y, cardW, cardH, undefined, "FAST");
 
       const pct = Math.round(((i + 1) / cards.length) * 100);
       bar.style.width = pct + "%";
