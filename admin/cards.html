@@ -925,71 +925,77 @@ async function generateAnswerKey() {
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({ unit: "in", format: "letter", orientation: "portrait" });
     const pageW = 8.5, pageH = 11;
-    const marginL = 0.6, marginR = 0.6, marginTop = 0.7, marginBot = 0.6;
-    const colWidth = (pageW - marginL - marginR - 0.3) / 2; // two-column layout
-    const lineH = 0.19;
+    const marginL = 0.6, marginR = 0.6;
+    const marginTop = 0.6, marginBot = 0.6;
+    const textWidth = pageW - marginL - marginR;
+    const lineH = 0.22;
     const eventName = document.getElementById("eventName").value || "Take Me Back Bingo Nights";
     const eventDate = document.getElementById("eventDate").value;
     const dateStr = eventDate ? formatDate(eventDate) : "";
 
-    // Header
-    pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(20);
-    pdf.text("TAKE ME BACK BINGO NIGHTS", pageW / 2, 0.6, { align: "center" });
-    pdf.setFontSize(13);
-    pdf.text("DJ Answer Key — Master Playlist", pageW / 2, 0.85, { align: "center" });
-    pdf.setFont("helvetica", "normal");
-    pdf.setFontSize(11);
-    pdf.text(`${eventName}${dateStr ? "  ·  " + dateStr : ""}`, pageW / 2, 1.1, { align: "center" });
-    pdf.setFontSize(9);
-    pdf.setTextColor(120, 120, 120);
-    pdf.text("Check off each song as it plays.  Cards show artist names only.", pageW / 2, 1.3, { align: "center" });
-    pdf.setTextColor(0, 0, 0);
+    // ---------- Page header (drawn once per page) ----------
+    function drawPageHeader() {
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(18);
+      pdf.text("TAKE ME BACK BINGO NIGHTS", pageW / 2, 0.55, { align: "center" });
+      pdf.setFontSize(12);
+      pdf.text("DJ Answer Key — Master Playlist", pageW / 2, 0.8, { align: "center" });
+      pdf.setFont("helvetica", "normal");
+      pdf.setFontSize(10);
+      pdf.text(`${eventName}${dateStr ? "  ·  " + dateStr : ""}`, pageW / 2, 1.02, { align: "center" });
+      pdf.setFontSize(8.5);
+      pdf.setTextColor(120, 120, 120);
+      pdf.text("Cards show artist names only.  Check off each song as it plays.", pageW / 2, 1.2, { align: "center" });
+      pdf.setTextColor(0, 0, 0);
+    }
+    drawPageHeader();
 
-    let y = 1.7;
-    let col = 0; // 0 = left, 1 = right
-    let colX = marginL;
+    let y = 1.55;
 
-    function moveToNextColOrPage() {
-      if (col === 0) {
-        col = 1;
-        colX = marginL + colWidth + 0.3;
-        y = 1.7;
-      } else {
+    function ensureRoom(needed) {
+      if (y + needed > pageH - marginBot) {
         pdf.addPage();
-        col = 0;
-        colX = marginL;
-        y = marginTop;
+        drawPageHeader();
+        y = 1.55;
+        return true;
       }
+      return false;
     }
 
     for (const poolName of selectedPools) {
       const songs = POOLS[poolName].slice().sort((a, b) => {
         const ea = parseEntry(a), eb = parseEntry(b);
-        return ea.primaryArtist.localeCompare(eb.primaryArtist);
+        const byArtist = ea.primaryArtist.localeCompare(eb.primaryArtist);
+        return byArtist !== 0 ? byArtist : ea.title.localeCompare(eb.title);
       });
 
-      // Era header — make sure it fits in the current column
-      if (y > pageH - marginBot - (songs.length + 2) * lineH / 2) {
-        // not enough room — that's OK, the era header just starts where it is
-      }
+      // Era header — keep header + at least 3 songs together
+      ensureRoom(lineH * 4);
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(11);
-      pdf.text(`${poolName.toUpperCase()} (${songs.length})`, colX, y);
-      y += lineH * 1.2;
+      pdf.setFillColor(241, 195, 59); // gold accent bar
+      pdf.rect(marginL, y - 0.16, textWidth, 0.24, "F");
+      pdf.setTextColor(26, 20, 8);
+      pdf.text(`${poolName.toUpperCase()}    ${songs.length} songs`, marginL + 0.12, y);
+      pdf.setTextColor(0, 0, 0);
+      y += lineH * 1.3;
       pdf.setFont("helvetica", "normal");
-      pdf.setFontSize(9.5);
+      pdf.setFontSize(10.5);
 
       for (const song of songs) {
-        if (y > pageH - marginBot) moveToNextColOrPage();
+        ensureRoom(lineH);
         const { title, artist } = parseEntry(song);
-        // Draw checkbox
-        pdf.setDrawColor(0, 0, 0);
-        pdf.rect(colX, y - 0.11, 0.11, 0.11);
-        const line = `${title}`;
-        const sub = ` — ${artist}`;
-        const fitted = fitLineToWidth(pdf, line + sub, colWidth - 0.2);
-        pdf.text(fitted, colX + 0.18, y);
+
+        // Checkbox — stroke-only, white fill, thin line. The "S" style
+        // is REQUIRED to prevent jsPDF from filling the rect black,
+        // which was the bug that swallowed entire rows in the prior PDF.
+        pdf.setDrawColor(60, 60, 60);
+        pdf.setFillColor(255, 255, 255);
+        pdf.setLineWidth(0.012);
+        pdf.rect(marginL, y - 0.13, 0.14, 0.14, "S");
+
+        const fitted = fitLineToWidth(pdf, `${title}  —  ${artist}`, textWidth - 0.25);
+        pdf.text(fitted, marginL + 0.22, y);
         y += lineH;
       }
       y += lineH * 0.4;
@@ -1010,7 +1016,6 @@ async function generateAnswerKey() {
 function fitLineToWidth(pdf, text, maxWidth) {
   const w = pdf.getTextWidth(text);
   if (w <= maxWidth) return text;
-  // Truncate with ellipsis
   let s = text;
   while (s.length > 4 && pdf.getTextWidth(s + "…") > maxWidth) {
     s = s.slice(0, -1);
