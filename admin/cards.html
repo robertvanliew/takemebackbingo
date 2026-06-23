@@ -151,28 +151,18 @@
     word-break: break-word; hyphens: auto;
   }
   .bcard__cell--free {
-    background: #1a1408; color: var(--gold);
-    border-color: #1a1408;
+    background: var(--gold); color: #1a1408;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     padding: 5px 4px 3px;
-    position: relative;
-    overflow: hidden;
-  }
-  .bcard__cell--free::before {
-    content: ""; position: absolute; inset: 3px;
-    border: 1px solid var(--gold); border-radius: 2px;
-    pointer-events: none; opacity: 0.55;
   }
   .bcard__free-logo {
     width: 92%; height: auto; max-height: 78%;
     object-fit: contain; display: block;
-    position: relative; z-index: 1;
   }
   .bcard__free-text {
     font-family: Bungee, sans-serif; font-size: 7px; letter-spacing: 1.5px;
-    color: var(--gold); line-height: 1;
+    color: #1a1408; line-height: 1;
     margin-top: 3px;
-    position: relative; z-index: 1;
   }
   .bcard__foot {
     display: flex; align-items: center; gap: 10px;
@@ -536,7 +526,7 @@ let LOGO_DATA_URL = null;
 
 async function loadLogo() {
   // Try a few sensible paths so this works in production and locally.
-  const candidates = ["/logos/logo-yellow.png", "../logos/logo-yellow.png", "logos/logo-yellow.png"];
+  const candidates = ["/logos/logo.png", "../logos/logo.png", "logos/logo.png"];
   for (const path of candidates) {
     try {
       const res = await fetch(path);
