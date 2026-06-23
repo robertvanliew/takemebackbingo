@@ -151,7 +151,7 @@
   .bcard__cell {
     background: #fff8e7; border: 1.5px solid #1a1408; border-radius: 4px;
     display: flex; align-items: center; justify-content: center; text-align: center;
-    padding: 4px 3px; font-size: 9.5px; font-weight: 600; line-height: 1.15;
+    padding: 4px 3px; font-size: 11.5px; font-weight: 700; line-height: 1.15;
     word-break: break-word; hyphens: auto;
   }
   .bcard__cell--free {
@@ -269,16 +269,17 @@
 
         <div class="btn-row">
           <button class="btn btn--ghost" onclick="renderPreview()">Preview 3 cards</button>
-          <button class="btn" id="genBtn" onclick="generatePdf()">Generate PDF</button>
+          <button class="btn" id="genBtn" onclick="generatePdf()">Generate Cards PDF</button>
+          <button class="btn btn--ghost" id="keyBtn" onclick="generateAnswerKey()">DJ Answer Key</button>
         </div>
 
         <div class="progress"><div class="progress__bar" id="progBar"></div></div>
         <div class="status" id="status"></div>
 
         <div class="stats">
-          <div class="stats__cell"><div class="stats__n" id="statPool">0</div><div class="stats__l">Pool size</div></div>
+          <div class="stats__cell"><div class="stats__n" id="statPool">0</div><div class="stats__l">Songs</div></div>
+          <div class="stats__cell"><div class="stats__n" id="statArtists">0</div><div class="stats__l">Artists</div></div>
           <div class="stats__cell"><div class="stats__n" id="statCards">0</div><div class="stats__l">Cards</div></div>
-          <div class="stats__cell"><div class="stats__n" id="statOverlap">&mdash;</div><div class="stats__l">Avg overlap</div></div>
         </div>
       </div>
 
@@ -574,18 +575,32 @@ function getCombinedSongPool() {
   return songs;
 }
 
+/* Parse "Song Title — Artist Name (feat. X)" into structured parts.
+   The em dash separator matches what we ship in the POOLS data. */
+function parseEntry(entry) {
+  const m = entry.match(/^(.+?)\s+—\s+(.+)$/);
+  if (!m) return { title: entry, artist: entry, primaryArtist: entry };
+  const title = m[1].trim();
+  const fullArtist = m[2].trim();
+  // For display + uniqueness, strip "feat. …" suffixes so
+  // "Beyoncé feat. Jay-Z" and "Beyoncé" both count as Beyoncé.
+  const primaryArtist = fullArtist.replace(/\s+feat\.?\s+.+$/i, "").trim();
+  return { title, artist: fullArtist, primaryArtist };
+}
+
+function uniqueArtists(pool) {
+  const set = new Set();
+  pool.forEach(e => set.add(parseEntry(e).primaryArtist));
+  return set;
+}
+
 function updateStats() {
   const pool = getCombinedSongPool();
   const cards = parseInt(document.getElementById("cardCount").value, 10) || 0;
+  const artists = uniqueArtists(pool);
   document.getElementById("statPool").textContent = pool.length;
+  document.getElementById("statArtists").textContent = artists.size;
   document.getElementById("statCards").textContent = cards;
-  // Theoretical avg overlap = 24 * (24 / poolSize) approx
-  if (pool.length >= 24) {
-    const overlap = (24 * 24 / pool.length).toFixed(1);
-    document.getElementById("statOverlap").textContent = overlap;
-  } else {
-    document.getElementById("statOverlap").textContent = "—";
-  }
 }
 document.addEventListener("input", e => {
   if (e.target.id === "cardCount") updateStats();
@@ -607,24 +622,40 @@ function shuffle(arr) {
   return a;
 }
 
+/* Pick 24 songs whose primary artists are all distinct.
+   Returns null if the pool can't supply 24 unique artists. */
 function makeCard(pool) {
-  const picks = shuffle(pool).slice(0, 24);
-  // Place into 5x5 grid; index 12 is FREE
+  const shuffled = shuffle(pool);
+  const picks = [];
+  const usedArtists = new Set();
+  for (const entry of shuffled) {
+    const { primaryArtist } = parseEntry(entry);
+    if (usedArtists.has(primaryArtist)) continue;
+    usedArtists.add(primaryArtist);
+    picks.push(entry);
+    if (picks.length === 24) break;
+  }
+  if (picks.length < 24) return null;
   const grid = [];
   let pi = 0;
   for (let i = 0; i < 25; i++) {
-    if (i === 12) grid.push("FREE");
-    else grid.push(picks[pi++]);
+    grid.push(i === 12 ? "FREE" : picks[pi++]);
   }
   return grid;
 }
 
+/* Fingerprint by song titles (the underlying identity) so two cards
+   that happen to draw the same set of artists with different songs
+   are still considered unique. */
 function fingerprint(grid) {
   return grid.filter(s => s !== "FREE").slice().sort().join("|");
 }
 
 function generateUniqueCards(pool, count) {
-  if (pool.length < 24) throw new Error("Need at least 24 songs in the pool.");
+  const artists = uniqueArtists(pool);
+  if (artists.size < 24) {
+    throw new Error(`Need at least 24 distinct artists in the pool. Currently ${artists.size}. Add more eras.`);
+  }
   const cards = [];
   const seen = new Set();
   let attempts = 0;
@@ -632,13 +663,14 @@ function generateUniqueCards(pool, count) {
   while (cards.length < count && attempts < maxAttempts) {
     attempts++;
     const g = makeCard(pool);
+    if (!g) continue;
     const fp = fingerprint(g);
     if (seen.has(fp)) continue;
     seen.add(fp);
     cards.push(g);
   }
   if (cards.length < count) {
-    throw new Error(`Could only generate ${cards.length} unique cards. Add more songs to the pool.`);
+    throw new Error(`Could only generate ${cards.length} unique cards. Add more eras to widen the artist pool.`);
   }
   return cards;
 }
@@ -666,10 +698,11 @@ function renderCardEl(grid, opts) {
         ${letters.map(l => `<div class="bcard__col-letter">${l}</div>`).join("")}
       </div>
       <div class="bcard__grid">
-        ${grid.map(s => s === "FREE"
-          ? freeCellHtml
-          : `<div class="bcard__cell">${escapeHtml(s)}</div>`
-        ).join("")}
+        ${grid.map(s => {
+          if (s === "FREE") return freeCellHtml;
+          const { primaryArtist } = parseEntry(s);
+          return `<div class="bcard__cell">${escapeHtml(primaryArtist)}</div>`;
+        }).join("")}
       </div>
       <div class="bcard__foot">
         ${qrDataUrl ? `<img class="bcard__qr" src="${qrDataUrl}" alt="Scan to visit Take Me Back Bingo Nights" />` : ""}
@@ -868,6 +901,122 @@ async function generatePdf() {
 }
 
 function slug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); }
+
+/* =========================================================================
+   DJ ANSWER KEY — text-based PDF listing every song in the selected eras
+   ------------------------------------------------------------------------
+   The cards only show artist names. The DJ uses this key to know which
+   songs to play. Each line: [ ] Song Title — Artist Name (with checkbox
+   so the DJ can mark what's been played during the night).
+   ========================================================================= */
+async function generateAnswerKey() {
+  const status = document.getElementById("status");
+  const btn = document.getElementById("keyBtn");
+  status.className = "status";
+  status.textContent = "";
+  try {
+    if (typeof window.jspdf === "undefined") {
+      throw new Error("PDF library not loaded yet — wait a second.");
+    }
+    const selectedPools = getSelectedPools();
+    if (!selectedPools.length) throw new Error("Pick at least one era pool.");
+
+    btn.disabled = true;
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ unit: "in", format: "letter", orientation: "portrait" });
+    const pageW = 8.5, pageH = 11;
+    const marginL = 0.6, marginR = 0.6, marginTop = 0.7, marginBot = 0.6;
+    const colWidth = (pageW - marginL - marginR - 0.3) / 2; // two-column layout
+    const lineH = 0.19;
+    const eventName = document.getElementById("eventName").value || "Take Me Back Bingo Nights";
+    const eventDate = document.getElementById("eventDate").value;
+    const dateStr = eventDate ? formatDate(eventDate) : "";
+
+    // Header
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(20);
+    pdf.text("TAKE ME BACK BINGO NIGHTS", pageW / 2, 0.6, { align: "center" });
+    pdf.setFontSize(13);
+    pdf.text("DJ Answer Key — Master Playlist", pageW / 2, 0.85, { align: "center" });
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(11);
+    pdf.text(`${eventName}${dateStr ? "  ·  " + dateStr : ""}`, pageW / 2, 1.1, { align: "center" });
+    pdf.setFontSize(9);
+    pdf.setTextColor(120, 120, 120);
+    pdf.text("Check off each song as it plays.  Cards show artist names only.", pageW / 2, 1.3, { align: "center" });
+    pdf.setTextColor(0, 0, 0);
+
+    let y = 1.7;
+    let col = 0; // 0 = left, 1 = right
+    let colX = marginL;
+
+    function moveToNextColOrPage() {
+      if (col === 0) {
+        col = 1;
+        colX = marginL + colWidth + 0.3;
+        y = 1.7;
+      } else {
+        pdf.addPage();
+        col = 0;
+        colX = marginL;
+        y = marginTop;
+      }
+    }
+
+    for (const poolName of selectedPools) {
+      const songs = POOLS[poolName].slice().sort((a, b) => {
+        const ea = parseEntry(a), eb = parseEntry(b);
+        return ea.primaryArtist.localeCompare(eb.primaryArtist);
+      });
+
+      // Era header — make sure it fits in the current column
+      if (y > pageH - marginBot - (songs.length + 2) * lineH / 2) {
+        // not enough room — that's OK, the era header just starts where it is
+      }
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(11);
+      pdf.text(`${poolName.toUpperCase()} (${songs.length})`, colX, y);
+      y += lineH * 1.2;
+      pdf.setFont("helvetica", "normal");
+      pdf.setFontSize(9.5);
+
+      for (const song of songs) {
+        if (y > pageH - marginBot) moveToNextColOrPage();
+        const { title, artist } = parseEntry(song);
+        // Draw checkbox
+        pdf.setDrawColor(0, 0, 0);
+        pdf.rect(colX, y - 0.11, 0.11, 0.11);
+        const line = `${title}`;
+        const sub = ` — ${artist}`;
+        const fitted = fitLineToWidth(pdf, line + sub, colWidth - 0.2);
+        pdf.text(fitted, colX + 0.18, y);
+        y += lineH;
+      }
+      y += lineH * 0.4;
+    }
+
+    const fname = `TMB-DJ-Answer-Key-${slug(eventName)}-${eventDate || "event"}.pdf`;
+    pdf.save(fname);
+    status.className = "status ok";
+    status.textContent = `Answer key downloaded as ${fname}.`;
+  } catch (e) {
+    status.className = "status err";
+    status.textContent = e.message;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function fitLineToWidth(pdf, text, maxWidth) {
+  const w = pdf.getTextWidth(text);
+  if (w <= maxWidth) return text;
+  // Truncate with ellipsis
+  let s = text;
+  while (s.length > 4 && pdf.getTextWidth(s + "…") > maxWidth) {
+    s = s.slice(0, -1);
+  }
+  return s + "…";
+}
 </script>
 </body>
 </html>
