@@ -12,6 +12,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
 
 <style>
   :root {
@@ -153,10 +154,26 @@
     background: var(--gold); color: #1a1408; font-family: Bungee, sans-serif; font-size: 11px;
   }
   .bcard__foot {
-    text-align: center; margin-top: 10px; font-size: 9px; color: #1a1408;
-    letter-spacing: 0.5px; position: relative; z-index: 1;
+    display: flex; align-items: center; gap: 10px;
+    margin-top: 10px; position: relative; z-index: 1;
   }
-  .bcard__foot strong { font-family: 'Permanent Marker', cursive; font-size: 12px; font-weight: 400; }
+  .bcard__qr {
+    width: 60px; height: 60px; flex-shrink: 0;
+    background: #fff; padding: 3px;
+    border: 1.5px solid #1a1408; border-radius: 4px;
+    display: block;
+  }
+  .bcard__foot-text {
+    flex: 1; text-align: left; font-size: 9px; color: #1a1408;
+    line-height: 1.35; letter-spacing: 0.2px;
+  }
+  .bcard__foot-text strong {
+    font-family: 'Permanent Marker', cursive; font-size: 12px;
+    font-weight: 400; letter-spacing: 0;
+  }
+  .bcard__handle {
+    font-weight: 700; font-size: 10.5px; color: #c1462e; letter-spacing: 0.3px;
+  }
   .bcard__num { position: absolute; bottom: 6px; right: 12px; font-size: 9px; color: #1a1408; opacity: 0.65; }
 
   /* ---------- Hidden render target (off-screen, used by html2canvas) ---------- */
@@ -202,6 +219,14 @@
         <div class="field">
           <label for="eventDate">Event Date</label>
           <input type="date" id="eventDate" value="2026-06-26" />
+        </div>
+        <div class="field">
+          <label for="qrUrl">QR Code Link</label>
+          <input type="text" id="qrUrl" value="https://takemebackbingo.com" placeholder="https://takemebackbingo.com" />
+        </div>
+        <div class="field">
+          <label for="igHandle">Social Handle</label>
+          <input type="text" id="igHandle" value="@takemebackbingo" />
         </div>
         <div class="field">
           <label for="cardCount">Number of Cards</label>
@@ -580,9 +605,10 @@ function generateUniqueCards(pool, count) {
    CARD RENDERING (HTML)
    ========================================================================= */
 function renderCardEl(grid, opts) {
-  const { eventName, eventDate, cardNum, totalCards } = opts;
+  const { eventName, eventDate, cardNum, totalCards, qrDataUrl, handle } = opts;
   const dateStr = eventDate ? formatDate(eventDate) : "";
   const letters = ["T", "M", "B", "B", "N"];
+  const handleSafe = (handle || "@takemebackbingo").trim();
   const html = `
     <div class="bcard">
       <div class="bcard__head">
@@ -600,13 +626,52 @@ function renderCardEl(grid, opts) {
           : `<div class="bcard__cell">${escapeHtml(s)}</div>`
         ).join("")}
       </div>
-      <div class="bcard__foot">Yell <strong>"TAKE ME BACK!"</strong> to win · #TakeMeBackBingoNights</div>
+      <div class="bcard__foot">
+        ${qrDataUrl ? `<img class="bcard__qr" src="${qrDataUrl}" alt="Scan to visit Take Me Back Bingo Nights" />` : ""}
+        <div class="bcard__foot-text">
+          <div>Yell <strong>&ldquo;TAKE ME BACK!&rdquo;</strong> to win</div>
+          <div><span class="bcard__handle">${escapeHtml(handleSafe)}</span> &middot; #TakeMeBackBingoNights</div>
+        </div>
+      </div>
       <div class="bcard__num">Card ${cardNum} of ${totalCards}</div>
     </div>
   `;
   const div = document.createElement("div");
   div.innerHTML = html.trim();
   return div.firstChild;
+}
+
+/* =========================================================================
+   QR CODE — generate once per run, embed as data URL in each card
+   ========================================================================= */
+function generateQrDataUrl(text, size) {
+  if (typeof QRCode === "undefined") return null;
+  const holder = document.createElement("div");
+  holder.style.position = "absolute";
+  holder.style.left = "-9999px";
+  document.body.appendChild(holder);
+  try {
+    // qrcodejs renders synchronously to a <canvas> (preferred) + <img>
+    /* eslint-disable no-new */
+    new QRCode(holder, {
+      text: text,
+      width: size || 240,
+      height: size || 240,
+      colorDark: "#1a1408",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.M
+    });
+    /* eslint-enable no-new */
+    const canvas = holder.querySelector("canvas");
+    const img = holder.querySelector("img");
+    if (canvas) return canvas.toDataURL("image/png");
+    if (img && img.src) return img.src;
+    return null;
+  } catch (e) {
+    return null;
+  } finally {
+    document.body.removeChild(holder);
+  }
 }
 
 function formatDate(iso) {
@@ -634,10 +699,13 @@ function renderPreview() {
     const cards = generateUniqueCards(pool, 3);
     const eventName = document.getElementById("eventName").value || "Take Me Back Bingo Nights";
     const eventDate = document.getElementById("eventDate").value;
+    const qrUrl = document.getElementById("qrUrl").value || "https://takemebackbingo.com";
+    const handle = document.getElementById("igHandle").value || "@takemebackbingo";
+    const qrDataUrl = generateQrDataUrl(qrUrl, 240);
     const wrap = document.getElementById("previewWrap");
     wrap.innerHTML = "";
     cards.forEach((g, i) => {
-      const el = renderCardEl(g, { eventName, eventDate, cardNum: i + 1, totalCards: 3 });
+      const el = renderCardEl(g, { eventName, eventDate, cardNum: i + 1, totalCards: 3, qrDataUrl, handle });
       wrap.appendChild(el);
     });
     status.className = "status ok";
@@ -665,6 +733,8 @@ async function generatePdf() {
 
   const eventName = document.getElementById("eventName").value || "Take Me Back Bingo Nights";
   const eventDate = document.getElementById("eventDate").value;
+  const qrUrl = document.getElementById("qrUrl").value || "https://takemebackbingo.com";
+  const handle = document.getElementById("igHandle").value || "@takemebackbingo";
   const count = Math.max(1, Math.min(500, parseInt(document.getElementById("cardCount").value, 10) || 1));
   const perPage = parseInt(document.getElementById("cardsPerPage").value, 10);
 
@@ -672,12 +742,16 @@ async function generatePdf() {
     if (typeof window.jspdf === "undefined" || typeof window.html2canvas === "undefined") {
       throw new Error("PDF libraries not loaded yet — wait a second and try again.");
     }
+    if (typeof QRCode === "undefined") {
+      throw new Error("QR library not loaded yet — wait a second and try again.");
+    }
     const pool = getCombinedSongPool();
     if (pool.length < 24) throw new Error("Pick more era pools — need at least 24 songs.");
 
     btn.disabled = true;
     status.textContent = "Generating " + count + " unique cards…";
 
+    const qrDataUrl = generateQrDataUrl(qrUrl, 240);
     const cards = generateUniqueCards(pool, count);
 
     const { jsPDF } = window.jspdf;
@@ -705,7 +779,7 @@ async function generatePdf() {
       const slotIdx = i % perPage;
       if (i > 0 && slotIdx === 0) pdf.addPage();
 
-      const el = renderCardEl(cards[i], { eventName, eventDate, cardNum: i + 1, totalCards: cards.length });
+      const el = renderCardEl(cards[i], { eventName, eventDate, cardNum: i + 1, totalCards: cards.length, qrDataUrl, handle });
       stage.innerHTML = "";
       stage.appendChild(el);
 
