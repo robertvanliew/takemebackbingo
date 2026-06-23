@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex,nofollow" />
+<title>Admin · Take Me Back Bingo Nights</title>
+<link rel="icon" type="image/svg+xml" href="/logos/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #141111; --panel: #1c1818; --line: #2b2525;
+    --ink: #f4ede1; --muted: #b6ad9c; --gold: #f1c33b;
+    --cream: #f6e9c8; --red: #c1462e;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: Sora, system-ui, sans-serif; }
+  a { color: inherit; text-decoration: none; }
+
+  .gate { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+  .gate__card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 32px; width: 100%; max-width: 380px; text-align: center; }
+  .gate__logo { font-family: Bungee, sans-serif; font-size: 28px; letter-spacing: 1px; color: var(--gold); margin: 0 0 6px; }
+  .gate__sub { color: var(--muted); margin: 0 0 24px; font-size: 13px; }
+  .gate__input { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line); background: #0e0c0c; color: var(--ink); font-size: 15px; margin-bottom: 12px; }
+  .gate__btn { width: 100%; padding: 12px 14px; border: 0; border-radius: 10px; background: var(--gold); color: #1a1408; font-weight: 700; cursor: pointer; font-family: inherit; }
+  .gate__err { color: var(--red); font-size: 13px; margin: 8px 0 0; min-height: 18px; }
+
+  .shell { display: none; }
+  .shell.active { display: block; }
+
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-bottom: 1px solid var(--line); background: var(--panel); }
+  .topbar__brand { font-family: Bungee, sans-serif; color: var(--gold); font-size: 18px; letter-spacing: 1px; }
+  .topbar__brand small { color: var(--muted); font-family: Sora, sans-serif; font-size: 12px; margin-left: 10px; letter-spacing: 0; }
+  .topbar__logout { background: transparent; border: 1px solid var(--line); color: var(--muted); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-family: inherit; }
+
+  .hero { padding: 60px 24px 40px; text-align: center; max-width: 720px; margin: 0 auto; }
+  .hero__h { font-family: Bungee, sans-serif; font-size: 44px; margin: 0 0 12px; letter-spacing: 0.5px; line-height: 1.1; }
+  .hero__sub { color: var(--muted); font-size: 16px; margin: 0; line-height: 1.5; }
+
+  .tiles { max-width: 960px; margin: 0 auto; padding: 0 24px 80px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 720px) { .tiles { grid-template-columns: 1fr; } }
+
+  .tile {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
+    padding: 28px; transition: border-color 0.15s, transform 0.15s;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .tile:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .tile__icon { font-size: 32px; line-height: 1; }
+  .tile__h { font-family: Bungee, sans-serif; font-size: 20px; color: var(--gold); margin: 0; letter-spacing: 0.5px; }
+  .tile__sub { color: var(--muted); font-size: 14px; line-height: 1.5; margin: 0; }
+  .tile__arrow { color: var(--gold); font-size: 18px; margin-top: auto; align-self: flex-end; }
+
+  .foot { text-align: center; padding: 24px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--line); }
+  .foot a { color: var(--muted); text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<section class="gate" id="gate">
+  <form class="gate__card" onsubmit="event.preventDefault(); tryLogin();">
+    <h1 class="gate__logo">TMB ADMIN</h1>
+    <p class="gate__sub">Take Me Back Bingo Nights</p>
+    <input type="password" id="pw" class="gate__input" placeholder="Password" autocomplete="current-password" autofocus />
+    <button type="submit" class="gate__btn">Unlock</button>
+    <p class="gate__err" id="gateErr"></p>
+  </form>
+</section>
+
+<div class="shell" id="shell">
+  <div class="topbar">
+    <div class="topbar__brand">TMB ADMIN <small>Dashboard</small></div>
+    <button class="topbar__logout" onclick="logout()">Lock</button>
+  </div>
+
+  <header class="hero">
+    <h1 class="hero__h">Welcome back.</h1>
+    <p class="hero__sub">Manage your events and generate bingo cards for the next night. Pick a tool below.</p>
+  </header>
+
+  <div class="tiles">
+    <a class="tile" href="/admin/events">
+      <div class="tile__icon">🎤</div>
+      <h2 class="tile__h">Events Manager</h2>
+      <p class="tile__sub">Add or edit upcoming events. Change dates, ticket links, flyers, host and DJ info. Publish to the live site in one click.</p>
+      <div class="tile__arrow">→</div>
+    </a>
+
+    <a class="tile" href="/admin/cards">
+      <div class="tile__icon">🎟️</div>
+      <h2 class="tile__h">Bingo Card Generator</h2>
+      <p class="tile__sub">Generate printable bingo cards for any event. Pick the song eras, set the count, download a PDF ready for the printer.</p>
+      <div class="tile__arrow">→</div>
+    </a>
+  </div>
+
+  <p class="foot">
+    Need help? Email <a href="mailto:info@takemebackbingo.com">info@takemebackbingo.com</a>
+  </p>
+</div>
+
+<script>
+const SESSION_KEY = "tmb_admin_unlocked";
+const PW_KEY = "tmb_admin_pw";
+let RUNTIME_PW_HASH = null;
+
+async function sha256(s) {
+  const buf = new TextEncoder().encode(s);
+  const h = await crypto.subtle.digest("SHA-256", buf);
+  return Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+(async () => { RUNTIME_PW_HASH = await sha256("takemeback2026"); })();
+
+async function tryLogin() {
+  const pw = document.getElementById("pw").value;
+  const err = document.getElementById("gateErr");
+  err.textContent = "";
+  if (!pw) { err.textContent = "Enter the password."; return; }
+  const h = await sha256(pw);
+  if (h === RUNTIME_PW_HASH) {
+    sessionStorage.setItem(SESSION_KEY, "1");
+    sessionStorage.setItem(PW_KEY, pw);
+    showApp();
+  } else err.textContent = "Wrong password.";
+}
+
+function showApp() {
+  document.getElementById("gate").style.display = "none";
+  document.getElementById("shell").classList.add("active");
+}
+function logout() { sessionStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(PW_KEY); location.reload(); }
+if (sessionStorage.getItem(SESSION_KEY) === "1") {
+  const w = setInterval(() => { if (RUNTIME_PW_HASH) { clearInterval(w); showApp(); } }, 50);
+}
+</script>
+</body>
+</html>

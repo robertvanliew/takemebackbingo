@@ -93,6 +93,14 @@
   .modal__card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 24px; width: 100%; max-width: 720px; max-height: 85vh; overflow-y: auto; }
   .modal__h { font-family: Bungee, sans-serif; color: var(--gold); margin: 0 0 12px; font-size: 16px; }
   .modal__code { background: #0e0c0c; border: 1px solid var(--line); border-radius: 8px; padding: 14px; font-family: ui-monospace, Menlo, monospace; font-size: 11px; line-height: 1.5; color: var(--cream); white-space: pre-wrap; word-break: break-word; max-height: 50vh; overflow-y: auto; }
+
+  .flyer-upload { display: flex; gap: 12px; align-items: flex-start; background: #0e0c0c; border: 1px solid var(--line); border-radius: 8px; padding: 10px; }
+  .flyer-preview { width: 90px; height: 120px; object-fit: cover; border-radius: 6px; background: var(--line); flex-shrink: 0; display: block; }
+  .flyer-preview:not([src]), .flyer-preview[src=""] { display: none; }
+  .flyer-upload__controls { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 0; }
+  .flyer-status { font-size: 12px; color: var(--muted); }
+  .flyer-status.ok { color: var(--green); }
+  .flyer-status.err { color: var(--red); }
 </style>
 </head>
 <body>
@@ -203,9 +211,17 @@
 
           <div class="section-h">Flyer &amp; Copy</div>
           <div class="field">
-            <label for="f_flyer">Flyer Path</label>
-            <input type="text" id="f_flyer" placeholder="flyers/june-26-2026-tmb-bingo.jpeg" />
-            <div class="field__hint">Path relative to site root. Upload the image to /flyers/ in the repo separately.</div>
+            <label>Flyer Image</label>
+            <div class="flyer-upload">
+              <img id="flyerPreview" class="flyer-preview" alt="" />
+              <div class="flyer-upload__controls">
+                <input type="file" id="flyerFile" accept="image/jpeg,image/png,image/webp" style="display:none;" />
+                <button type="button" class="btn btn--ghost btn--sm" onclick="document.getElementById('flyerFile').click()">Choose Image…</button>
+                <span class="flyer-status" id="flyerStatus"></span>
+              </div>
+            </div>
+            <input type="text" id="f_flyer" placeholder="flyers/your-flyer.jpg" style="margin-top:10px;" />
+            <div class="field__hint">Pick an image (auto-resized to 1600px, JPEG 0.85) — uploads when you click <strong>Save Draft</strong>. Or type a path manually if the file is already in the repo.</div>
           </div>
           <div class="field"><label for="f_flyerAlt">Flyer Alt Text</label><input type="text" id="f_flyerAlt" placeholder="Take Me Back Bingo Summer Jam flyer · Friday June 26" /></div>
           <div class="field"><label for="f_copy">Description Copy</label><textarea id="f_copy" placeholder="Comedian Talent (Def Comedy Jam…) on the mic, DJ Tameil on the ones and twos…"></textarea></div>
@@ -434,7 +450,7 @@ function resetSeed() {
 /* ==========================================================================
    APP STATE
    ========================================================================== */
-const state = { events: [], activeId: null };
+const state = { events: [], activeId: null, pendingFlyerBlob: null, pendingFlyerName: null };
 
 function initApp() {
   state.events = loadEvents();
@@ -514,6 +530,100 @@ function renderEditor() {
     const el = document.getElementById("f_" + k);
     if (el) el.value = e[k] || "";
   });
+  updateFlyerPreview(e.flyer || "");
+  state.pendingFlyerBlob = null;
+  state.pendingFlyerName = null;
+  document.getElementById("flyerStatus").textContent = "";
+  document.getElementById("flyerStatus").className = "flyer-status";
+  document.getElementById("flyerFile").value = "";
+}
+
+function updateFlyerPreview(path) {
+  const img = document.getElementById("flyerPreview");
+  if (path) {
+    img.src = path.startsWith("http") || path.startsWith("/") ? path : "/" + path;
+  } else {
+    img.removeAttribute("src");
+  }
+}
+
+/* ----- Client-side image resize before upload ----- */
+async function resizeImageFile(file, maxDim, quality) {
+  const dataUrl = await new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result);
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
+  const img = await new Promise((resolve, reject) => {
+    const i = new Image();
+    i.onload = () => resolve(i);
+    i.onerror = reject;
+    i.src = dataUrl;
+  });
+  let w = img.naturalWidth, h = img.naturalHeight;
+  if (w > maxDim || h > maxDim) {
+    if (w >= h) { h = Math.round(h * maxDim / w); w = maxDim; }
+    else        { w = Math.round(w * maxDim / h); h = maxDim; }
+  }
+  const canvas = document.createElement("canvas");
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0, w, h);
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(b => b ? resolve(b) : reject(new Error("Image conversion failed")), "image/jpeg", quality);
+  });
+}
+
+document.addEventListener("change", async (ev) => {
+  if (ev.target.id !== "flyerFile") return;
+  const file = ev.target.files && ev.target.files[0];
+  const st = document.getElementById("flyerStatus");
+  if (!file) { st.textContent = ""; return; }
+  if (!/^image\/(jpeg|png|webp)$/.test(file.type)) {
+    st.className = "flyer-status err"; st.textContent = "Only JPG, PNG, or WEBP.";
+    return;
+  }
+  st.className = "flyer-status"; st.textContent = "Resizing…";
+  try {
+    const blob = await resizeImageFile(file, 1600, 0.85);
+    state.pendingFlyerBlob = blob;
+    // Build a target filename: <event-id>-<original-name-or-slug>.jpg
+    const e = state.events.find(x => x.id === state.activeId) || {};
+    const base = (e.id || "flyer").replace(/^evt-/, "");
+    const stamp = Date.now().toString(36);
+    state.pendingFlyerName = `${base}-${stamp}.jpg`;
+    // Show local preview immediately
+    const url = URL.createObjectURL(blob);
+    const img = document.getElementById("flyerPreview");
+    img.src = url;
+    const kb = (blob.size / 1024).toFixed(0);
+    st.className = "flyer-status ok";
+    st.textContent = `Ready (${kb} KB). Will upload when you click Save Draft.`;
+  } catch (e) {
+    st.className = "flyer-status err"; st.textContent = "Couldn't process image: " + e.message;
+  }
+});
+
+async function uploadPendingFlyer() {
+  if (!state.pendingFlyerBlob) return null;
+  const pw = sessionStorage.getItem(PW_KEY);
+  if (!pw) throw new Error("Session expired — log in again.");
+  const reader = new FileReader();
+  const dataUrl = await new Promise((res, rej) => {
+    reader.onload = () => res(reader.result);
+    reader.onerror = rej;
+    reader.readAsDataURL(state.pendingFlyerBlob);
+  });
+  const base64 = dataUrl.split(",")[1];
+  const res = await fetch("/api/upload-flyer", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + pw },
+    body: JSON.stringify({ filename: state.pendingFlyerName, dataBase64: base64 })
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || ("Upload failed: HTTP " + res.status));
+  return data.path; // "flyers/<name>"
 }
 
 function readForm() {
@@ -523,7 +633,7 @@ function readForm() {
   return obj;
 }
 
-function saveEvent() {
+async function saveEvent() {
   if (!state.activeId) return;
   const data = readForm();
   const status = document.getElementById("status");
@@ -533,17 +643,34 @@ function saveEvent() {
   }
   const idx = state.events.findIndex(x => x.id === state.activeId);
   if (idx < 0) return;
-  // If id changed, make sure new id is unique
   if (data.id !== state.activeId && state.events.some(x => x.id === data.id)) {
     status.className = "status err"; status.textContent = "Another event already uses that ID.";
     return;
   }
+
+  // If a new flyer file is pending, upload it first.
+  if (state.pendingFlyerBlob) {
+    status.className = "status"; status.textContent = "Uploading flyer…";
+    try {
+      const path = await uploadPendingFlyer();
+      data.flyer = path;
+      document.getElementById("f_flyer").value = path;
+      state.pendingFlyerBlob = null;
+      state.pendingFlyerName = null;
+      const fs = document.getElementById("flyerStatus");
+      fs.className = "flyer-status ok"; fs.textContent = "Uploaded to " + path;
+    } catch (e) {
+      status.className = "status err"; status.textContent = "Flyer upload failed: " + e.message;
+      return;
+    }
+  }
+
   state.events[idx] = data;
   state.activeId = data.id;
   saveEvents(state.events);
   renderList();
   status.className = "status ok";
-  status.textContent = "Draft saved to your browser. Use Export or Copy HTML to publish.";
+  status.textContent = "Draft saved. Click Publish Live to push to the website.";
 }
 
 /* ==========================================================================
