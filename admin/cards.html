@@ -158,10 +158,11 @@
     margin-top: 10px; position: relative; z-index: 1;
   }
   .bcard__qr {
-    width: 60px; height: 60px; flex-shrink: 0;
-    background: #fff; padding: 3px;
-    border: 1.5px solid #1a1408; border-radius: 4px;
+    width: 84px; height: 84px; flex-shrink: 0;
+    background: #fff; padding: 4px;
+    border: 2px solid #1a1408; border-radius: 4px;
     display: block;
+    image-rendering: pixelated;
   }
   .bcard__foot-text {
     flex: 1; text-align: left; font-size: 9px; color: #1a1408;
@@ -655,11 +656,11 @@ function generateQrDataUrl(text, size) {
     /* eslint-disable no-new */
     new QRCode(holder, {
       text: text,
-      width: size || 240,
-      height: size || 240,
+      width: size || 480,
+      height: size || 480,
       colorDark: "#1a1408",
       colorLight: "#ffffff",
-      correctLevel: QRCode.CorrectLevel.M
+      correctLevel: QRCode.CorrectLevel.H
     });
     /* eslint-enable no-new */
     const canvas = holder.querySelector("canvas");
@@ -701,7 +702,7 @@ function renderPreview() {
     const eventDate = document.getElementById("eventDate").value;
     const qrUrl = document.getElementById("qrUrl").value || "https://takemebackbingo.com";
     const handle = document.getElementById("igHandle").value || "@takemebackbingo";
-    const qrDataUrl = generateQrDataUrl(qrUrl, 240);
+    const qrDataUrl = generateQrDataUrl(qrUrl, 480);
     const wrap = document.getElementById("previewWrap");
     wrap.innerHTML = "";
     cards.forEach((g, i) => {
@@ -751,7 +752,7 @@ async function generatePdf() {
     btn.disabled = true;
     status.textContent = "Generating " + count + " unique cards…";
 
-    const qrDataUrl = generateQrDataUrl(qrUrl, 240);
+    const qrDataUrl = generateQrDataUrl(qrUrl, 480);
     const cards = generateUniqueCards(pool, count);
 
     const { jsPDF } = window.jspdf;
@@ -786,9 +787,9 @@ async function generatePdf() {
       // Wait one frame so layout/fonts settle
       await new Promise(r => requestAnimationFrame(r));
 
-      const canvas = await html2canvas(el, { backgroundColor: null, scale: 2, logging: false, useCORS: true });
-      const imgData = canvas.toDataURL("image/jpeg", 0.92);
-      pdf.addImage(imgData, "JPEG", layoutX, slotYs[slotIdx], layoutW, layoutH);
+      const canvas = await html2canvas(el, { backgroundColor: null, scale: 3, logging: false, useCORS: true });
+      const imgData = canvas.toDataURL("image/jpeg", 0.96);
+      pdf.addImage(imgData, "JPEG", layoutX, slotYs[slotIdx], layoutW, layoutH, undefined, "FAST");
 
       const pct = Math.round(((i + 1) / cards.length) * 100);
       bar.style.width = pct + "%";
