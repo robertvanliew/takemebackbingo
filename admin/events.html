@@ -1,0 +1,660 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex,nofollow" />
+<title>Events Manager · Take Me Back Bingo Nights Admin</title>
+<link rel="icon" type="image/svg+xml" href="/logos/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #141111; --panel: #1c1818; --line: #2b2525;
+    --ink: #f4ede1; --muted: #b6ad9c; --gold: #f1c33b;
+    --cream: #f6e9c8; --red: #c1462e; --green: #6dd47e;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: Sora, system-ui, sans-serif; }
+
+  .gate { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+  .gate__card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 32px; width: 100%; max-width: 380px; text-align: center; }
+  .gate__logo { font-family: Bungee, sans-serif; font-size: 28px; letter-spacing: 1px; color: var(--gold); margin: 0 0 6px; }
+  .gate__sub { color: var(--muted); margin: 0 0 24px; font-size: 13px; }
+  .gate__input { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line); background: #0e0c0c; color: var(--ink); font-size: 15px; margin-bottom: 12px; }
+  .gate__btn { width: 100%; padding: 12px 14px; border: 0; border-radius: 10px; background: var(--gold); color: #1a1408; font-weight: 700; cursor: pointer; font-family: inherit; }
+  .gate__err { color: var(--red); font-size: 13px; margin: 8px 0 0; min-height: 18px; }
+
+  .shell { display: none; }
+  .shell.active { display: block; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-bottom: 1px solid var(--line); background: var(--panel); flex-wrap: wrap; gap: 12px; }
+  .topbar__brand { font-family: Bungee, sans-serif; color: var(--gold); font-size: 18px; letter-spacing: 1px; }
+  .topbar__brand small { color: var(--muted); font-family: Sora, sans-serif; font-size: 12px; margin-left: 10px; letter-spacing: 0; }
+  .topbar__nav { display: flex; gap: 6px; }
+  .topbar__nav a { color: var(--muted); text-decoration: none; padding: 8px 14px; border-radius: 8px; font-size: 14px; }
+  .topbar__nav a.active { background: var(--gold); color: #1a1408; font-weight: 700; }
+  .topbar__nav a:not(.active):hover { background: var(--line); color: var(--ink); }
+  .topbar__logout { background: transparent; border: 1px solid var(--line); color: var(--muted); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-family: inherit; }
+
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 32px 24px 80px; }
+  .h1 { font-family: Bungee, sans-serif; font-size: 32px; margin: 0 0 6px; letter-spacing: 0.5px; }
+  .lede { color: var(--muted); margin: 0 0 24px; font-size: 14px; }
+
+  .grid { display: grid; grid-template-columns: 380px 1fr; gap: 24px; align-items: start; }
+  @media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
+
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+  .card h2 { font-family: Bungee, sans-serif; font-size: 14px; margin: 0 0 14px; color: var(--gold); letter-spacing: 0.5px; }
+
+  .list { display: flex; flex-direction: column; gap: 8px; max-height: 600px; overflow-y: auto; padding-right: 4px; }
+  .list__item { background: #0e0c0c; border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; cursor: pointer; transition: border-color 0.15s; }
+  .list__item:hover { border-color: var(--muted); }
+  .list__item.active { border-color: var(--gold); background: #1a1408; }
+  .list__row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .list__title { font-weight: 600; font-size: 14px; color: var(--ink); }
+  .list__date { color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .list__badge { font-size: 10px; padding: 3px 8px; border-radius: 999px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; flex-shrink: 0; }
+  .list__badge--onsale { background: var(--green); color: #1a3a1f; }
+  .list__badge--soldout { background: var(--red); color: #fff; }
+  .list__badge--past { background: var(--line); color: var(--muted); }
+
+  .list-actions { display: flex; gap: 8px; margin-top: 12px; }
+
+  .field { margin-bottom: 14px; }
+  .field--row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .field input, .field select, .field textarea {
+    width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line);
+    background: #0e0c0c; color: var(--ink); font-size: 14px; font-family: inherit;
+  }
+  .field textarea { resize: vertical; min-height: 80px; line-height: 1.4; }
+  .field__hint { color: var(--muted); font-size: 11px; margin-top: 4px; }
+
+  .btn { display: inline-block; padding: 10px 18px; border: 0; border-radius: 8px; background: var(--gold); color: #1a1408; font-weight: 700; cursor: pointer; font-family: inherit; font-size: 13px; letter-spacing: 0.3px; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn--ghost { background: transparent; border: 1px solid var(--line); color: var(--ink); }
+  .btn--danger { background: var(--red); color: #fff; }
+  .btn--sm { padding: 6px 12px; font-size: 12px; }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+
+  .status { font-size: 13px; margin-top: 12px; min-height: 18px; color: var(--muted); }
+  .status.ok { color: var(--green); }
+  .status.err { color: var(--red); }
+
+  .empty { color: var(--muted); font-size: 13px; text-align: center; padding: 24px 0; }
+
+  .section-h { font-family: Bungee, sans-serif; font-size: 12px; color: var(--gold); margin: 20px 0 8px; letter-spacing: 0.7px; }
+  .section-h:first-child { margin-top: 0; }
+
+  .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+  .modal.active { display: flex; }
+  .modal__card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 24px; width: 100%; max-width: 720px; max-height: 85vh; overflow-y: auto; }
+  .modal__h { font-family: Bungee, sans-serif; color: var(--gold); margin: 0 0 12px; font-size: 16px; }
+  .modal__code { background: #0e0c0c; border: 1px solid var(--line); border-radius: 8px; padding: 14px; font-family: ui-monospace, Menlo, monospace; font-size: 11px; line-height: 1.5; color: var(--cream); white-space: pre-wrap; word-break: break-word; max-height: 50vh; overflow-y: auto; }
+</style>
+</head>
+<body>
+
+<!-- Login Gate -->
+<section class="gate" id="gate">
+  <form class="gate__card" onsubmit="event.preventDefault(); tryLogin();">
+    <h1 class="gate__logo">TMB ADMIN</h1>
+    <p class="gate__sub">Take Me Back Bingo Nights · Events Manager</p>
+    <input type="password" id="pw" class="gate__input" placeholder="Password" autocomplete="current-password" autofocus />
+    <button type="submit" class="gate__btn">Unlock</button>
+    <p class="gate__err" id="gateErr"></p>
+  </form>
+</section>
+
+<!-- App -->
+<div class="shell" id="shell">
+  <div class="topbar">
+    <div class="topbar__brand">TMB ADMIN <small>Events Manager</small></div>
+    <nav class="topbar__nav">
+      <a href="/admin/cards">Card Generator</a>
+      <a href="/admin/events" class="active">Events</a>
+    </nav>
+    <button class="topbar__logout" onclick="logout()">Lock</button>
+  </div>
+
+  <div class="wrap">
+    <h1 class="h1">Events Manager</h1>
+    <p class="lede">Add, edit, or remove events. Changes save to your browser as drafts. When you&rsquo;re ready to publish, click <strong>Export</strong> to download <code>events.json</code> &mdash; commit it to the repo and Vercel will rebuild.</p>
+
+    <div class="grid">
+      <!-- Event List -->
+      <div class="card">
+        <h2>Events (<span id="evtCount">0</span>)</h2>
+        <div class="list" id="eventList"></div>
+        <div class="list-actions">
+          <button class="btn btn--sm" onclick="newEvent()">+ New Event</button>
+          <button class="btn btn--ghost btn--sm" onclick="resetSeed()" title="Reload the seeded events (overwrites your local drafts)">Reset</button>
+        </div>
+      </div>
+
+      <!-- Editor -->
+      <div class="card" id="editorCard">
+        <h2 id="editorTitle">Select an event &rarr;</h2>
+        <div id="editor" style="display:none;">
+
+          <div class="section-h">Identity</div>
+          <div class="field">
+            <label for="f_id">ID (slug) <span style="color:var(--red);">*</span></label>
+            <input type="text" id="f_id" placeholder="evt-summer-jam-2026" />
+            <div class="field__hint">Lowercase, hyphenated. Used for #anchor and DOM id.</div>
+          </div>
+          <div class="field--row">
+            <div class="field"><label for="f_title">Title *</label><input type="text" id="f_title" placeholder="Summer Jam" /></div>
+            <div class="field"><label for="f_kicker">Kicker</label><input type="text" id="f_kicker" placeholder="DJ Tameil · Hosted by Comedian Talent" /></div>
+          </div>
+          <div class="field--row">
+            <div class="field">
+              <label for="f_status">Status *</label>
+              <select id="f_status">
+                <option value="onsale">On Sale</option>
+                <option value="soldout">Sold Out</option>
+                <option value="past">Past</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f_section">Section *</label>
+              <select id="f_section">
+                <option value="upcoming">Upcoming</option>
+                <option value="past">Past</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="section-h">When &amp; Where</div>
+          <div class="field--row">
+            <div class="field"><label for="f_startDate">Start (date + time) *</label><input type="datetime-local" id="f_startDate" /></div>
+            <div class="field"><label for="f_endDate">End</label><input type="datetime-local" id="f_endDate" /></div>
+          </div>
+          <div class="field--row">
+            <div class="field"><label for="f_dateLabel">Date Label (display)</label><input type="text" id="f_dateLabel" placeholder="Friday, June 26, 2026" /></div>
+            <div class="field"><label for="f_timeLabel">Time Label (display)</label><input type="text" id="f_timeLabel" placeholder="Doors 6PM · Show 7PM · 21+" /></div>
+          </div>
+          <div class="field"><label for="f_venue">Venue Name</label><input type="text" id="f_venue" placeholder="Lake Chateau Banquets" /></div>
+          <div class="field"><label for="f_venueAddr">Venue Display</label><input type="text" id="f_venueAddr" placeholder="Lake Chateau Banquets · Woodbridge, NJ" /></div>
+          <div class="field--row">
+            <div class="field"><label for="f_street">Street</label><input type="text" id="f_street" placeholder="1002 US-9" /></div>
+            <div class="field"><label for="f_city">City</label><input type="text" id="f_city" placeholder="Woodbridge Township" /></div>
+          </div>
+          <div class="field--row">
+            <div class="field"><label for="f_region">State</label><input type="text" id="f_region" placeholder="NJ" /></div>
+            <div class="field"><label for="f_postal">Zip</label><input type="text" id="f_postal" placeholder="07095" /></div>
+          </div>
+
+          <div class="section-h">Talent &amp; Music</div>
+          <div class="field--row">
+            <div class="field"><label for="f_dj">DJ</label><input type="text" id="f_dj" placeholder="DJ Tameil" /></div>
+            <div class="field"><label for="f_host">Host</label><input type="text" id="f_host" placeholder="Comedian Talent" /></div>
+          </div>
+          <div class="field"><label for="f_music">Music Label</label><input type="text" id="f_music" placeholder="80s, 90s, 00s · Dance & lip sync battles" /></div>
+          <div class="field"><label for="f_afterParty">After-party Label</label><input type="text" id="f_afterParty" placeholder="10:00 PM – 12:00 AM" /></div>
+
+          <div class="section-h">Pricing</div>
+          <div class="field--row">
+            <div class="field"><label for="f_priceLabel">Price Label (display)</label><input type="text" id="f_priceLabel" placeholder="Early bird $40" /></div>
+            <div class="field"><label for="f_price">Price (numeric, USD)</label><input type="text" id="f_price" placeholder="40.00" /></div>
+          </div>
+
+          <div class="section-h">Flyer &amp; Copy</div>
+          <div class="field">
+            <label for="f_flyer">Flyer Path</label>
+            <input type="text" id="f_flyer" placeholder="flyers/june-26-2026-tmb-bingo.jpeg" />
+            <div class="field__hint">Path relative to site root. Upload the image to /flyers/ in the repo separately.</div>
+          </div>
+          <div class="field"><label for="f_flyerAlt">Flyer Alt Text</label><input type="text" id="f_flyerAlt" placeholder="Take Me Back Bingo Summer Jam flyer · Friday June 26" /></div>
+          <div class="field"><label for="f_copy">Description Copy</label><textarea id="f_copy" placeholder="Comedian Talent (Def Comedy Jam…) on the mic, DJ Tameil on the ones and twos…"></textarea></div>
+
+          <div class="section-h">Ticket Links</div>
+          <div class="field"><label for="f_simpletix">SimpleTix URL</label><input type="text" id="f_simpletix" placeholder="https://www.simpletix.com/e/…" /></div>
+          <div class="field"><label for="f_eventbrite">Eventbrite URL</label><input type="text" id="f_eventbrite" placeholder="https://www.eventbrite.com/e/…" /></div>
+          <div class="field"><label for="f_posh">Posh URL</label><input type="text" id="f_posh" placeholder="https://posh.vip/e/…" /></div>
+          <div class="field"><label for="f_fb">Facebook Event URL</label><input type="text" id="f_fb" placeholder="https://www.facebook.com/events/…" /></div>
+
+          <div class="btn-row">
+            <button class="btn" onclick="saveEvent()">Save Draft</button>
+            <button class="btn btn--ghost" onclick="showHtmlSnippet()">Copy HTML for events.html</button>
+            <button class="btn btn--danger btn--sm" onclick="deleteEvent()" style="margin-left:auto;">Delete</button>
+          </div>
+          <div class="status" id="status"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:24px;">
+      <h2>Publish</h2>
+      <p class="lede">Two ways to ship your changes to the live site:</p>
+      <div class="btn-row" style="margin-top:0;">
+        <button class="btn" onclick="exportJson()">Export events.json</button>
+        <button class="btn btn--ghost" onclick="exportAllHtml()">Copy HTML for ALL events</button>
+      </div>
+      <p class="field__hint" style="margin-top:14px;">
+        <strong>events.json:</strong> downloads the data file. Drop into <code>/content/events.json</code> in the repo for Phase 2B (when events.html is wired to read it).<br>
+        <strong>HTML snippets:</strong> ready-to-paste markup for the current static events.html. Use this until 2B ships.
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<!-- HTML Output Modal -->
+<div class="modal" id="modal" onclick="if(event.target===this) closeModal()">
+  <div class="modal__card">
+    <h3 class="modal__h" id="modalTitle">HTML Snippet</h3>
+    <p class="lede" id="modalDesc"></p>
+    <pre class="modal__code" id="modalCode"></pre>
+    <div class="btn-row">
+      <button class="btn" onclick="copyModal()">Copy to Clipboard</button>
+      <button class="btn btn--ghost" onclick="closeModal()">Close</button>
+    </div>
+    <div class="status" id="modalStatus"></div>
+  </div>
+</div>
+
+<script>
+/* ==========================================================================
+   PASSWORD GATE (shared session with /admin/cards via "tmb_admin_unlocked")
+   ========================================================================== */
+const SESSION_KEY = "tmb_admin_unlocked";
+let RUNTIME_PW_HASH = null;
+
+async function sha256(s) {
+  const buf = new TextEncoder().encode(s);
+  const h = await crypto.subtle.digest("SHA-256", buf);
+  return Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+(async () => { RUNTIME_PW_HASH = await sha256("takemeback2026"); })();
+
+async function tryLogin() {
+  const pw = document.getElementById("pw").value;
+  const err = document.getElementById("gateErr");
+  err.textContent = "";
+  if (!pw) { err.textContent = "Enter the password."; return; }
+  const h = await sha256(pw);
+  if (h === RUNTIME_PW_HASH) {
+    sessionStorage.setItem(SESSION_KEY, "1");
+    showApp();
+  } else err.textContent = "Wrong password.";
+}
+
+function showApp() {
+  document.getElementById("gate").style.display = "none";
+  document.getElementById("shell").classList.add("active");
+  initApp();
+}
+
+function logout() { sessionStorage.removeItem(SESSION_KEY); location.reload(); }
+
+if (sessionStorage.getItem(SESSION_KEY) === "1") {
+  const w = setInterval(() => { if (RUNTIME_PW_HASH) { clearInterval(w); showApp(); } }, 50);
+}
+
+/* ==========================================================================
+   SEED DATA — mirrors current events.html
+   ========================================================================== */
+const SEED_EVENTS = [
+  {
+    id: "evt-summer-jam-2026",
+    title: "Summer Jam",
+    kicker: "DJ Tameil · Hosted by Comedian Talent",
+    status: "onsale",
+    section: "upcoming",
+    startDate: "2026-06-26T19:00",
+    endDate: "2026-06-27T00:00",
+    dateLabel: "Friday, June 26, 2026",
+    timeLabel: "Doors 6:00 PM · Show 7:00 PM · 21+",
+    venue: "Lake Chateau Banquets",
+    venueAddr: "Lake Chateau Banquets · Woodbridge, NJ",
+    street: "1002 US-9", city: "Woodbridge Township", region: "NJ", postal: "07095",
+    dj: "DJ Tameil", host: "Comedian Talent",
+    music: "80s, 90s, 00s · Dance & lip sync battles",
+    afterParty: "10:00 PM – 12:00 AM",
+    priceLabel: "Early bird $40", price: "40.00",
+    flyer: "flyers/june-26-2026-tmb-bingo.jpeg",
+    flyerAlt: "Take Me Back Bingo Summer Jam flyer · Friday June 26 at Lake Chateau Banquets",
+    copy: "Comedian Talent (Def Comedy Jam, BET's Comic View, The Apollo) on the mic, DJ Tameil on the ones and twos. 80s through 2000s all night, dance and lip sync battles between rounds, prizes on the table. Cancer-free folks on the B-day guestlist.",
+    simpletix: "https://www.simpletix.com/e/take-me-back-bingo-summer-jam-tickets-278482",
+    eventbrite: "https://www.eventbrite.com/e/take-me-back-bingo-summer-jam-tickets-1991192623739",
+    posh: "https://posh.vip/e/take-me-back-bingo-summer-jam",
+    fb: "https://www.facebook.com/events/1264566722162854"
+  },
+  {
+    id: "evt-thriller",
+    title: "Thriller Bingo",
+    kicker: "Michael Jackson Tribute",
+    status: "soldout",
+    section: "past",
+    startDate: "2026-03-14T19:00",
+    endDate: "2026-03-15T01:00",
+    dateLabel: "Saturday, March 14, 2026",
+    timeLabel: "",
+    venue: "Lake Chateau Banquets",
+    venueAddr: "Lake Chateau Banquets · Woodbridge, NJ",
+    street: "1002 US-9", city: "Woodbridge Township", region: "NJ", postal: "07095",
+    dj: "DJ Nix In The Mix", host: "Rey Gibbs",
+    music: "", afterParty: "", priceLabel: "", price: "",
+    flyer: "flyers/Thriller-Bingo-High-Class.jpg",
+    flyerAlt: "Thriller Bingo flyer · past Michael Jackson tribute night",
+    copy: "An MJ-only set list. From Off the Wall through Thriller, Bad, Dangerous and the late-era hits. Hosted by Rey Gibbs with DJ Nix In The Mix. Sold out the room.",
+    simpletix: "", eventbrite: "", posh: "", fb: ""
+  },
+  {
+    id: "evt-reminisce",
+    title: "Reminisce Bingo",
+    kicker: "High Class Exclusive",
+    status: "soldout",
+    section: "past",
+    startDate: "2026-04-25T19:00",
+    endDate: "2026-04-26T01:00",
+    dateLabel: "Saturday, April 25, 2026",
+    timeLabel: "",
+    venue: "Lake Chateau Banquets",
+    venueAddr: "Lake Chateau Banquets · Woodbridge, NJ",
+    street: "1002 US-9", city: "Woodbridge Township", region: "NJ", postal: "07095",
+    dj: "", host: "",
+    music: "", afterParty: "", priceLabel: "", price: "",
+    flyer: "flyers/Reminisce-Bingo-High-Class-Exclusive.jpg",
+    flyerAlt: "Reminisce Bingo flyer · past Take Me Back night",
+    copy: "The launch night. Packed room, hip-hop and R&B from the 90s and 2000s, dance battle into the early hours. Photos live in the gallery.",
+    simpletix: "", eventbrite: "", posh: "", fb: ""
+  }
+];
+
+const STORAGE_KEY = "tmb_events_draft";
+
+function loadEvents() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (raw) { try { return JSON.parse(raw); } catch {} }
+  return JSON.parse(JSON.stringify(SEED_EVENTS));
+}
+function saveEvents(list) { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
+function resetSeed() {
+  if (!confirm("Reset to the seeded events? This will overwrite your local drafts.")) return;
+  localStorage.removeItem(STORAGE_KEY);
+  state.events = loadEvents();
+  state.activeId = null;
+  renderList(); renderEditor();
+}
+
+/* ==========================================================================
+   APP STATE
+   ========================================================================== */
+const state = { events: [], activeId: null };
+
+function initApp() {
+  state.events = loadEvents();
+  renderList();
+  renderEditor();
+}
+
+function renderList() {
+  const wrap = document.getElementById("eventList");
+  document.getElementById("evtCount").textContent = state.events.length;
+  if (!state.events.length) { wrap.innerHTML = '<p class="empty">No events. Click <strong>+ New Event</strong> to add one.</p>'; return; }
+  // Sort: upcoming first (by date asc), then past (by date desc)
+  const sorted = state.events.slice().sort((a, b) => {
+    if (a.section !== b.section) return a.section === "upcoming" ? -1 : 1;
+    const da = new Date(a.startDate || 0), db = new Date(b.startDate || 0);
+    return a.section === "upcoming" ? da - db : db - da;
+  });
+  wrap.innerHTML = sorted.map(e => `
+    <div class="list__item ${e.id === state.activeId ? "active" : ""}" onclick="selectEvent('${e.id}')">
+      <div class="list__row">
+        <div>
+          <div class="list__title">${escapeHtml(e.title || e.id)}</div>
+          <div class="list__date">${escapeHtml(e.dateLabel || e.startDate || "—")}</div>
+        </div>
+        <span class="list__badge list__badge--${e.status}">${statusLabel(e.status)}</span>
+      </div>
+    </div>
+  `).join("");
+}
+
+function statusLabel(s) { return s === "onsale" ? "On Sale" : s === "soldout" ? "Sold Out" : "Past"; }
+
+function selectEvent(id) {
+  state.activeId = id;
+  renderList(); renderEditor();
+}
+
+function newEvent() {
+  const id = "evt-new-" + Date.now().toString(36);
+  const fresh = {
+    id, title: "New Event", kicker: "", status: "onsale", section: "upcoming",
+    startDate: "", endDate: "", dateLabel: "", timeLabel: "",
+    venue: "Lake Chateau Banquets", venueAddr: "Lake Chateau Banquets · Woodbridge, NJ",
+    street: "1002 US-9", city: "Woodbridge Township", region: "NJ", postal: "07095",
+    dj: "", host: "", music: "", afterParty: "", priceLabel: "", price: "",
+    flyer: "", flyerAlt: "", copy: "",
+    simpletix: "", eventbrite: "", posh: "", fb: ""
+  };
+  state.events.push(fresh);
+  saveEvents(state.events);
+  selectEvent(id);
+}
+
+function deleteEvent() {
+  if (!state.activeId) return;
+  const e = state.events.find(x => x.id === state.activeId);
+  if (!confirm(`Delete "${e.title}"? This only removes the local draft — the live site is unaffected until you re-publish.`)) return;
+  state.events = state.events.filter(x => x.id !== state.activeId);
+  saveEvents(state.events);
+  state.activeId = null;
+  renderList(); renderEditor();
+}
+
+function renderEditor() {
+  const editor = document.getElementById("editor");
+  const titleEl = document.getElementById("editorTitle");
+  if (!state.activeId) {
+    editor.style.display = "none";
+    titleEl.textContent = "Select an event →";
+    return;
+  }
+  const e = state.events.find(x => x.id === state.activeId);
+  if (!e) { editor.style.display = "none"; titleEl.textContent = "—"; return; }
+  editor.style.display = "block";
+  titleEl.textContent = `Editing: ${e.title || e.id}`;
+  Object.keys(e).forEach(k => {
+    const el = document.getElementById("f_" + k);
+    if (el) el.value = e[k] || "";
+  });
+}
+
+function readForm() {
+  const fields = ["id","title","kicker","status","section","startDate","endDate","dateLabel","timeLabel","venue","venueAddr","street","city","region","postal","dj","host","music","afterParty","priceLabel","price","flyer","flyerAlt","copy","simpletix","eventbrite","posh","fb"];
+  const obj = {};
+  fields.forEach(k => { const el = document.getElementById("f_" + k); if (el) obj[k] = el.value.trim(); });
+  return obj;
+}
+
+function saveEvent() {
+  if (!state.activeId) return;
+  const data = readForm();
+  const status = document.getElementById("status");
+  if (!data.id || !data.title) {
+    status.className = "status err"; status.textContent = "ID and Title are required.";
+    return;
+  }
+  const idx = state.events.findIndex(x => x.id === state.activeId);
+  if (idx < 0) return;
+  // If id changed, make sure new id is unique
+  if (data.id !== state.activeId && state.events.some(x => x.id === data.id)) {
+    status.className = "status err"; status.textContent = "Another event already uses that ID.";
+    return;
+  }
+  state.events[idx] = data;
+  state.activeId = data.id;
+  saveEvents(state.events);
+  renderList();
+  status.className = "status ok";
+  status.textContent = "Draft saved to your browser. Use Export or Copy HTML to publish.";
+}
+
+/* ==========================================================================
+   EXPORT — events.json download
+   ========================================================================== */
+function exportJson() {
+  const blob = new Blob([JSON.stringify(state.events, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "events.json"; document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+/* ==========================================================================
+   HTML SNIPPET GENERATION — paste into events.html
+   ========================================================================== */
+function eventToHtml(e) {
+  const isPast = e.section === "past";
+  const cardCls = "event-card" + (isPast ? " event-card--past" : "");
+  const flyerCls = "event-card__flyer" + (isPast ? " event-card__flyer--past" : "");
+  const badgeCls = "event-card__badge" + (e.status === "soldout" ? " event-card__badge--sold" : "");
+  const badgeText = e.status === "onsale" ? "On Sale" : e.status === "soldout" ? "Sold Out" : "Past";
+  const startISO = e.startDate ? e.startDate + ":00-04:00" : "";
+  const endISO = e.endDate ? e.endDate + ":00-04:00" : "";
+
+  const meta = [];
+  if (e.dateLabel) meta.push(`              <div><dt>Date</dt><dd>${escapeHtml(e.dateLabel)}</dd></div>`);
+  if (e.venueAddr) meta.push(`              <div><dt>Venue</dt><dd>${escapeHtml(e.venueAddr)}</dd></div>`);
+  if (e.timeLabel) meta.push(`              <div><dt>Doors</dt><dd>${escapeHtml(e.timeLabel)}</dd></div>`);
+  if (e.afterParty) meta.push(`              <div><dt>After-party</dt><dd>${escapeHtml(e.afterParty)}</dd></div>`);
+  if (e.music) meta.push(`              <div><dt>Music</dt><dd>${escapeHtml(e.music)}</dd></div>`);
+  if (e.priceLabel) meta.push(`              <div><dt>Early bird</dt><dd>${escapeHtml(e.priceLabel)}</dd></div>`);
+
+  const ctaButtons = [];
+  if (!isPast && e.simpletix) {
+    ctaButtons.push(`              <a class="btn btn--primary btn--lg" href="${escapeAttr(e.simpletix)}" target="_blank" rel="noopener" data-ticket-link>Buy Tickets</a>`);
+  }
+  if (isPast) {
+    ctaButtons.push(`              <a class="btn btn--ghost btn--lg" href="gallery.html">See the photos</a>`);
+  }
+
+  const performers = [];
+  if (e.dj) performers.push(`      { "@type": "Person", "name": "${escapeJson(e.dj)}" }`);
+  if (e.host) performers.push(`      { "@type": "Person", "name": "${escapeJson(e.host)}" }`);
+
+  const offers = [];
+  if (e.simpletix && !isPast) {
+    offers.push(`    {
+      "@type": "Offer",
+      "name": "${escapeJson(e.priceLabel || "General admission")}",
+      "availability": "https://schema.org/${e.status === "soldout" ? "SoldOut" : "InStock"}",
+      "url": "${escapeJson(e.simpletix)}"${e.price ? `,
+      "price": "${escapeJson(e.price)}",
+      "priceCurrency": "USD"` : ""}
+    }`);
+  }
+  if (e.eventbrite) offers.push(`    { "@type": "Offer", "name": "Eventbrite", "availability": "https://schema.org/${e.status === "soldout" ? "SoldOut" : "InStock"}", "url": "${escapeJson(e.eventbrite)}", "priceCurrency": "USD" }`);
+  if (e.posh) offers.push(`    { "@type": "Offer", "name": "Posh", "availability": "https://schema.org/${e.status === "soldout" ? "SoldOut" : "InStock"}", "url": "${escapeJson(e.posh)}", "priceCurrency": "USD" }`);
+
+  const sameAs = [e.eventbrite, e.fb, e.posh].filter(Boolean).map(u => `"${escapeJson(u)}"`).join(", ");
+
+  return `        <li class="${cardCls}" id="${escapeAttr(e.id)}" data-reveal
+            data-share-title="Take Me Back Bingo: ${escapeAttr(e.title)}"
+            data-share-text="${escapeAttr(e.copy.slice(0, 140))}"
+            data-share-image="${escapeAttr(e.flyer)}"
+            data-share-image-name="${escapeAttr((e.title || "Event").replace(/[^a-zA-Z0-9]+/g, "-"))}-Flyer.jpg">
+          <div class="${flyerCls}">
+            <img src="${escapeAttr(e.flyer)}" alt="${escapeAttr(e.flyerAlt)}" loading="lazy" />
+            <span class="${badgeCls}">${badgeText}</span>
+          </div>
+          <div class="event-card__body">
+            ${e.kicker ? `<p class="event-card__kicker">${escapeHtml(e.kicker)}</p>` : ""}
+            <h3 class="event-card__title">${escapeHtml(e.title)}</h3>
+            ${meta.length ? `<dl class="event-card__meta">
+${meta.join("\n")}
+            </dl>` : ""}
+            ${e.copy ? `<p class="event-card__copy">${escapeHtml(e.copy)}</p>` : ""}
+            ${ctaButtons.length ? `<div class="event-card__cta-row">
+${ctaButtons.join("\n")}
+            </div>` : ""}
+          </div>
+
+          <script type="application/ld+json">
+          {
+            "@context": "https://schema.org",
+            "@type": "Event",
+            "name": "Take Me Back Bingo Nights: ${escapeJson(e.title)}",
+            "startDate": "${startISO}",
+            "endDate": "${endISO}",
+            "eventStatus": "https://schema.org/EventScheduled",
+            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+            "location": {
+              "@type": "Place",
+              "name": "${escapeJson(e.venue)}",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "${escapeJson(e.street)}",
+                "addressLocality": "${escapeJson(e.city)}",
+                "addressRegion": "${escapeJson(e.region)}",
+                "postalCode": "${escapeJson(e.postal)}",
+                "addressCountry": "US"
+              }
+            },
+            "image": ["https://takemebackbingo.com/${escapeJson(e.flyer)}"],
+            "description": "${escapeJson(e.copy)}",
+            "performer": [
+${performers.join(",\n")}
+            ],
+            "offers": [
+${offers.join(",\n")}
+            ],
+            "sameAs": [${sameAs}],
+            "organizer": { "@id": "https://takemebackbingo.com/#organization" },
+            "typicalAgeRange": "21+"
+          }
+          </` + `script>
+        </li>`;
+}
+
+function showHtmlSnippet() {
+  if (!state.activeId) return;
+  const e = state.events.find(x => x.id === state.activeId);
+  if (!e) return;
+  const html = eventToHtml(e);
+  openModal(`HTML snippet — ${e.title}`, "Paste this inside the matching <ol class=\"events-list\"> block in events.html.", html);
+}
+
+function exportAllHtml() {
+  const upcoming = state.events.filter(x => x.section === "upcoming");
+  const past = state.events.filter(x => x.section === "past");
+  upcoming.sort((a, b) => new Date(a.startDate || 0) - new Date(b.startDate || 0));
+  past.sort((a, b) => new Date(b.startDate || 0) - new Date(a.startDate || 0));
+  const sep = "\n\n<!-- ---------- -->\n\n";
+  const upHtml = upcoming.map(eventToHtml).join("\n\n");
+  const pastHtml = past.map(eventToHtml).join("\n\n");
+  const out = `<!-- UPCOMING (${upcoming.length}) -->\n${upHtml || "<!-- (none) -->"}\n${sep}<!-- PAST (${past.length}) -->\n${pastHtml || "<!-- (none) -->"}`;
+  openModal("HTML for ALL events", "Two sections — replace the contents of the matching <ol class=\"events-list\"> blocks in events.html.", out);
+}
+
+/* ==========================================================================
+   MODAL + UTILITIES
+   ========================================================================== */
+function openModal(title, desc, code) {
+  document.getElementById("modalTitle").textContent = title;
+  document.getElementById("modalDesc").textContent = desc;
+  document.getElementById("modalCode").textContent = code;
+  document.getElementById("modalStatus").textContent = "";
+  document.getElementById("modal").classList.add("active");
+}
+function closeModal() { document.getElementById("modal").classList.remove("active"); }
+async function copyModal() {
+  const code = document.getElementById("modalCode").textContent;
+  const st = document.getElementById("modalStatus");
+  try { await navigator.clipboard.writeText(code); st.className = "status ok"; st.textContent = "Copied to clipboard."; }
+  catch { st.className = "status err"; st.textContent = "Copy failed — select the code manually."; }
+}
+
+function escapeHtml(s) { return String(s||"").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c])); }
+function escapeAttr(s) { return escapeHtml(s); }
+function escapeJson(s) { return String(s||"").replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, " "); }
+</script>
+</body>
+</html>
