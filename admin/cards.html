@@ -248,7 +248,7 @@
           <label for="cardsPerPage">Cards Per Page</label>
           <select id="cardsPerPage">
             <option value="1">1 per page · portrait, 7.1" × 10"</option>
-            <option value="2" selected>2 per page · landscape, 5.5" × 7.75" each</option>
+            <option value="2" selected>2 per page · landscape, 5" × 7" each</option>
           </select>
         </div>
 
@@ -670,7 +670,6 @@ function renderCardEl(grid, opts) {
           <div><span class="bcard__handle">${escapeHtml(handleSafe)}</span> &middot; #TakeMeBackBingoNights</div>
         </div>
       </div>
-      <div class="bcard__num">Card ${cardNum} of ${totalCards}</div>
     </div>
   `;
   const div = document.createElement("div");
@@ -806,15 +805,15 @@ async function generatePdf() {
       cardW = cardH * ASPECT;              // 7.14"
       slots = [{ x: (pageW - cardW) / 2, y: (pageH - cardH) / 2 }];
     } else {
-      // Landscape Letter, two cards side-by-side. Stacking portrait 5:7 cards
-      // vertically would need 14"+ of height which doesn't fit, so we rotate
-      // the page and place them horizontally — each card stays large and readable.
+      // Landscape Letter, two cards side-by-side. Card width is constrained
+      // by horizontal page space: 2 * cardW + gap + side-margins <= 11".
+      // With cardH = 7", cardW = 5.0", gap = 0.5", margins = 0.25" each.
       pdf = new jsPDF({ unit: "in", format: "letter", orientation: "landscape" });
       pageW = 11; pageH = 8.5;
-      cardH = 7.75;                        // 0.375" top/bottom margins
-      cardW = cardH * ASPECT;              // 5.54"
-      const gap = 0.4;
-      const totalW = cardW * 2 + gap;
+      cardH = 7.0;                         // 0.75" top/bottom margins
+      cardW = cardH * ASPECT;              // 5.0"
+      const gap = 0.5;
+      const totalW = cardW * 2 + gap;      // 10.5" — leaves 0.25" each side
       const startX = (pageW - totalW) / 2;
       const y = (pageH - cardH) / 2;
       slots = [
