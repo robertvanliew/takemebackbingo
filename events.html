@@ -87,14 +87,17 @@
       </p>
     </header>
 
-    <!-- UPCOMING -->
+    <!-- UPCOMING — populated by JS from /content/events.json. The static
+         markup below is kept ONLY as a no-JS fallback / SEO baseline; the
+         events-render script (bottom of file) replaces this list on load
+         with whatever the admin most recently published. -->
     <section class="events-section" aria-labelledby="events-upcoming">
       <header class="events-section__head" data-reveal>
         <h2 id="events-upcoming" class="events-section__h2">Upcoming</h2>
-        <span class="events-section__count">1 night on sale</span>
+        <span class="events-section__count" data-events-count-upcoming>1 night on sale</span>
       </header>
 
-      <ol class="events-list">
+      <ol class="events-list" id="events-upcoming-list">
 
         <li class="event-card" id="evt-summer-jam-2026" data-reveal
             data-share-title="Take Me Back Bingo: Summer Jam · June 26"
@@ -226,14 +229,14 @@
       </ol>
     </section>
 
-    <!-- PAST -->
+    <!-- PAST — populated by JS from /content/events.json (same as above) -->
     <section class="events-section" aria-labelledby="events-past">
       <header class="events-section__head" data-reveal>
         <h2 id="events-past" class="events-section__h2">Past Nights</h2>
-        <span class="events-section__count">Sold out shows</span>
+        <span class="events-section__count" data-events-count-past>Sold out shows</span>
       </header>
 
-      <ol class="events-list events-list--past">
+      <ol class="events-list events-list--past" id="events-past-list">
 
         <li class="event-card event-card--past" id="evt-thriller" data-reveal
             data-share-title="Thriller Bingo · Michael Jackson Tribute"
@@ -978,6 +981,217 @@
       if (e.key === 'Escape') closeAllShares(null);
     });
   })();
+</script>
+
+<!-- ============ DYNAMIC EVENTS RENDERER ============
+     Fetches /content/events.json (committed by the admin Publish Live
+     flow) and replaces the static fallback markup above with the current
+     event list. Runs on DOMContentLoaded. Cache-busted so each Vercel
+     rebuild after a publish shows the new data immediately. -->
+<script>
+(function () {
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+  }
+  function escAttr(s) { return esc(s); }
+
+  function badgeFor(status) {
+    if (status === "soldout") return { cls: "event-card__badge--sold", label: "Sold Out" };
+    if (status === "past")    return { cls: "event-card__badge--sold", label: "Past" };
+    return { cls: "",            label: "On Sale" };
+  }
+
+  function metaRows(e) {
+    const rows = [];
+    if (e.dateLabel)  rows.push(`<div><dt>Date</dt><dd>${esc(e.dateLabel)}</dd></div>`);
+    if (e.venueAddr)  rows.push(`<div><dt>Venue</dt><dd>${esc(e.venueAddr)}</dd></div>`);
+    if (e.timeLabel)  rows.push(`<div><dt>Doors</dt><dd>${esc(e.timeLabel)}</dd></div>`);
+    if (e.afterParty) rows.push(`<div><dt>After-party</dt><dd>${esc(e.afterParty)}</dd></div>`);
+    if (e.music)      rows.push(`<div><dt>Music</dt><dd>${esc(e.music)}</dd></div>`);
+    if (e.priceLabel) rows.push(`<div><dt>Tickets</dt><dd>${esc(e.priceLabel)}</dd></div>`);
+    return rows.length ? `<dl class="event-card__meta">${rows.join("")}</dl>` : "";
+  }
+
+  function shareButton() {
+    return `
+      <div class="share" data-share>
+        <button type="button" class="btn btn--ghost btn--lg" data-share-trigger aria-haspopup="menu" aria-expanded="false" aria-label="Share this event">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          <span class="share-label">Share</span>
+        </button>
+      </div>`;
+  }
+
+  function ctaRow(e, isPast) {
+    const parts = [];
+    if (!isPast && e.simpletix && e.status !== "soldout") {
+      parts.push(`
+        <a class="btn btn--primary btn--lg" href="${escAttr(e.simpletix)}" target="_blank" rel="noopener" data-ticket-link>
+          Buy Tickets
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>`);
+      const ctx = `${e.dateLabel ? e.dateLabel + " · " : ""}${e.title}${e.venue ? " at " + e.venue : ""}`;
+      parts.push(`<a class="btn btn--ghost btn--lg" href="#contact" data-open-inquiry data-inquiry-topic="Group of 6+" data-inquiry-context="${escAttr(ctx)}">Group of 6+?</a>`);
+    } else if (isPast) {
+      parts.push(`
+        <a class="btn btn--ghost btn--lg" href="gallery.html">
+          See the photos
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>`);
+    }
+    parts.push(shareButton());
+    return `<div class="event-card__cta-row">${parts.join("")}</div>`;
+  }
+
+  function renderCard(e, isPast) {
+    const b = badgeFor(e.status);
+    const flyer = e.flyer || "";
+    const flyerAlt = e.flyerAlt || `${e.title} flyer`;
+    const shareTitle = `Take Me Back Bingo: ${e.title}${e.dateLabel ? " · " + e.dateLabel : ""}`;
+    const shareText  = e.copy ? e.copy.slice(0, 220) : `${e.title}${e.dateLabel ? " · " + e.dateLabel : ""}${e.venue ? " at " + e.venue : ""}`;
+    const shareImg   = flyer;
+    const shareName  = (e.title || "Event").replace(/[^a-zA-Z0-9]+/g, "-") + "-Flyer.jpg";
+
+    return `
+      <li class="event-card${isPast ? " event-card--past" : ""}" id="${escAttr(e.id)}" data-reveal
+          data-share-title="${escAttr(shareTitle)}"
+          data-share-text="${escAttr(shareText)}"
+          data-share-image="${escAttr(shareImg)}"
+          data-share-image-name="${escAttr(shareName)}">
+        <div class="event-card__flyer${isPast ? " event-card__flyer--past" : ""}">
+          ${flyer ? `<img src="${escAttr(flyer)}" alt="${escAttr(flyerAlt)}" loading="lazy" />` : ""}
+          <span class="event-card__badge ${b.cls}">${esc(b.label)}</span>
+        </div>
+        <div class="event-card__body">
+          ${e.kicker ? `<p class="event-card__kicker">${esc(e.kicker)}</p>` : ""}
+          <h3 class="event-card__title">${esc(e.title)}</h3>
+          ${metaRows(e)}
+          ${e.copy ? `<p class="event-card__copy">${esc(e.copy)}</p>` : ""}
+          ${ctaRow(e, isPast)}
+        </div>
+      </li>`;
+  }
+
+  function buildSchema(e) {
+    const url = `https://takemebackbingo.com/events#${e.id}`;
+    const startISO = e.startDate ? e.startDate + ":00-04:00" : "";
+    const endISO   = e.endDate   ? e.endDate   + ":00-04:00" : "";
+    const availability = e.status === "soldout" ? "https://schema.org/SoldOut" : "https://schema.org/InStock";
+    const performers = [];
+    if (e.dj)   performers.push({ "@type": "Person", "name": e.dj });
+    if (e.host) performers.push({ "@type": "Person", "name": e.host });
+    const offers = [];
+    if (e.simpletix) {
+      const o = {
+        "@type": "Offer",
+        "name": e.priceLabel || "General admission",
+        "availability": availability,
+        "url": e.simpletix,
+        "priceCurrency": "USD"
+      };
+      if (e.price) o.price = e.price;
+      offers.push(o);
+    }
+    if (e.eventbrite) offers.push({ "@type": "Offer", "name": "Eventbrite", "availability": availability, "url": e.eventbrite, "priceCurrency": "USD" });
+    if (e.posh)       offers.push({ "@type": "Offer", "name": "Posh",       "availability": availability, "url": e.posh,       "priceCurrency": "USD" });
+    const sameAs = [e.eventbrite, e.posh, e.fb].filter(Boolean);
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      "name": `Take Me Back Bingo Nights: ${e.title}`,
+      "startDate": startISO,
+      "endDate": endISO,
+      "eventStatus": "https://schema.org/EventScheduled",
+      "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+      "location": {
+        "@type": "Place",
+        "name": e.venue || "Lake Chateau Banquets",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": e.street || "",
+          "addressLocality": e.city || "",
+          "addressRegion": e.region || "",
+          "postalCode": e.postal || "",
+          "addressCountry": "US"
+        }
+      },
+      "image": e.flyer ? [`https://takemebackbingo.com/${e.flyer}`] : [],
+      "description": e.copy || `${e.title} at ${e.venue || "Lake Chateau Banquets"}.`,
+      "url": url,
+      "organizer": { "@id": "https://takemebackbingo.com/#organization" },
+      "typicalAgeRange": "21+"
+    };
+    if (performers.length) schema.performer = performers;
+    if (offers.length)     schema.offers = offers;
+    if (sameAs.length)     schema.sameAs = sameAs;
+    return schema;
+  }
+
+  function renderAll(events) {
+    const upcoming = events.filter(e => e.section === "upcoming");
+    const past     = events.filter(e => e.section === "past");
+    upcoming.sort((a, b) => new Date(a.startDate || 0) - new Date(b.startDate || 0));
+    past.sort((a, b) => new Date(b.startDate || 0) - new Date(a.startDate || 0));
+
+    const upList   = document.getElementById("events-upcoming-list");
+    const pastList = document.getElementById("events-past-list");
+    const upCount  = document.querySelector("[data-events-count-upcoming]");
+    const pastCount = document.querySelector("[data-events-count-past]");
+
+    if (upList) {
+      upList.innerHTML = upcoming.length
+        ? upcoming.map(e => renderCard(e, false)).join("")
+        : `<li class="event-card event-card--empty"><div class="event-card__body" style="padding:32px;"><p class="event-card__copy">Tickets drop here first. Join the list and you&rsquo;ll know before anyone.</p><div class="event-card__cta-row"><a class="btn btn--primary btn--lg" href="#newsletter">Get Notified</a></div></div></li>`;
+    }
+    if (pastList) {
+      pastList.innerHTML = past.map(e => renderCard(e, true)).join("");
+    }
+    if (upCount) {
+      upCount.textContent = upcoming.length === 0 ? "Coming soon" :
+                            upcoming.length === 1 ? "1 night on sale" :
+                            `${upcoming.length} nights on sale`;
+    }
+    if (pastCount) {
+      pastCount.textContent = past.length === 0 ? "" : "Sold out shows";
+    }
+
+    // Replace existing event-card JSON-LD scripts with fresh ones generated
+    // from the current data. We tag ours with data-events-schema so we don't
+    // wipe the site-wide Organization / WebSite schemas.
+    document.querySelectorAll("script[data-events-schema]").forEach(s => s.remove());
+    events.forEach(e => {
+      const s = document.createElement("script");
+      s.type = "application/ld+json";
+      s.setAttribute("data-events-schema", "");
+      s.textContent = JSON.stringify(buildSchema(e));
+      document.head.appendChild(s);
+    });
+
+    // Tell any other code on the page that the event cards have changed,
+    // so reveal animations / share handlers can pick up the new elements.
+    document.dispatchEvent(new CustomEvent("events:rendered"));
+  }
+
+  async function load() {
+    try {
+      // Cache-bust so the freshest publish shows up after each Vercel rebuild.
+      const r = await fetch("/content/events.json?t=" + Date.now(), { cache: "no-store" });
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      const events = await r.json();
+      if (!Array.isArray(events)) throw new Error("events.json is not an array");
+      renderAll(events);
+    } catch (err) {
+      // Static fallback stays in place — the page is still usable.
+      console.warn("[events] Could not load /content/events.json:", err);
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", load);
+  } else {
+    load();
+  }
+})();
 </script>
 </body>
 </html>
