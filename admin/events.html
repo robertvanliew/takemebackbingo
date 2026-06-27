@@ -234,7 +234,8 @@
 
           <div class="btn-row">
             <button class="btn" onclick="saveEvent()">Save Draft</button>
-            <button class="btn btn--ghost" onclick="showHtmlSnippet()">Copy HTML for events.html</button>
+            <button class="btn" id="publishOneBtn" onclick="publishOne()" style="background:#6dd47e; color:#0e2a14;">🚀 Publish This Event</button>
+            <button class="btn btn--ghost" onclick="showHtmlSnippet()">Copy HTML</button>
             <button class="btn btn--danger btn--sm" onclick="deleteEvent()" style="margin-left:auto;">Delete</button>
           </div>
           <div class="status" id="status"></div>
@@ -243,17 +244,14 @@
     </div>
 
     <div class="card" style="margin-top:24px;">
-      <h2>Publish</h2>
-      <p class="lede">When you&rsquo;re ready, push your changes to the live site. The button below sends your events to the server, which commits them and triggers a rebuild &mdash; the live site updates in about 30 seconds.</p>
+      <h2>Publish to Live Site</h2>
+      <p class="lede"><strong>Normally use &ldquo;Publish This Event&rdquo;</strong> in the editor above &mdash; it only ships the one event you&rsquo;re working on. The button below re-publishes the entire list, useful if you&rsquo;ve changed multiple events at once.</p>
       <div class="btn-row" style="margin-top:0;">
-        <button class="btn" onclick="publishLive()" id="publishBtn" style="font-size:14px; padding:12px 22px;">🚀 Publish Live</button>
+        <button class="btn" onclick="publishLive()" id="publishBtn" style="font-size:14px; padding:12px 22px;">🚀 Publish All Events</button>
         <button class="btn btn--ghost" onclick="exportJson()">Download events.json</button>
         <button class="btn btn--ghost" onclick="exportAllHtml()">Copy HTML (fallback)</button>
       </div>
       <div class="status" id="publishStatus"></div>
-      <p class="field__hint" style="margin-top:14px;">
-        <strong>Publish Live</strong> is the normal way to ship changes. The download/copy options are backups in case the server is offline.
-      </p>
     </div>
 
   </div>
@@ -311,8 +309,65 @@ function showApp() {
 function logout() { sessionStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(PW_KEY); location.reload(); }
 
 /* ==========================================================================
-   PUBLISH LIVE — POST events to /api/publish-events, which commits to GitHub
-   and triggers a Vercel rebuild. Live in ~30 seconds.
+   PUBLISH ONE — push just the currently-edited event to the live site.
+   Server-side, the API merges this into the existing events.json by id
+   (replace if id matches, append if not), so the other events are not
+   touched and the commit history is per-event.
+   ========================================================================== */
+async function publishOne() {
+  if (!state.activeId) return;
+  const e = state.events.find(x => x.id === state.activeId);
+  if (!e) return;
+
+  const st = document.getElementById("status");
+  st.className = "status"; st.textContent = "";
+
+  // If a draft hasn't been saved yet (or there's a pending flyer), save first
+  // so what gets published matches what the editor shows.
+  await saveEvent();
+  // saveEvent shows its own error in #status; bail if it errored.
+  if (st.classList.contains("err")) return;
+
+  // Refresh from state (saveEvent may have updated flyer path / cleaned data).
+  const fresh = state.events.find(x => x.id === state.activeId);
+  if (!fresh) return;
+
+  if (!confirm(`Publish "${fresh.title}" to the LIVE site? The site will update in about 30 seconds.`)) return;
+
+  const pw = sessionStorage.getItem(PW_KEY);
+  if (!pw) {
+    st.className = "status err"; st.textContent = "Session expired — lock the panel and log in again.";
+    return;
+  }
+
+  const btn = document.getElementById("publishOneBtn");
+  btn.disabled = true;
+  st.textContent = `Publishing "${fresh.title}"…`;
+  try {
+    const res = await fetch("/api/publish-events", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + pw },
+      body: JSON.stringify({ event: fresh })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      st.className = "status err";
+      st.textContent = "Publish failed: " + (data.error || ("HTTP " + res.status));
+      return;
+    }
+    st.className = "status ok";
+    st.textContent = `Published "${fresh.title}". Live in ~30 seconds.${data.commit ? " Commit " + data.commit + "." : ""}`;
+  } catch (e) {
+    st.className = "status err";
+    st.textContent = "Publish error: " + e.message;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+/* ==========================================================================
+   PUBLISH ALL — POST every event to /api/publish-events. Used for batch
+   re-publishes (e.g. you edited several events at once).
    ========================================================================== */
 async function publishLive() {
   const btn = document.getElementById("publishBtn");
