@@ -50,6 +50,20 @@
 
 <link rel="stylesheet" href="styles.css?v=2" />
 
+<!-- Safety net: the events page is rendered dynamically from JSON, and the
+     site-wide data-reveal fade-in (which sets opacity:0 until an
+     IntersectionObserver fires) caught us off guard when JS-inserted cards
+     never received .is-in. Force every event card inside our dynamic
+     containers to be fully visible no matter what reveal state CSS later
+     tries to apply. -->
+<style>
+  #events-upcoming-list .event-card,
+  #events-past-list .event-card {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+</style>
+
 <!-- DATES-PENDING toggle (single source of truth for the "Buy Tickets" → newsletter
      redirect while the calendar is down). See /dates-pending.js. -->
 <script src="/dates-pending.js" defer></script>
@@ -1052,8 +1066,12 @@
     const shareImg   = flyer;
     const shareName  = (e.title || "Event").replace(/[^a-zA-Z0-9]+/g, "-") + "-Flyer.jpg";
 
+    // NOTE: deliberately NOT adding data-reveal. The site's reveal
+    // IntersectionObserver finishes its scan before this script inserts
+    // its cards, so any data-reveal element added later stays at
+    // opacity:0 forever. We just render cards already-visible.
     return `
-      <li class="event-card${isPast ? " event-card--past" : ""}" id="${escAttr(e.id)}" data-reveal
+      <li class="event-card${isPast ? " event-card--past" : ""}" id="${escAttr(e.id)}"
           data-share-title="${escAttr(shareTitle)}"
           data-share-text="${escAttr(shareText)}"
           data-share-image="${escAttr(shareImg)}"
