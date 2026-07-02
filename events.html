@@ -21,6 +21,9 @@
 <meta name="theme-color" content="#141111" />
 <link rel="canonical" href="https://takemebackbingo.com/events" />
 
+<!-- RSS feed · Chrome mobile Follow + standard readers -->
+<link rel="alternate" type="application/rss+xml" title="Take Me Back Bingo Nights" href="/rss.xml" />
+
 <!-- Geo signals · the Summer Jam venue (Lake Chateau Banquets) for
      local search. Picked up by some crawlers as a hint when the page
      is about a place. Coordinates are the Lake Chateau Banquets address. -->
@@ -1145,6 +1148,31 @@
     return schema;
   }
 
+  function buildBlogPostingSchema(e) {
+    // Discover treats each event as a piece of content to be surfaced in
+    // the mobile feed. BlogPosting gives it the shape it wants: headline,
+    // dated image, publisher, and clear datePublished/dateModified.
+    if (!e.flyer) return null; // no image = no Discover eligibility anyway
+    const url = `https://takemebackbingo.com/events#${e.id}`;
+    const imgUrl = `https://takemebackbingo.com/${e.flyer.replace(/^\//, "")}`;
+    const now = new Date().toISOString();
+    return {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": `${e.title}${e.dateLabel ? " — " + e.dateLabel : ""}`,
+      "image": [imgUrl],
+      "datePublished": e.startDate ? e.startDate + ":00-04:00" : now,
+      "dateModified": now,
+      "author":    { "@type": "Organization", "name": "Take Me Back Bingo Nights", "url": "https://takemebackbingo.com/" },
+      "publisher": { "@id": "https://takemebackbingo.com/#organization" },
+      "url": url,
+      "mainEntityOfPage": { "@type": "WebPage", "@id": url },
+      "description": (e.copy || `${e.title} at ${e.venue || "Lake Chateau Banquets"}.`).slice(0, 300),
+      "keywords": "music bingo, hip hop bingo, R&B bingo, NJ nightlife, throwback night, live music, Take Me Back Bingo",
+      "articleSection": e.section === "past" ? "Past Events" : "Upcoming Events"
+    };
+  }
+
   function renderAll(events) {
     const upcoming = events.filter(e => e.section === "upcoming");
     const past     = events.filter(e => e.section === "past");
@@ -1176,13 +1204,21 @@
     // Replace existing event-card JSON-LD scripts with fresh ones generated
     // from the current data. We tag ours with data-events-schema so we don't
     // wipe the site-wide Organization / WebSite schemas.
+    // For each event we emit TWO schemas:
+    //   1. Event  — for Google Search's event card in SERP
+    //   2. BlogPosting — for Google Discover eligibility. Discover strongly
+    //      prefers Article/BlogPosting/NewsArticle over Event schema for
+    //      surfacing content in the mobile feed, so we layer both.
     document.querySelectorAll("script[data-events-schema]").forEach(s => s.remove());
     events.forEach(e => {
-      const s = document.createElement("script");
-      s.type = "application/ld+json";
-      s.setAttribute("data-events-schema", "");
-      s.textContent = JSON.stringify(buildSchema(e));
-      document.head.appendChild(s);
+      [buildSchema(e), buildBlogPostingSchema(e)].forEach(schema => {
+        if (!schema) return;
+        const s = document.createElement("script");
+        s.type = "application/ld+json";
+        s.setAttribute("data-events-schema", "");
+        s.textContent = JSON.stringify(schema);
+        document.head.appendChild(s);
+      });
     });
 
     // Tell any other code on the page that the event cards have changed,

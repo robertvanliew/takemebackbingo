@@ -1,6 +1,10 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "rewrites": [
+    { "source": "/rss.xml", "destination": "/api/rss" },
+    { "source": "/feed.xml", "destination": "/api/rss" }
+  ],
   "headers": [
     {
       "source": "/(.*)\\.(jpg|jpeg|png|webp|gif|svg|ico)",
