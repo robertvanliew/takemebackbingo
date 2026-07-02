@@ -461,25 +461,60 @@
     margin: 0 0 24px;
     line-height: 1.5;
   }
+  .mag__share-lead {
+    font-family: 'Sora', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #9d9484;
+    margin: 0 0 18px;
+    font-weight: 600;
+  }
   .mag__share {
     display: flex;
     gap: 10px;
     justify-content: center;
     flex-wrap: wrap;
   }
-  .mag__share a {
+  .mag__share a,
+  .mag__share button {
     color: #9d9484 !important;
+    background: transparent;
     text-decoration: none !important;
-    padding: 10px 20px;
+    padding: 12px 20px;
     border: 1px solid #2b2525 !important;
     font-family: 'Sora', sans-serif;
     font-size: 11px;
     letter-spacing: 2px;
     text-transform: uppercase;
     font-weight: 600;
-    transition: border-color 0.15s, color 0.15s;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
   }
-  .mag__share a:hover { color: #f1c33b !important; border-color: #f1c33b !important; }
+  .mag__share a:hover,
+  .mag__share button:hover { color: #f1c33b !important; border-color: #f1c33b !important; }
+  .mag__share-primary {
+    color: #1a1408 !important;
+    background: #f1c33b !important;
+    border-color: #f1c33b !important;
+  }
+  .mag__share-primary:hover {
+    color: #1a1408 !important;
+    background: #ffd45a !important;
+    border-color: #ffd45a !important;
+  }
+  .mag__share-hint {
+    font-family: 'Newsreader', Georgia, serif;
+    font-style: italic;
+    font-size: 13px;
+    color: #9d9484;
+    margin: 18px 0 0;
+    line-height: 1.5;
+  }
+  .mag__share-hint strong { color: #f6e9c8; font-style: normal; font-weight: 700; }
 
   /* ============ MOBILE ============ */
   @media (max-width: 640px) {
@@ -625,11 +660,19 @@
 
   <footer class="mag__colophon">
     <p class="mag__colophon-line">Take Me Back Bingo Nights is a live music bingo brand<br>from High Class Experience LLC. Woodbridge, NJ.</p>
+    <p class="mag__share-lead">Share the post</p>
     <div class="mag__share">
-      <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Ftakemebackbingo.com%2Fblog%2Fsong-of-the-week-crazy-in-love&text=Why%20Beyonc%C3%A9%27s%20%27Crazy%20in%20Love%27%20still%20owns%20every%20music%20bingo%20night" target="_blank" rel="noopener">Share on X</a>
-      <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Ftakemebackbingo.com%2Fblog%2Fsong-of-the-week-crazy-in-love" target="_blank" rel="noopener">Share on FB</a>
+      <button type="button" class="mag__share-primary" id="magShareBtn" data-share-title="Take Me Back Bingo Nights — Song of the Week" data-share-text="Why Beyoncé's 'Crazy in Love' still owns every music bingo night." data-share-image="/photos/Winners/GSP_2353.jpg" data-share-filename="take-me-back-bingo-song-of-the-week.jpg">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        <span>Share to Story</span>
+      </button>
+      <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Ftakemebackbingo.com%2Fblog%2Fsong-of-the-week-crazy-in-love&text=Why%20Beyonc%C3%A9%27s%20%27Crazy%20in%20Love%27%20still%20owns%20every%20music%20bingo%20night" target="_blank" rel="noopener">X / Twitter</a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Ftakemebackbingo.com%2Fblog%2Fsong-of-the-week-crazy-in-love" target="_blank" rel="noopener">Facebook</a>
       <a href="mailto:?subject=Song%20of%20the%20Week%3A%20Crazy%20in%20Love&body=https%3A%2F%2Ftakemebackbingo.com%2Fblog%2Fsong-of-the-week-crazy-in-love">Email</a>
     </div>
+    <p class="mag__share-hint" id="magShareHint">
+      <strong>On mobile:</strong> tap <em>Share to Story</em> to post the photo directly to your Instagram or Facebook Story via your phone&rsquo;s share sheet.
+    </p>
   </footer>
 
 </article>
@@ -701,6 +744,77 @@
 </script>
 
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+
+<!-- Story share · pre-caches the flyer as a File on load so that when the
+     user taps the button we can call navigator.share({ files: [...] })
+     SYNCHRONOUSLY. iOS Safari only honors share() while the tap's user
+     activation is live — awaiting the fetch inside the click handler
+     consumes that activation and throws NotAllowedError. -->
+<script>
+(function () {
+  var btn = document.getElementById('magShareBtn');
+  var hint = document.getElementById('magShareHint');
+  if (!btn) return;
+
+  var title    = btn.getAttribute('data-share-title')    || document.title;
+  var text     = btn.getAttribute('data-share-text')     || title;
+  var imgPath  = btn.getAttribute('data-share-image');
+  var filename = btn.getAttribute('data-share-filename') || 'take-me-back-bingo.jpg';
+  var url      = window.location.href;
+
+  var cachedFile = null;
+
+  // Prefetch the image and wrap as a File, so it's ready to share synchronously.
+  if (imgPath && typeof fetch === 'function' && typeof File !== 'undefined') {
+    fetch(imgPath)
+      .then(function (r) { return r.ok ? r.blob() : null; })
+      .then(function (blob) {
+        if (!blob) return;
+        try { cachedFile = new File([blob], filename, { type: blob.type || 'image/jpeg' }); } catch (e) {}
+      })
+      .catch(function () {});
+  }
+
+  // If we can't share files (older browsers, desktop), soften the hint copy.
+  var canShareFiles = navigator.canShare && (function () {
+    try { return navigator.canShare({ files: [new File([new Blob()], 't.jpg', { type: 'image/jpeg' })] }); }
+    catch (e) { return false; }
+  })();
+  if (!canShareFiles && hint) {
+    hint.innerHTML = '<strong>To post as a Story:</strong> tap <em>Share to Story</em> to save the photo to your camera roll, then open Instagram or Facebook and add it as a Story.';
+  }
+
+  btn.addEventListener('click', function () {
+    // 1. Best path: native share with the image file (mobile). Must be sync.
+    if (cachedFile && navigator.canShare && navigator.canShare({ files: [cachedFile] })) {
+      try {
+        navigator.share({ files: [cachedFile], title: title, text: text + '\n' + url })
+          .catch(function () {});
+        return;
+      } catch (e) {}
+    }
+    // 2. Native share without file (mobile, no file support or file not ready yet).
+    if (navigator.share) {
+      try {
+        navigator.share({ title: title, text: text, url: url }).catch(function () {});
+        return;
+      } catch (e) {}
+    }
+    // 3. Desktop fallback: download the image, copy the URL to clipboard.
+    if (imgPath) {
+      var a = document.createElement('a');
+      a.href = imgPath;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).catch(function () {});
+    }
+  });
+})();
+</script>
 
 <!-- Photo slider · auto-advances every 5s, stops on user interaction so we
      don't argue with the reader once they pick a photo. -->

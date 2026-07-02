@@ -839,6 +839,36 @@
     });
 
     // === SHARE: per-event share button with native share + popover fallback ===
+    //
+    // Flyer pre-cache: navigator.share() with a file (which lets iOS Safari
+    // hand the image to Instagram / Facebook Story via the share sheet) has
+    // to be called SYNCHRONOUSLY on tap. Awaiting fetch() first consumes the
+    // user activation and iOS throws NotAllowedError. So we prefetch each
+    // visible flyer as a File up front and pull from cache on click.
+    var flyerCache = {};
+    function cacheFlyer(imgUrl) {
+      if (!imgUrl || flyerCache[imgUrl]) return;
+      fetch(imgUrl)
+        .then(function (r) { return r.ok ? r.blob() : null; })
+        .then(function (blob) {
+          if (!blob) return;
+          var name = imgUrl.split('/').pop().split('?')[0] || 'flyer.jpg';
+          try {
+            flyerCache[imgUrl] = new File([blob], name, { type: blob.type || 'image/jpeg' });
+          } catch (e) {}
+        })
+        .catch(function () {});
+    }
+    function cacheAllVisibleFlyers() {
+      document.querySelectorAll('[data-share-image]').forEach(function (el) {
+        var img = el.getAttribute('data-share-image');
+        if (img) cacheFlyer(new URL(img, location.href).href);
+      });
+    }
+    cacheAllVisibleFlyers();
+    // Re-cache after the dynamic events renderer swaps the list.
+    document.addEventListener('events:rendered', cacheAllVisibleFlyers);
+
     function buildSharePop() {
       var pop = document.createElement('div');
       pop.className = 'share-pop';
@@ -953,43 +983,64 @@
       if (trigger) trigger.setAttribute('aria-expanded', 'true');
     }
 
-    document.querySelectorAll('[data-share-trigger]').forEach(function (btn) {
-      btn.addEventListener('click', function (e) {
-        e.preventDefault();
-        var share = btn.closest('[data-share]');
-        if (!share) return;
-        var data = getShareData(share);
+    // Event delegation so share buttons on dynamically-rendered event cards
+    // (from /content/events.json) also work — the previous per-button
+    // forEach only wired the static fallback markup.
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-share-trigger]');
+      if (!btn) return;
+      e.preventDefault();
+      var share = btn.closest('[data-share]');
+      if (!share) return;
+      var data = getShareData(share);
+      var cachedFile = data.imageUrl && flyerCache[data.imageUrl] ? flyerCache[data.imageUrl] : null;
 
-        // No native share at all (typical desktop). Open the popover with all options
-        if (!navigator.share) {
-          var isOpen = share.getAttribute('data-open') === 'true';
-          if (isOpen) {
-            share.setAttribute('data-open', 'false');
-            btn.setAttribute('aria-expanded', 'false');
-          } else {
-            openShare(share);
-          }
-          return;
+      // No native share at all (typical desktop). Open the popover with all options.
+      if (!navigator.share) {
+        var isOpen = share.getAttribute('data-open') === 'true';
+        if (isOpen) {
+          share.setAttribute('data-open', 'false');
+          btn.setAttribute('aria-expanded', 'false');
+        } else {
+          openShare(share);
         }
+        return;
+      }
 
-        // Native share (mobile). CRITICAL: navigator.share() must be called
-        // SYNCHRONOUSLY inside this click handler. iOS Safari only permits it
-        // while the tap's user-activation is live. Awaiting a fetch first (to
-        // attach a flyer file) consumed that activation and made share() throw
-        // NotAllowedError, so the button silently did nothing. Sharing the
-        // title/text/url is reliable; the flyer stays available via the
-        // popover's "Download flyer" item on desktop.
-        btn.setAttribute('aria-busy', 'true');
-        var clearBusy = function () { btn.removeAttribute('aria-busy'); };
-        try {
-          var p = navigator.share({ title: data.title, text: data.text, url: data.url });
-          if (p && typeof p.then === 'function') p.then(clearBusy, clearBusy);
-          else clearBusy();
-        } catch (err) {
+      // Native share (mobile). Include the flyer as a file when we've cached
+      // it and the platform will accept it — that's what lets iOS/Android
+      // route the tap to Instagram Story / Facebook Story with the flyer
+      // pre-loaded. Must stay synchronous; no await.
+      var shareData = { title: data.title, text: data.text };
+      if (cachedFile && navigator.canShare && navigator.canShare({ files: [cachedFile] })) {
+        shareData.files = [cachedFile];
+        // When sharing files to Story, the URL is more useful appended to
+        // the text than as a separate field (some receivers drop `url`).
+        shareData.text = data.text + '\n' + data.url;
+      } else {
+        shareData.url = data.url;
+      }
+
+      btn.setAttribute('aria-busy', 'true');
+      var clearBusy = function () { btn.removeAttribute('aria-busy'); };
+      try {
+        var p = navigator.share(shareData);
+        if (p && typeof p.then === 'function') {
+          p.then(clearBusy, function (err) {
+            clearBusy();
+            // Retry WITHOUT the file if the OS rejected it (rare but
+            // possible on older Android / non-supported apps).
+            if (shareData.files) {
+              try { navigator.share({ title: data.title, text: data.text, url: data.url }).catch(function () {}); } catch (e2) {}
+            }
+          });
+        } else {
           clearBusy();
-          openShare(share); // last-resort fallback if share() throws synchronously
         }
-      });
+      } catch (err) {
+        clearBusy();
+        openShare(share); // last-resort fallback if share() throws synchronously
+      }
     });
 
     document.addEventListener('click', function (e) {
