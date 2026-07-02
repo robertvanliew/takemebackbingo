@@ -745,11 +745,16 @@
 
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 
-<!-- Story share · pre-caches the flyer as a File on load so that when the
-     user taps the button we can call navigator.share({ files: [...] })
-     SYNCHRONOUSLY. iOS Safari only honors share() while the tap's user
-     activation is live — awaiting the fetch inside the click handler
-     consumes that activation and throws NotAllowedError. -->
+<!-- Story share · composes a 1080x1920 Instagram-Story-formatted "share
+     card" image with the article's headline, cover photo, and URL burned
+     in, then hands it to navigator.share as a File. Instagram Story
+     doesn't accept clickable links from third-party apps (their spam
+     rules), so a readable URL burned into the image is the closest we
+     can get — this is what The Athletic / ESPN / NYT do.
+
+     Pre-compose on page load, cache the File, share synchronously on
+     tap. iOS Safari kills the share() call if we await anything after
+     the click, so all async work happens up front. -->
 <script>
 (function () {
   var btn = document.getElementById('magShareBtn');
@@ -762,52 +767,237 @@
   var filename = btn.getAttribute('data-share-filename') || 'take-me-back-bingo.jpg';
   var url      = window.location.href;
 
-  var cachedFile = null;
+  // Human-readable URL for the burned-in card (drops the scheme).
+  var displayUrl = url.replace(/^https?:\/\//, '').replace(/\/$/, '');
 
-  // Prefetch the image and wrap as a File, so it's ready to share synchronously.
+  var storyFile = null;         // fully-composed 1080x1920 story card
+  var rawPhotoFile = null;      // raw cover photo as a fallback
+
+  // ------- Compose the 9:16 Story card via Canvas -------
+  function composeStoryCard() {
+    return new Promise(function (resolve, reject) {
+      var W = 1080, H = 1920;
+      var canvas = document.createElement('canvas');
+      canvas.width = W; canvas.height = H;
+      var ctx = canvas.getContext('2d');
+
+      // Load the cover photo first — the rest can be drawn synchronously.
+      var img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = function () {
+        draw();
+      };
+      img.onerror = function () {
+        // Draw without the photo if it fails to load.
+        draw();
+      };
+      img.src = imgPath;
+
+      function draw() {
+        // Background: solid dark, matches brand
+        ctx.fillStyle = '#141111';
+        ctx.fillRect(0, 0, W, H);
+
+        // Cover photo: cropped to fill the top ~62% (rows 0-1180)
+        var photoY = 0, photoH = 1180;
+        if (img.naturalWidth && img.naturalHeight) {
+          // object-fit: cover math
+          var srcRatio = img.naturalWidth / img.naturalHeight;
+          var dstRatio = W / photoH;
+          var sx = 0, sy = 0, sW = img.naturalWidth, sH = img.naturalHeight;
+          if (srcRatio > dstRatio) {
+            // photo is wider than target: crop sides
+            sW = img.naturalHeight * dstRatio;
+            sx = (img.naturalWidth - sW) / 2;
+          } else {
+            // photo is taller than target: crop top/bottom
+            sH = img.naturalWidth / dstRatio;
+            sy = (img.naturalHeight - sH) / 2;
+          }
+          ctx.drawImage(img, sx, sy, sW, sH, 0, photoY, W, photoH);
+        }
+
+        // Gradient overlay on the bottom of the photo so the kicker sits on
+        // top cleanly regardless of what's in the underlying image.
+        var grad = ctx.createLinearGradient(0, photoH - 260, 0, photoH);
+        grad.addColorStop(0, 'rgba(20,17,17,0)');
+        grad.addColorStop(1, 'rgba(20,17,17,0.95)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, photoH - 260, W, 260);
+
+        // Top-left kicker over the photo: SONG OF THE WEEK
+        ctx.fillStyle = '#f1c33b';
+        ctx.font = 'bold 32px "Bungee", "Impact", system-ui, sans-serif';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        ctx.letterSpacing && (ctx.letterSpacing = '8px');
+        var kickerText = 'SONG OF THE WEEK';
+        ctx.fillText(spaced(kickerText, 4), 64, 64);
+
+        // Small underline mark
+        ctx.fillStyle = '#f1c33b';
+        ctx.fillRect(64, 118, 80, 4);
+
+        // Title — big, serif, italic, at ~1250
+        ctx.textAlign = 'left';
+        ctx.fillStyle = '#f6e9c8';
+        ctx.font = 'italic 700 82px "Newsreader", Georgia, serif';
+        var titleLines = wrapText(ctx, headlineForCard(), W - 128, 82);
+        var titleY = 1260;
+        for (var i = 0; i < Math.min(titleLines.length, 4); i++) {
+          ctx.fillText(titleLines[i], 64, titleY);
+          titleY += 96;
+        }
+
+        // Divider
+        ctx.strokeStyle = 'rgba(241, 195, 59, 0.4)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(64, 1670);
+        ctx.lineTo(W - 64, 1670);
+        ctx.stroke();
+
+        // Brand line
+        ctx.fillStyle = '#9d9484';
+        ctx.font = '500 28px "Sora", system-ui, sans-serif';
+        ctx.fillText('TAKE ME BACK BINGO NIGHTS', 64, 1710);
+
+        // URL pill (gold background, dark text)
+        var url = displayUrl;
+        ctx.font = 'bold 30px "Sora", system-ui, sans-serif';
+        var pillPadX = 28, pillPadY = 16, pillR = 8;
+        var textW = ctx.measureText(url).width;
+        var pillW = textW + pillPadX * 2, pillH = 30 + pillPadY * 2;
+        var pillX = 64, pillY = 1770;
+        roundRect(ctx, pillX, pillY, pillW, pillH, pillR);
+        ctx.fillStyle = '#f1c33b';
+        ctx.fill();
+        ctx.fillStyle = '#1a1408';
+        ctx.textBaseline = 'top';
+        ctx.fillText(url, pillX + pillPadX, pillY + pillPadY + 2);
+
+        // Convert to blob → File
+        canvas.toBlob(function (blob) {
+          if (!blob) { reject(new Error('Canvas toBlob failed')); return; }
+          try {
+            var f = new File([blob], 'tmb-story-song-of-the-week.jpg', { type: 'image/jpeg' });
+            resolve(f);
+          } catch (e) { reject(e); }
+        }, 'image/jpeg', 0.94);
+      }
+    });
+  }
+
+  // Story card uses a tighter version of the article headline so it fits
+  // the vertical space without truncation.
+  function headlineForCard() {
+    return "Why 'Crazy in Love' Still Owns Every Music Bingo Night";
+  }
+
+  // Basic canvas word-wrap.
+  function wrapText(ctx, text, maxWidth) {
+    var words = text.split(/\s+/);
+    var lines = [];
+    var line = '';
+    for (var i = 0; i < words.length; i++) {
+      var test = line ? line + ' ' + words[i] : words[i];
+      if (ctx.measureText(test).width > maxWidth && line) {
+        lines.push(line);
+        line = words[i];
+      } else {
+        line = test;
+      }
+    }
+    if (line) lines.push(line);
+    return lines;
+  }
+
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+
+  // ctx.letterSpacing has spotty support; approximate with a space-inserting
+  // helper so the kicker still reads as tracked out.
+  function spaced(s, gap) {
+    return s.split('').join(' '.repeat(gap));
+  }
+
+  // Kick off composition — but first wait for fonts to load so the canvas
+  // draws in the real typefaces, not a system fallback.
+  var ready = (document.fonts && document.fonts.ready) || Promise.resolve();
+  ready.then(function () {
+    return composeStoryCard();
+  }).then(function (file) {
+    storyFile = file;
+  }).catch(function () {});
+
+  // Also prefetch the raw cover photo as a Fallback in case canvas fails
+  // (e.g. old browsers, CORS on the image server).
   if (imgPath && typeof fetch === 'function' && typeof File !== 'undefined') {
     fetch(imgPath)
       .then(function (r) { return r.ok ? r.blob() : null; })
       .then(function (blob) {
         if (!blob) return;
-        try { cachedFile = new File([blob], filename, { type: blob.type || 'image/jpeg' }); } catch (e) {}
+        try { rawPhotoFile = new File([blob], filename, { type: blob.type || 'image/jpeg' }); } catch (e) {}
       })
       .catch(function () {});
   }
 
-  // If we can't share files (older browsers, desktop), soften the hint copy.
+  // Soften the hint copy for platforms that can't file-share.
   var canShareFiles = navigator.canShare && (function () {
     try { return navigator.canShare({ files: [new File([new Blob()], 't.jpg', { type: 'image/jpeg' })] }); }
     catch (e) { return false; }
   })();
   if (!canShareFiles && hint) {
-    hint.innerHTML = '<strong>To post as a Story:</strong> tap <em>Share to Story</em> to save the photo to your camera roll, then open Instagram or Facebook and add it as a Story.';
+    hint.innerHTML = '<strong>To post as a Story:</strong> tap the button to download the share card, then open Instagram or Facebook on your phone and add it as a Story.';
+  } else if (hint) {
+    hint.innerHTML = '<strong>On mobile:</strong> the share card has the headline and link baked in &mdash; ready to post as an Instagram or Facebook Story from your phone&rsquo;s share sheet.';
   }
 
   btn.addEventListener('click', function () {
-    // 1. Best path: native share with the image file (mobile). Must be sync.
-    if (cachedFile && navigator.canShare && navigator.canShare({ files: [cachedFile] })) {
+    // Prefer the composed story card, fall back to the raw photo, then to
+    // text-only share, then desktop download.
+    var fileToShare = storyFile || rawPhotoFile;
+
+    if (fileToShare && navigator.canShare && navigator.canShare({ files: [fileToShare] })) {
       try {
-        navigator.share({ files: [cachedFile], title: title, text: text + '\n' + url })
+        navigator.share({ files: [fileToShare], title: title, text: text + '\n' + url })
           .catch(function () {});
         return;
       } catch (e) {}
     }
-    // 2. Native share without file (mobile, no file support or file not ready yet).
     if (navigator.share) {
       try {
         navigator.share({ title: title, text: text, url: url }).catch(function () {});
         return;
       } catch (e) {}
     }
-    // 3. Desktop fallback: download the image, copy the URL to clipboard.
-    if (imgPath) {
+    // Desktop: download the composed card, copy the URL.
+    if (storyFile) {
       var a = document.createElement('a');
-      a.href = imgPath;
-      a.download = filename;
+      a.href = URL.createObjectURL(storyFile);
+      a.download = 'tmb-story-song-of-the-week.jpg';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+    } else if (imgPath) {
+      var a2 = document.createElement('a');
+      a2.href = imgPath;
+      a2.download = filename;
+      document.body.appendChild(a2);
+      a2.click();
+      document.body.removeChild(a2);
     }
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(url).catch(function () {});
