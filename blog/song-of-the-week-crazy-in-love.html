@@ -37,15 +37,15 @@
 <meta property="og:title" content="Why 'Crazy in Love' Still Owns Every Music Bingo Night" />
 <meta property="og:description" content="How Beyoncé's 2003 anthem became the track that stops every Take Me Back Bingo room in its tracks — 22 years later." />
 <meta property="og:url" content="https://takemebackbingo.com/blog/song-of-the-week-crazy-in-love" />
-<meta property="og:image" content="https://takemebackbingo.com/photos/GSP_2436.jpg" />
-<meta property="og:image:width" content="1600" />
-<meta property="og:image:height" content="1067" />
-<meta property="og:image:alt" content="Take Me Back Bingo Nights crowd on the dance floor" />
+<meta property="og:image" content="https://takemebackbingo.com/photos/Winners/GSP_2353.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="1500" />
+<meta property="og:image:alt" content="A guest at Take Me Back Bingo Nights" />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Why 'Crazy in Love' Still Owns Every Music Bingo Night" />
 <meta name="twitter:description" content="Beyoncé's 2003 anthem, decoded. Why it still stops every Take Me Back Bingo room 22 years later." />
-<meta name="twitter:image" content="https://takemebackbingo.com/photos/GSP_2436.jpg" />
+<meta name="twitter:image" content="https://takemebackbingo.com/photos/Winners/GSP_2353.jpg" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -91,8 +91,13 @@
     margin: 0 0 20px;
     padding-bottom: 20px;
     border-bottom: 1px solid #2b2525;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
   }
-  .mag__issue span { color: #9d9484; margin-right: 12px; }
+  .mag__issue-date { color: #9d9484; }
+  .mag__issue-sep { color: #4a4038; }
   .mag__title {
     font-family: 'Newsreader', Georgia, serif;
     font-size: clamp(38px, 5.2vw, 68px);
@@ -133,13 +138,6 @@
   .mag__byline-sep { color: #4a4038; }
 
   .mag__figure { margin: 0; }
-  .mag__figure img {
-    width: 100%; height: auto;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
-    display: block;
-    filter: contrast(1.05) saturate(1.05);
-  }
   .mag__figure figcaption {
     font-family: 'Newsreader', Georgia, serif;
     font-style: italic;
@@ -151,6 +149,38 @@
     padding: 0 8px;
   }
   .mag__figure figcaption strong { font-style: normal; text-transform: uppercase; letter-spacing: 1.5px; font-size: 10px; color: #f1c33b; font-weight: 700; margin-right: 8px; }
+
+  /* Photo slider — a cross-fade carousel that keeps the same
+     4:5 crop as a single photo but rotates through several. */
+  .mag__slider { position: relative; }
+  .mag__slider-track {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: #0e0c0c;
+  }
+  .mag__slide {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1s ease;
+    filter: contrast(1.05) saturate(1.05);
+  }
+  .mag__slide--active { opacity: 1; }
+  .mag__slider-dots {
+    display: flex; justify-content: center; gap: 8px;
+    margin-top: 14px;
+  }
+  .mag__slider-dot {
+    width: 28px; height: 3px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 0; padding: 0;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  .mag__slider-dot--active { background: #f1c33b; }
+  .mag__slider-dot:focus-visible { outline: 2px solid #f1c33b; outline-offset: 4px; }
 
   /* ============ BODY ============ */
   .mag__body {
@@ -191,49 +221,35 @@
   .mag__body strong { color: #f4ede1; font-weight: 700; }
   .mag__body em { color: #f6e9c8; font-style: italic; }
 
-  .mag__section {
-    margin: 3em 0 0.4em !important;
-    padding-top: 2em;
-    border-top: 1px solid #2b2525;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .mag__section-num {
-    font-family: 'Bungee', sans-serif;
-    color: #f1c33b;
-    font-size: 11px;
-    letter-spacing: 3px;
-  }
   .mag__section-h {
     font-family: 'Newsreader', Georgia, serif;
     font-size: 30px;
     font-weight: 600;
     line-height: 1.15;
     color: #f4ede1;
-    margin: 0;
+    margin: 3em 0 0.4em !important;
+    padding-top: 1.4em;
+    border-top: 1px solid #2b2525;
     letter-spacing: -0.3px;
   }
 
-  /* Numbered points, styled like magazine feature callouts */
-  .mag__points { list-style: none; padding: 0; margin: 0 !important; counter-reset: mag-pt; }
+  /* Feature points — clean editorial callouts, no numbering. */
+  .mag__points { list-style: none; padding: 0; margin: 0 !important; }
   .mag__points li {
-    counter-increment: mag-pt;
-    position: relative;
-    padding: 22px 0 22px 60px;
+    padding: 22px 0;
     border-bottom: 1px solid #2b2525;
     color: #f4ede1;
   }
   .mag__points li:first-child { border-top: 1px solid #2b2525; }
-  .mag__points li::before {
-    content: counter(mag-pt, decimal-leading-zero);
-    position: absolute;
-    left: 0; top: 22px;
-    font-family: 'Bungee', sans-serif;
-    color: #f1c33b;
-    font-size: 15px;
-    letter-spacing: 1.5px;
-    width: 44px;
+  .mag__points li strong {
+    display: block;
+    font-family: 'Newsreader', Georgia, serif;
+    font-weight: 700;
+    font-size: 21px;
+    line-height: 1.25;
+    color: #f6e9c8;
+    margin-bottom: 6px;
+    letter-spacing: -0.2px;
   }
 
   /* Unordered bullets — magazine em-dash style */
@@ -500,20 +516,33 @@
   <section class="mag__hero">
     <div class="mag__hero-inner">
       <div class="mag__meta">
-        <p class="mag__issue"><span>Vol. 01</span> No. 001 &nbsp;·&nbsp; Song of the Week</p>
+        <p class="mag__issue">
+          <span>Song of the Week</span>
+          <span class="mag__issue-sep" aria-hidden="true">·</span>
+          <span class="mag__issue-date"><time datetime="2026-06-27">June 27, 2026</time></span>
+        </p>
         <h1 class="mag__title">Why <em>Crazy in Love</em> Still Owns Every Music Bingo Night.</h1>
         <p class="mag__deck">How Beyoncé&rsquo;s 2003 debut single became the track that stops every Take Me Back Bingo room in its tracks &mdash; 22 years later.</p>
         <p class="mag__byline">
           <span>By <strong>Take Me Back Bingo Nights</strong></span>
           <span class="mag__byline-sep" aria-hidden="true">·</span>
-          <span><time datetime="2026-06-27">June 27, 2026</time></span>
-          <span class="mag__byline-sep" aria-hidden="true">·</span>
           <span>4 min read</span>
         </p>
       </div>
-      <figure class="mag__figure">
-        <img src="/photos/GSP_2436.jpg" alt="Take Me Back Bingo Nights dance floor mid-round" width="1600" height="2000" />
-        <figcaption><strong>Field notes</strong>A moment mid-round at Lake Chateau Banquets, Woodbridge NJ.</figcaption>
+      <figure class="mag__figure mag__slider" id="magSlider" role="region" aria-label="Photos from Take Me Back Bingo Nights">
+        <div class="mag__slider-track">
+          <img class="mag__slide mag__slide--active" src="/photos/Winners/GSP_2353.jpg" alt="A guest at Take Me Back Bingo Nights" width="1200" height="1500" />
+          <img class="mag__slide" src="/photos/Winners/GSP_2360.jpg" alt="Winners at Take Me Back Bingo Nights" width="1200" height="1500" loading="lazy" />
+          <img class="mag__slide" src="/photos/Winners/GSP_2395.jpg" alt="Take Me Back Bingo Nights crowd moment" width="1200" height="1500" loading="lazy" />
+          <img class="mag__slide" src="/photos/GSP_2286.jpg" alt="A Take Me Back Bingo Nights dance floor moment" width="1200" height="1500" loading="lazy" />
+        </div>
+        <div class="mag__slider-dots" role="tablist" aria-label="Choose photo">
+          <button class="mag__slider-dot mag__slider-dot--active" type="button" aria-label="Photo 1" data-idx="0"></button>
+          <button class="mag__slider-dot" type="button" aria-label="Photo 2" data-idx="1"></button>
+          <button class="mag__slider-dot" type="button" aria-label="Photo 3" data-idx="2"></button>
+          <button class="mag__slider-dot" type="button" aria-label="Photo 4" data-idx="3"></button>
+        </div>
+        <figcaption><strong>Field notes</strong>Scenes from Take Me Back Bingo Nights &mdash; Lake Chateau Banquets, Woodbridge NJ.</figcaption>
       </figure>
     </div>
   </section>
@@ -524,10 +553,7 @@
 
     <p>This week we&rsquo;re breaking down why this track hasn&rsquo;t budged from our rotation in 22 years &mdash; and why, when it drops at 8:47 PM on a Friday night in Woodbridge, NJ, half the room already knows exactly what square to daub.</p>
 
-    <hgroup class="mag__section">
-      <p class="mag__section-num">§ I</p>
-      <h2 class="mag__section-h">The Story Behind It</h2>
-    </hgroup>
+    <h2 class="mag__section-h">The Story Behind It</h2>
 
     <p>Beyoncé recorded &ldquo;Crazy in Love&rdquo; in the summer of 2002. She&rsquo;d just left Destiny&rsquo;s Child. Her debut album <em>Dangerously in Love</em> needed a lead single &mdash; something bigger than solo. Rich Harrison, the producer, had a sample sitting on his hard drive: the Chi&#8209;Lites&rsquo; 1970 track <em>&ldquo;Are You My Woman? (Tell Me So)&rdquo;</em>. Those horns. Nobody could find the hook.</p>
 
@@ -540,24 +566,18 @@
 
     <p>It went #1 in the US. #1 in the UK. Song of the Year at the Grammys. It made Beyoncé <em>Beyoncé</em>.</p>
 
-    <hgroup class="mag__section">
-      <p class="mag__section-num">§ II</p>
-      <h2 class="mag__section-h">Why It Hits at Music Bingo</h2>
-    </hgroup>
+    <h2 class="mag__section-h">Why It Hits at Music Bingo</h2>
 
     <p>Every era has anthems. Not every anthem still works in a crowded room 22 years later. &ldquo;Crazy in Love&rdquo; does because:</p>
 
-    <ol class="mag__points">
+    <ul class="mag__points">
       <li><strong>The horn stab is instant recognition.</strong> You don&rsquo;t need the vocals. That first hit and every 30&#8209;year&#8209;old in the building looks up from their card.</li>
       <li><strong>It&rsquo;s danceable.</strong> Music bingo isn&rsquo;t just about daubing squares. Between rounds, this is the track that pulls people off their chairs.</li>
       <li><strong>It&rsquo;s cross&#8209;generational.</strong> Someone at your table&rsquo;s mom loves it. Someone at your table&rsquo;s little sister loves it. That&rsquo;s rare.</li>
       <li><strong>It&rsquo;s bingo&#8209;callable.</strong> &ldquo;Beyoncé&rdquo; fits in a square. &ldquo;Crazy in Love&rdquo; fits in a square. Either way, the room reacts.</li>
-    </ol>
+    </ul>
 
-    <hgroup class="mag__section">
-      <p class="mag__section-num">§ III</p>
-      <h2 class="mag__section-h">The Music Bingo Moment</h2>
-    </hgroup>
+    <h2 class="mag__section-h">The Music Bingo Moment</h2>
 
     <p>Here&rsquo;s what actually happens when we play &ldquo;Crazy in Love&rdquo; on a Take Me Back Bingo Night:</p>
 
@@ -588,10 +608,7 @@
       <a href="/songs" class="mag__tracklist-link">See the full 150&#8209;song tracklist</a>
     </aside>
 
-    <hgroup class="mag__section">
-      <p class="mag__section-num">§ IV</p>
-      <h2 class="mag__section-h">Vote for Next Week&rsquo;s Song</h2>
-    </hgroup>
+    <h2 class="mag__section-h">Vote for Next Week&rsquo;s Song</h2>
 
     <p>We&rsquo;re picking one every week. If there&rsquo;s a track you <em>have</em> to see on a bingo card, tag us on Instagram <strong><a href="https://www.instagram.com/takemebackbingo" target="_blank" rel="noopener">@takemebackbingo</a></strong> or slide into the DMs. If we play it, we&rsquo;ll shout you out at the next event.</p>
 
@@ -666,7 +683,7 @@
   "headline": "Why 'Crazy in Love' Still Owns Every Music Bingo Night",
   "alternativeHeadline": "Song of the Week — How Beyoncé's 2003 anthem became a music bingo staple",
   "description": "Some songs age. Some songs own eras. Here's why Beyoncé's 2003 debut single still stops every Take Me Back Bingo room 22 years later.",
-  "image": ["https://takemebackbingo.com/photos/GSP_2436.jpg"],
+  "image": ["https://takemebackbingo.com/photos/Winners/GSP_2353.jpg"],
   "datePublished": "2026-06-27T09:00:00-04:00",
   "dateModified":  "2026-06-27T09:00:00-04:00",
   "author":    { "@type": "Organization", "name": "Take Me Back Bingo Nights", "url": "https://takemebackbingo.com/" },
@@ -684,6 +701,38 @@
 </script>
 
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+
+<!-- Photo slider · auto-advances every 5s, stops on user interaction so we
+     don't argue with the reader once they pick a photo. -->
+<script>
+(function () {
+  var wrap = document.getElementById('magSlider');
+  if (!wrap) return;
+  var slides = wrap.querySelectorAll('.mag__slide');
+  var dots   = wrap.querySelectorAll('.mag__slider-dot');
+  if (!slides.length) return;
+  var i = 0, timer, stopped = false;
+
+  function show(next) {
+    slides[i].classList.remove('mag__slide--active');
+    dots[i] && dots[i].classList.remove('mag__slider-dot--active');
+    i = (next + slides.length) % slides.length;
+    slides[i].classList.add('mag__slide--active');
+    dots[i] && dots[i].classList.add('mag__slider-dot--active');
+  }
+  function autoplay() {
+    if (stopped) return;
+    timer = setTimeout(function () { show(i + 1); autoplay(); }, 5000);
+  }
+  dots.forEach(function (d) {
+    d.addEventListener('click', function () {
+      stopped = true; clearTimeout(timer);
+      show(parseInt(d.getAttribute('data-idx'), 10) || 0);
+    });
+  });
+  autoplay();
+})();
+</script>
 
 </body>
 </html>
