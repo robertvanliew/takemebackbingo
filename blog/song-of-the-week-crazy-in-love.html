@@ -4,7 +4,6 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<!-- Google tag (gtag.js) - GA4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-L8RFG2GF44"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -25,7 +24,6 @@
 
 <link rel="alternate" type="application/rss+xml" title="Take Me Back Bingo Nights" href="/rss.xml" />
 
-<!-- Article time signals for Discover / social -->
 <meta property="article:published_time" content="2026-06-27T09:00:00-04:00" />
 <meta property="article:modified_time" content="2026-06-27T09:00:00-04:00" />
 <meta property="article:author" content="Take Me Back Bingo Nights" />
@@ -34,7 +32,6 @@
 <meta property="article:tag" content="Beyoncé" />
 <meta property="article:tag" content="Music Bingo" />
 
-<!-- Open Graph -->
 <meta property="og:type" content="article" />
 <meta property="og:site_name" content="Take Me Back Bingo Nights" />
 <meta property="og:title" content="Why 'Crazy in Love' Still Owns Every Music Bingo Night" />
@@ -45,7 +42,6 @@
 <meta property="og:image:height" content="1067" />
 <meta property="og:image:alt" content="Take Me Back Bingo Nights crowd on the dance floor" />
 
-<!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Why 'Crazy in Love' Still Owns Every Music Bingo Night" />
 <meta name="twitter:description" content="Beyoncé's 2003 anthem, decoded. Why it still stops every Take Me Back Bingo room 22 years later." />
@@ -53,212 +49,430 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Allura&family=Bungee&family=Permanent+Marker&family=Sora:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="/styles.css?v=2" />
 
-<!-- Blog-post-specific styling — layered on top of styles.css so we don't
-     duplicate the site-wide design tokens. Any typography and color values
-     that already exist as CSS custom properties reuse them. -->
+<!-- Article-scoped magazine styling. Everything here is namespaced under
+     .mag- so it can't leak into the rest of the site or be leaked into by
+     styles.css variable collisions. All colors are hard-coded values, no
+     CSS custom properties — that was the readability bug on v1. -->
 <style>
-  .blog-hero {
-    position: relative;
-    padding: 80px 24px 40px;
-    background: linear-gradient(180deg, #0e0c0c 0%, #141111 100%);
-    border-bottom: 1px solid #2b2525;
-    overflow: hidden;
+  .mag {
+    background: #141111;
+    color: #f4ede1;
   }
-  .blog-hero__inner { max-width: 820px; margin: 0 auto; }
-  .blog-hero__crumbs {
-    color: var(--muted, #b6ad9c);
-    font-size: 12px;
-    letter-spacing: 0.7px;
-    text-transform: uppercase;
-    margin: 0 0 24px;
+
+  /* ============ HERO ============ */
+  .mag__hero {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 48px 32px 24px;
   }
-  .blog-hero__crumbs a { color: var(--gold, #f1c33b); text-decoration: none; }
-  .blog-hero__crumbs a:hover { text-decoration: underline; }
-  .blog-hero__eyebrow {
-    display: inline-block;
-    background: var(--gold, #f1c33b);
-    color: #1a1408;
+  .mag__hero-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  @media (max-width: 900px) {
+    .mag__hero { padding: 32px 20px 8px; }
+    .mag__hero-inner { grid-template-columns: 1fr; gap: 32px; }
+  }
+  .mag__meta {
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .mag__issue {
     font-family: 'Bungee', sans-serif;
     font-size: 11px;
-    letter-spacing: 1.2px;
-    padding: 6px 12px;
-    border-radius: 4px;
-    margin-bottom: 20px;
-  }
-  .blog-hero__title {
-    font-family: 'Bungee', sans-serif;
-    font-size: clamp(30px, 5.5vw, 52px);
-    line-height: 1.05;
-    letter-spacing: 0.3px;
-    color: var(--ink, #f4ede1);
-    margin: 0 0 20px;
-  }
-  .blog-hero__title em {
-    font-style: normal;
-    color: var(--gold, #f1c33b);
-  }
-  .blog-hero__sub {
-    font-family: 'Newsreader', Georgia, serif;
-    font-size: clamp(18px, 2.2vw, 22px);
-    line-height: 1.5;
-    color: var(--muted, #b6ad9c);
-    max-width: 640px;
-    margin: 0 0 28px;
-    font-style: italic;
-  }
-  .blog-hero__meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px 24px;
-    color: var(--muted, #b6ad9c);
-    font-size: 13px;
-    letter-spacing: 0.4px;
+    letter-spacing: 3px;
+    color: #f1c33b;
     text-transform: uppercase;
+    margin: 0 0 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #2b2525;
   }
-  .blog-hero__meta strong { color: var(--ink, #f4ede1); font-weight: 700; }
+  .mag__issue span { color: #9d9484; margin-right: 12px; }
+  .mag__title {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: clamp(38px, 5.2vw, 68px);
+    font-weight: 500;
+    line-height: 1.02;
+    letter-spacing: -1px;
+    color: #f4ede1;
+    margin: 0;
+  }
+  .mag__title em {
+    font-style: italic;
+    font-weight: 400;
+    color: #f1c33b;
+  }
+  .mag__deck {
+    font-family: 'Newsreader', Georgia, serif;
+    font-style: italic;
+    font-size: clamp(17px, 1.8vw, 21px);
+    line-height: 1.5;
+    color: #b6ad9c;
+    margin: 0;
+  }
+  .mag__byline {
+    font-family: 'Sora', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #9d9484;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 0;
+    padding-top: 20px;
+    border-top: 1px solid #2b2525;
+  }
+  .mag__byline strong { color: #f4ede1; font-weight: 700; }
+  .mag__byline-sep { color: #4a4038; }
 
-  .blog-cover {
-    max-width: 1200px; margin: 0 auto; padding: 0 24px 60px;
+  .mag__figure { margin: 0; }
+  .mag__figure img {
+    width: 100%; height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    display: block;
+    filter: contrast(1.05) saturate(1.05);
   }
-  .blog-cover img {
-    width: 100%; height: auto; display: block;
-    border-radius: 14px;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
-  }
-  .blog-cover__caption {
-    color: var(--muted, #b6ad9c);
-    font-size: 12px;
+  .mag__figure figcaption {
+    font-family: 'Newsreader', Georgia, serif;
+    font-style: italic;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #9d9484;
     text-align: center;
     margin-top: 14px;
-    font-style: italic;
+    padding: 0 8px;
   }
+  .mag__figure figcaption strong { font-style: normal; text-transform: uppercase; letter-spacing: 1.5px; font-size: 10px; color: #f1c33b; font-weight: 700; margin-right: 8px; }
 
-  .blog-body {
-    max-width: 720px;
+  /* ============ BODY ============ */
+  .mag__body {
+    max-width: 680px;
     margin: 0 auto;
-    padding: 0 24px 80px;
+    padding: 40px 24px 60px;
     font-family: 'Newsreader', Georgia, serif;
     font-size: 20px;
-    line-height: 1.65;
-    color: var(--ink, #f4ede1);
+    line-height: 1.7;
+    color: #f4ede1;
   }
-  .blog-body > * + * { margin-top: 1.2em; }
-  .blog-body p { margin: 0; }
-  .blog-body h2 {
+  .mag__body > * + * { margin-top: 1.3em; }
+  .mag__body p { margin: 0; color: #f4ede1; }
+
+  .mag__lede {
+    font-size: 23px;
+    line-height: 1.55;
+    color: #f6e9c8;
+  }
+  .mag__lede::first-letter,
+  .drop-cap {
     font-family: 'Bungee', sans-serif;
-    font-size: 24px;
-    letter-spacing: 0.5px;
-    color: var(--gold, #f1c33b);
+    float: left;
+    font-size: 76px;
+    line-height: 0.82;
+    padding: 6px 14px 0 0;
+    color: #f1c33b;
+  }
+
+  .mag__body a {
+    color: #f1c33b;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(241, 195, 59, 0.4);
+    padding-bottom: 1px;
+    transition: border-color 0.15s;
+  }
+  .mag__body a:hover { border-bottom-color: #f1c33b; }
+  .mag__body strong { color: #f4ede1; font-weight: 700; }
+  .mag__body em { color: #f6e9c8; font-style: italic; }
+
+  .mag__section {
+    margin: 3em 0 0.4em !important;
+    padding-top: 2em;
+    border-top: 1px solid #2b2525;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .mag__section-num {
+    font-family: 'Bungee', sans-serif;
+    color: #f1c33b;
+    font-size: 11px;
+    letter-spacing: 3px;
+  }
+  .mag__section-h {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1.15;
+    color: #f4ede1;
+    margin: 0;
+    letter-spacing: -0.3px;
+  }
+
+  /* Numbered points, styled like magazine feature callouts */
+  .mag__points { list-style: none; padding: 0; margin: 0 !important; counter-reset: mag-pt; }
+  .mag__points li {
+    counter-increment: mag-pt;
+    position: relative;
+    padding: 22px 0 22px 60px;
+    border-bottom: 1px solid #2b2525;
+    color: #f4ede1;
+  }
+  .mag__points li:first-child { border-top: 1px solid #2b2525; }
+  .mag__points li::before {
+    content: counter(mag-pt, decimal-leading-zero);
+    position: absolute;
+    left: 0; top: 22px;
+    font-family: 'Bungee', sans-serif;
+    color: #f1c33b;
+    font-size: 15px;
+    letter-spacing: 1.5px;
+    width: 44px;
+  }
+
+  /* Unordered bullets — magazine em-dash style */
+  .mag__bullets { list-style: none; padding: 0; margin: 0 !important; }
+  .mag__bullets li {
+    position: relative;
+    padding: 4px 0 4px 24px;
+    color: #f4ede1;
+  }
+  .mag__bullets li::before {
+    content: "—";
+    position: absolute; left: 0; top: 4px;
+    color: #f1c33b;
+    font-weight: 400;
+  }
+
+  /* Pull quote — the visual centerpiece of the article */
+  .mag__pull {
+    margin: 2.5em -20px !important;
+    padding: 40px 20px;
+    border-top: 2px solid #f1c33b;
+    border-bottom: 2px solid #f1c33b;
+    text-align: center;
+    font-family: 'Newsreader', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(26px, 3.5vw, 40px);
     line-height: 1.2;
-    margin: 2.2em 0 0.6em;
+    color: #f6e9c8;
+    letter-spacing: -0.3px;
+    position: relative;
   }
-  .blog-body h3 {
+  .mag__pull::before {
+    content: "\201C";
+    display: block;
+    font-family: 'Newsreader', Georgia, serif;
+    color: #f1c33b;
+    font-size: 80px;
+    line-height: 0.4;
+    margin-bottom: 20px;
+    font-style: normal;
+  }
+  .mag__pull-attr {
+    display: block;
+    margin-top: 20px;
     font-family: 'Sora', sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--ink, #f4ede1);
-    margin: 1.8em 0 0.4em;
-    letter-spacing: 0.2px;
-  }
-  .blog-body a { color: var(--gold, #f1c33b); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-  .blog-body a:hover { text-decoration-thickness: 2px; }
-  .blog-body strong { color: var(--ink, #f4ede1); font-weight: 700; }
-  .blog-body em { color: var(--cream, #f6e9c8); }
-  .blog-body ul, .blog-body ol { padding-left: 1.4em; }
-  .blog-body li { margin-bottom: 0.5em; }
-  .blog-body blockquote {
-    border-left: 3px solid var(--gold, #f1c33b);
-    padding: 4px 0 4px 20px;
-    font-family: 'Permanent Marker', cursive;
-    font-size: 24px;
-    line-height: 1.35;
-    color: var(--cream, #f6e9c8);
+    font-size: 12px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #9d9484;
     font-style: normal;
   }
 
-  .tracklist-callout {
-    background: #0e0c0c;
+  /* Tracklist inline callout */
+  .mag__tracklist {
+    background: rgba(241, 195, 59, 0.04);
     border: 1px solid #2b2525;
-    border-radius: 14px;
-    padding: 24px;
-    margin: 2em 0;
+    border-left: 3px solid #f1c33b;
+    padding: 32px 32px 28px;
+    margin: 2.5em -8px !important;
     font-family: 'Sora', sans-serif;
     font-size: 15px;
-    line-height: 1.5;
+    line-height: 1.6;
+    color: #f4ede1;
   }
-  .tracklist-callout h3 {
+  .mag__tracklist-label {
     font-family: 'Bungee', sans-serif;
-    color: var(--gold, #f1c33b);
-    font-size: 14px;
-    letter-spacing: 0.6px;
-    margin: 0 0 14px;
+    color: #f1c33b;
+    font-size: 10px;
+    letter-spacing: 3px;
+    margin: 0 0 8px !important;
+    text-transform: uppercase;
   }
-  .tracklist-callout ul {
-    list-style: none; padding: 0; margin: 0 0 14px;
+  .mag__tracklist-title {
+    font-family: 'Newsreader', Georgia, serif;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 1.25;
+    color: #f4ede1;
+    margin: 0 0 20px !important;
   }
-  .tracklist-callout li {
-    padding: 6px 0;
-    border-bottom: 1px dashed #2b2525;
-    color: var(--ink, #f4ede1);
+  .mag__tracklist ul {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 0 20px !important;
+    columns: 2;
+    column-gap: 24px;
   }
-  .tracklist-callout li:last-child { border-bottom: 0; }
-  .tracklist-callout li strong { color: var(--gold, #f1c33b); }
-  .tracklist-callout__link {
+  @media (max-width: 500px) {
+    .mag__tracklist ul { columns: 1; }
+  }
+  .mag__tracklist ul li {
+    padding: 6px 0 !important;
+    color: #f4ede1;
+    break-inside: avoid;
+    border: 0 !important;
+    padding-left: 0 !important;
+  }
+  .mag__tracklist ul li::before { content: none !important; }
+  .mag__tracklist ul li strong { color: #f1c33b; font-weight: 600; font-family: 'Sora', sans-serif; }
+  .mag__tracklist ul li em { color: #b6ad9c; font-family: 'Sora', sans-serif; font-style: normal; }
+  .mag__tracklist-link {
     display: inline-block;
-    color: var(--gold, #f1c33b);
+    color: #f1c33b !important;
     font-weight: 700;
-    text-decoration: none;
-    border-bottom: 2px solid var(--gold, #f1c33b);
-    padding-bottom: 2px;
+    font-family: 'Sora', sans-serif;
+    text-decoration: none !important;
+    border: 0 !important;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-size: 12px;
+    padding: 0 !important;
+  }
+  .mag__tracklist-link::after { content: " →"; }
+
+  /* Section ornament (end-of-section separator) */
+  .mag__ornament {
+    text-align: center;
+    color: #f1c33b;
+    font-size: 20px;
+    letter-spacing: 20px;
+    margin: 2.5em 0 !important;
+    padding-left: 20px;
   }
 
-  .blog-cta {
-    background: linear-gradient(135deg, #f1c33b 0%, #c19424 100%);
-    color: #1a1408;
-    padding: 40px 28px;
-    border-radius: 16px;
-    margin: 2.5em 0;
+  /* End mark */
+  .mag__end {
     text-align: center;
+    color: #f1c33b;
+    font-size: 24px;
+    line-height: 1;
+    margin: 3em 0 0 !important;
   }
-  .blog-cta__eyebrow { font-family: 'Permanent Marker', cursive; font-size: 20px; margin: 0 0 6px; }
-  .blog-cta__title { font-family: 'Bungee', sans-serif; font-size: 28px; margin: 0 0 8px; letter-spacing: 0.4px; line-height: 1.1; }
-  .blog-cta__sub { font-family: 'Sora', sans-serif; font-size: 15px; margin: 0 0 22px; opacity: 0.85; }
-  .blog-cta__btn {
-    display: inline-block; background: #1a1408; color: var(--gold, #f1c33b);
-    padding: 14px 28px; border-radius: 10px; font-family: 'Sora', sans-serif;
-    font-weight: 700; text-decoration: none; letter-spacing: 0.3px;
+
+  /* ============ CTA ============ */
+  .mag__cta {
+    max-width: 680px;
+    margin: 0 auto 60px;
+    padding: 44px 32px;
+    background: #f6e9c8;
+    color: #1a1408;
+    text-align: center;
+    position: relative;
+    border-radius: 2px;
+  }
+  .mag__cta::before, .mag__cta::after {
+    content: "";
+    position: absolute;
+    left: 32px; right: 32px;
+    height: 1px;
+    background: #1a1408;
+    opacity: 0.15;
+  }
+  .mag__cta::before { top: 20px; }
+  .mag__cta::after { bottom: 20px; }
+  .mag__cta-eyebrow {
+    font-family: 'Bungee', sans-serif;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: #c1462e;
+    margin: 0 0 14px;
+    text-transform: uppercase;
+  }
+  .mag__cta-title {
+    font-family: 'Newsreader', Georgia, serif;
+    font-weight: 700;
+    font-size: clamp(26px, 3.5vw, 36px);
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+    color: #1a1408;
+    margin: 0 0 12px;
+  }
+  .mag__cta-sub {
+    font-family: 'Newsreader', Georgia, serif;
+    font-style: italic;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #4a3820;
+    margin: 0 0 24px;
+  }
+  .mag__cta-btn {
+    display: inline-block;
+    background: #1a1408;
+    color: #f1c33b !important;
+    padding: 14px 32px;
+    font-family: 'Bungee', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2.5px;
+    text-decoration: none;
+    border: 0 !important;
+    text-transform: uppercase;
     transition: transform 0.15s;
   }
-  .blog-cta__btn:hover { transform: translateY(-1px); }
+  .mag__cta-btn:hover { transform: translateY(-2px); }
 
-  .blog-share {
-    max-width: 720px; margin: 0 auto; padding: 20px 24px 60px;
+  /* ============ COLOPHON / FOOTER ============ */
+  .mag__colophon {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
     border-top: 1px solid #2b2525;
-    display: flex; align-items: center; justify-content: space-between; gap: 20px;
+    text-align: center;
+  }
+  .mag__colophon-line {
+    font-family: 'Newsreader', Georgia, serif;
+    font-style: italic;
+    font-size: 14px;
+    color: #9d9484;
+    margin: 0 0 24px;
+    line-height: 1.5;
+  }
+  .mag__share {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
     flex-wrap: wrap;
   }
-  .blog-share__label { color: var(--muted, #b6ad9c); font-size: 13px; letter-spacing: 0.4px; text-transform: uppercase; }
-  .blog-share__buttons { display: flex; gap: 10px; flex-wrap: wrap; }
-  .blog-share__buttons a {
-    color: var(--muted, #b6ad9c);
-    text-decoration: none;
-    padding: 8px 14px; border: 1px solid #2b2525; border-radius: 8px;
-    font-size: 13px; font-weight: 600; font-family: 'Sora', sans-serif;
-    letter-spacing: 0.3px;
+  .mag__share a {
+    color: #9d9484 !important;
+    text-decoration: none !important;
+    padding: 10px 20px;
+    border: 1px solid #2b2525 !important;
+    font-family: 'Sora', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
     transition: border-color 0.15s, color 0.15s;
   }
-  .blog-share__buttons a:hover { color: var(--gold, #f1c33b); border-color: var(--gold, #f1c33b); }
+  .mag__share a:hover { color: #f1c33b !important; border-color: #f1c33b !important; }
 
+  /* ============ MOBILE ============ */
   @media (max-width: 640px) {
-    .blog-hero { padding: 60px 20px 30px; }
-    .blog-body { font-size: 18px; padding: 0 20px 60px; }
-    .blog-body blockquote { font-size: 20px; }
-    .blog-cta { padding: 30px 20px; }
-    .blog-cta__title { font-size: 22px; }
+    .mag__body { padding: 24px 20px 48px; font-size: 18px; }
+    .mag__lede { font-size: 20px; }
+    .mag__lede::first-letter, .drop-cap { font-size: 60px; padding-right: 10px; }
+    .mag__section-h { font-size: 24px; }
+    .mag__tracklist { padding: 24px 20px 20px; margin-left: -4px !important; margin-right: -4px !important; }
+    .mag__cta { padding: 36px 24px; margin-left: 20px; margin-right: 20px; }
   }
 </style>
 </head>
@@ -274,115 +488,132 @@
     <a href="/play">Play</a>
     <a href="/events">Events</a>
     <a href="/gallery">Gallery</a>
+    <a href="/blog" aria-current="page">Blog</a>
     <a href="/#contact">Contact</a>
   </nav>
   <a href="/events" class="btn btn--primary nav__cta">Buy Tickets</a>
   <button type="button" class="nav__toggle" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav" onclick="(function(b){var n=b.closest('.nav');var o=n.getAttribute('data-nav-open')==='true';n.setAttribute('data-nav-open',o?'false':'true');b.setAttribute('aria-expanded',o?'false':'true');b.setAttribute('aria-label',o?'Open menu':'Close menu');})(this)"><span class="nav__toggle-bars" aria-hidden="true"></span></button>
 </header>
 
-<article>
+<article class="mag">
 
-  <section class="blog-hero">
-    <div class="blog-hero__inner">
-      <p class="blog-hero__crumbs">
-        <a href="/">Home</a> · <a href="/blog">Blog</a> · Song of the Week
-      </p>
-      <span class="blog-hero__eyebrow">Song of the Week · 2000s R&amp;B</span>
-      <h1 class="blog-hero__title">Why <em>"Crazy in Love"</em> Still Owns Every Music Bingo Night</h1>
-      <p class="blog-hero__sub">How Beyoncé's 2003 anthem became the track that stops every Take Me Back Bingo room in its tracks — 22 years later.</p>
-      <div class="blog-hero__meta">
-        <span><strong>By</strong> Take Me Back Bingo Nights</span>
-        <span><strong>Published</strong> <time datetime="2026-06-27">June 27, 2026</time></span>
-        <span><strong>Read</strong> 4 min</span>
+  <section class="mag__hero">
+    <div class="mag__hero-inner">
+      <div class="mag__meta">
+        <p class="mag__issue"><span>Vol. 01</span> No. 001 &nbsp;·&nbsp; Song of the Week</p>
+        <h1 class="mag__title">Why <em>Crazy in Love</em> Still Owns Every Music Bingo Night.</h1>
+        <p class="mag__deck">How Beyoncé&rsquo;s 2003 debut single became the track that stops every Take Me Back Bingo room in its tracks &mdash; 22 years later.</p>
+        <p class="mag__byline">
+          <span>By <strong>Take Me Back Bingo Nights</strong></span>
+          <span class="mag__byline-sep" aria-hidden="true">·</span>
+          <span><time datetime="2026-06-27">June 27, 2026</time></span>
+          <span class="mag__byline-sep" aria-hidden="true">·</span>
+          <span>4 min read</span>
+        </p>
       </div>
+      <figure class="mag__figure">
+        <img src="/photos/GSP_2436.jpg" alt="Take Me Back Bingo Nights dance floor mid-round" width="1600" height="2000" />
+        <figcaption><strong>Field notes</strong>A moment mid-round at Lake Chateau Banquets, Woodbridge NJ.</figcaption>
+      </figure>
     </div>
   </section>
 
-  <div class="blog-cover">
-    <img src="/photos/GSP_2436.jpg" alt="Take Me Back Bingo Nights dance floor moment" width="1600" height="1067" />
-    <p class="blog-cover__caption">A Take Me Back Bingo Nights crowd, mid-round · Lake Chateau Banquets, Woodbridge NJ</p>
-  </div>
+  <div class="mag__body">
 
-  <div class="blog-body">
+    <p class="mag__lede">Some songs age. Some songs <em>own</em> eras. And then there&rsquo;s &ldquo;Crazy in Love.&rdquo; Beyoncé&rsquo;s 2003 solo debut doesn&rsquo;t just belong on a <a href="/events">Take Me Back Bingo Nights</a> setlist &mdash; it <em>is</em> the setlist. When the horn stab hits, every phone comes out. Every hand goes up. Every dauber freezes mid&#8209;air.</p>
 
-    <p>Some songs age. Some songs <strong>own</strong> eras. And then there's "Crazy in Love."</p>
+    <p>This week we&rsquo;re breaking down why this track hasn&rsquo;t budged from our rotation in 22 years &mdash; and why, when it drops at 8:47 PM on a Friday night in Woodbridge, NJ, half the room already knows exactly what square to daub.</p>
 
-    <p>Beyoncé's 2003 solo debut single doesn't just belong on a <a href="/events">Take Me Back Bingo Nights</a> setlist — it <em>is</em> the setlist. When the horn stab hits, every phone comes out. Every hand goes up. Every dauber freezes mid-air. And the room recognizes the moment before the first vocal even lands.</p>
+    <hgroup class="mag__section">
+      <p class="mag__section-num">§ I</p>
+      <h2 class="mag__section-h">The Story Behind It</h2>
+    </hgroup>
 
-    <p>This week we're breaking down why this track hasn't budged from our rotation in 22 years — and why, when it drops at 8:47 PM on a Friday night in Woodbridge, NJ, half the room already knows exactly what square to daub.</p>
+    <p>Beyoncé recorded &ldquo;Crazy in Love&rdquo; in the summer of 2002. She&rsquo;d just left Destiny&rsquo;s Child. Her debut album <em>Dangerously in Love</em> needed a lead single &mdash; something bigger than solo. Rich Harrison, the producer, had a sample sitting on his hard drive: the Chi&#8209;Lites&rsquo; 1970 track <em>&ldquo;Are You My Woman? (Tell Me So)&rdquo;</em>. Those horns. Nobody could find the hook.</p>
 
-    <h2>The Story Behind It</h2>
+    <p>Then Beyoncé walked in at 8 AM after a night out. She wrote her verses on the spot. Jay&#8209;Z showed up hours later and freestyled his verse in one take.</p>
 
-    <p>Beyoncé recorded "Crazy in Love" in the summer of 2002. She'd just left Destiny's Child. Her debut album <em>Dangerously in Love</em> needed a lead single — something bigger than solo. Rich Harrison, the producer, had a sample sitting on his hard drive: the Chi-Lites' 1970 track <em>"Are You My Woman? (Tell Me So)"</em>. Those horns. Nobody could find the hook.</p>
-
-    <p>Then Beyoncé walked in at 8 AM after a night out. She wrote her verses on the spot. Jay-Z showed up hours later and freestyled his verse in one take. The song was done by lunch.</p>
-
-    <blockquote>"Uh oh, uh oh, uh oh, oh no, no…"</blockquote>
+    <blockquote class="mag__pull">
+      The song was done by lunch.
+      <span class="mag__pull-attr">Rich Harrison, on the making of a #1</span>
+    </blockquote>
 
     <p>It went #1 in the US. #1 in the UK. Song of the Year at the Grammys. It made Beyoncé <em>Beyoncé</em>.</p>
 
-    <h2>Why It Hits at Music Bingo</h2>
+    <hgroup class="mag__section">
+      <p class="mag__section-num">§ II</p>
+      <h2 class="mag__section-h">Why It Hits at Music Bingo</h2>
+    </hgroup>
 
-    <p>Every era has anthems. Not every anthem still works in a crowded room 22 years later. "Crazy in Love" does because:</p>
+    <p>Every era has anthems. Not every anthem still works in a crowded room 22 years later. &ldquo;Crazy in Love&rdquo; does because:</p>
 
-    <ol>
-      <li><strong>The horn stab is instant recognition.</strong> You don't need the vocals. That first hit and every 30-year-old in the building looks up from their card.</li>
-      <li><strong>It's danceable.</strong> Music bingo isn't just about daubing squares. Between rounds, this is the track that pulls people off their chairs.</li>
-      <li><strong>Cross-generational.</strong> Someone at your table's mom loves it. Someone at your table's little sister loves it. That's rare.</li>
-      <li><strong>Bingo-callable.</strong> "Beyoncé" fits in a square. "Crazy in Love" fits in a square. Either way, the room reacts.</li>
+    <ol class="mag__points">
+      <li><strong>The horn stab is instant recognition.</strong> You don&rsquo;t need the vocals. That first hit and every 30&#8209;year&#8209;old in the building looks up from their card.</li>
+      <li><strong>It&rsquo;s danceable.</strong> Music bingo isn&rsquo;t just about daubing squares. Between rounds, this is the track that pulls people off their chairs.</li>
+      <li><strong>It&rsquo;s cross&#8209;generational.</strong> Someone at your table&rsquo;s mom loves it. Someone at your table&rsquo;s little sister loves it. That&rsquo;s rare.</li>
+      <li><strong>It&rsquo;s bingo&#8209;callable.</strong> &ldquo;Beyoncé&rdquo; fits in a square. &ldquo;Crazy in Love&rdquo; fits in a square. Either way, the room reacts.</li>
     </ol>
 
-    <h2>The Music Bingo Moment</h2>
+    <hgroup class="mag__section">
+      <p class="mag__section-num">§ III</p>
+      <h2 class="mag__section-h">The Music Bingo Moment</h2>
+    </hgroup>
 
-    <p>Here's what actually happens when we play "Crazy in Love" on a Take Me Back Bingo Night:</p>
+    <p>Here&rsquo;s what actually happens when we play &ldquo;Crazy in Love&rdquo; on a Take Me Back Bingo Night:</p>
 
-    <ul>
+    <ul class="mag__bullets">
       <li>Round 3. Around 8:47 PM. Jersey Club King <strong>DJ Tameil</strong> drops the first horn stab.</li>
-      <li>The room lets out a collective "<em>OH!</em>"</li>
+      <li>The room lets out a collective <em>&ldquo;OH!&rdquo;</em></li>
       <li>Half the cards on the table have Beyoncé.</li>
-      <li>Three or four people yell <strong>"TAKE ME BACK!"</strong> within 20 seconds.</li>
+      <li>Three or four people yell <strong>&ldquo;TAKE ME BACK!&rdquo;</strong> within 20 seconds.</li>
       <li>The host verifies. Prizes fly.</li>
       <li>Someone stands on their chair.</li>
     </ul>
 
     <p>This is why we do this.</p>
 
-    <div class="tracklist-callout">
-      <h3>The Full 2000s R&amp;B Pool</h3>
-      <p>"Crazy in Love" is one of 25 tracks in our 2000s R&amp;B pool. When you get a 2000s R&amp;B card at a Take Me Back Bingo Night, you're playing from:</p>
+    <aside class="mag__tracklist">
+      <p class="mag__tracklist-label">Also from the 2000s R&amp;B Pool</p>
+      <p class="mag__tracklist-title">Seven more that hit the same way.</p>
       <ul>
-        <li><strong>Crazy in Love</strong> — Beyoncé feat. Jay-Z</li>
-        <li><strong>Yeah!</strong> — Usher feat. Lil Jon &amp; Ludacris</li>
-        <li><strong>So Sick</strong> — Ne-Yo</li>
-        <li><strong>We Belong Together</strong> — Mariah Carey</li>
-        <li><strong>Say My Name</strong> — Destiny's Child</li>
-        <li><strong>Umbrella</strong> — Rihanna feat. Jay-Z</li>
-        <li><strong>If I Ain't Got You</strong> — Alicia Keys</li>
+        <li><strong>Crazy in Love</strong><br><em>Beyoncé feat. Jay&#8209;Z</em></li>
+        <li><strong>Yeah!</strong><br><em>Usher feat. Lil Jon &amp; Ludacris</em></li>
+        <li><strong>So Sick</strong><br><em>Ne&#8209;Yo</em></li>
+        <li><strong>We Belong Together</strong><br><em>Mariah Carey</em></li>
+        <li><strong>Say My Name</strong><br><em>Destiny&rsquo;s Child</em></li>
+        <li><strong>Umbrella</strong><br><em>Rihanna feat. Jay&#8209;Z</em></li>
+        <li><strong>If I Ain&rsquo;t Got You</strong><br><em>Alicia Keys</em></li>
+        <li><strong>Fallin&rsquo;</strong><br><em>Alicia Keys</em></li>
       </ul>
-      <p>…and 18 more. <a href="/songs" class="tracklist-callout__link">See the full tracklist →</a></p>
-    </div>
+      <a href="/songs" class="mag__tracklist-link">See the full 150&#8209;song tracklist</a>
+    </aside>
 
-    <h2>Vote For Next Week's Song</h2>
+    <hgroup class="mag__section">
+      <p class="mag__section-num">§ IV</p>
+      <h2 class="mag__section-h">Vote for Next Week&rsquo;s Song</h2>
+    </hgroup>
 
-    <p>We're picking one every week. If there's a track you <em>have</em> to see on a bingo card, tag us on Instagram <strong><a href="https://www.instagram.com/takemebackbingo" target="_blank" rel="noopener">@takemebackbingo</a></strong> or slide into the DMs. If we play it, we'll shout you out at the next event.</p>
+    <p>We&rsquo;re picking one every week. If there&rsquo;s a track you <em>have</em> to see on a bingo card, tag us on Instagram <strong><a href="https://www.instagram.com/takemebackbingo" target="_blank" rel="noopener">@takemebackbingo</a></strong> or slide into the DMs. If we play it, we&rsquo;ll shout you out at the next event.</p>
 
-    <div class="blog-cta">
-      <p class="blog-cta__eyebrow">The next night</p>
-      <h3 class="blog-cta__title">All White with a Splash of Color</h3>
-      <p class="blog-cta__sub">Sunday, July 26, 2026 · Lake Chateau Banquets · Woodbridge NJ<br>DJ Doo Wop + DJ Tameil · Hosted by Comedian Monique Latise</p>
-      <a href="https://www.simpletix.com/e/take-me-back-bingo-all-white-with-a-splash-tickets-280963" class="blog-cta__btn" target="_blank" rel="noopener">Buy Tickets — $40</a>
-    </div>
+    <p class="mag__end" aria-hidden="true">■</p>
 
   </div>
 
-  <div class="blog-share">
-    <span class="blog-share__label">Share this post</span>
-    <div class="blog-share__buttons">
-      <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Ftakemebackbingo.com%2Fblog%2Fsong-of-the-week-crazy-in-love&text=Why%20Beyonc%C3%A9%27s%20%27Crazy%20in%20Love%27%20still%20owns%20every%20music%20bingo%20night" target="_blank" rel="noopener">Twitter / X</a>
-      <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Ftakemebackbingo.com%2Fblog%2Fsong-of-the-week-crazy-in-love" target="_blank" rel="noopener">Facebook</a>
+  <aside class="mag__cta">
+    <p class="mag__cta-eyebrow">The Next Night</p>
+    <h3 class="mag__cta-title">All White with a Splash of Color</h3>
+    <p class="mag__cta-sub">Sunday, July 26, 2026 &nbsp;·&nbsp; Lake Chateau Banquets, Woodbridge NJ<br>DJ Doo Wop + DJ Tameil &nbsp;·&nbsp; Hosted by Comedian Monique Latise</p>
+    <a href="https://www.simpletix.com/e/take-me-back-bingo-all-white-with-a-splash-tickets-280963" class="mag__cta-btn" target="_blank" rel="noopener">Buy Tickets &nbsp;·&nbsp; $40</a>
+  </aside>
+
+  <footer class="mag__colophon">
+    <p class="mag__colophon-line">Take Me Back Bingo Nights is a live music bingo brand<br>from High Class Experience LLC. Woodbridge, NJ.</p>
+    <div class="mag__share">
+      <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Ftakemebackbingo.com%2Fblog%2Fsong-of-the-week-crazy-in-love&text=Why%20Beyonc%C3%A9%27s%20%27Crazy%20in%20Love%27%20still%20owns%20every%20music%20bingo%20night" target="_blank" rel="noopener">Share on X</a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Ftakemebackbingo.com%2Fblog%2Fsong-of-the-week-crazy-in-love" target="_blank" rel="noopener">Share on FB</a>
       <a href="mailto:?subject=Song%20of%20the%20Week%3A%20Crazy%20in%20Love&body=https%3A%2F%2Ftakemebackbingo.com%2Fblog%2Fsong-of-the-week-crazy-in-love">Email</a>
     </div>
-  </div>
+  </footer>
 
 </article>
 
@@ -416,7 +647,6 @@
   </div>
 </footer>
 
-<!-- BreadcrumbList schema -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -429,7 +659,6 @@
 }
 </script>
 
-<!-- BlogPosting schema · powers Google Discover eligibility for the article -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -437,9 +666,7 @@
   "headline": "Why 'Crazy in Love' Still Owns Every Music Bingo Night",
   "alternativeHeadline": "Song of the Week — How Beyoncé's 2003 anthem became a music bingo staple",
   "description": "Some songs age. Some songs own eras. Here's why Beyoncé's 2003 debut single still stops every Take Me Back Bingo room 22 years later.",
-  "image": [
-    "https://takemebackbingo.com/photos/GSP_2436.jpg"
-  ],
+  "image": ["https://takemebackbingo.com/photos/GSP_2436.jpg"],
   "datePublished": "2026-06-27T09:00:00-04:00",
   "dateModified":  "2026-06-27T09:00:00-04:00",
   "author":    { "@type": "Organization", "name": "Take Me Back Bingo Nights", "url": "https://takemebackbingo.com/" },
