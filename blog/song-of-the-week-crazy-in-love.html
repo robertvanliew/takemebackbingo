@@ -767,8 +767,12 @@
   var filename = btn.getAttribute('data-share-filename') || 'take-me-back-bingo.jpg';
   var url      = window.location.href;
 
-  // Human-readable URL for the burned-in card (drops the scheme).
-  var displayUrl = url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+  // Human-readable URL for the burned-in card. Only the root domain
+  // fits legibly in the pill at Story dimensions — the full path was
+  // being clipped by the pill edge on tall Story previews. Viewers who
+  // want the specific post can tap the share sheet URL (still passed
+  // to navigator.share as text) or navigate from the homepage.
+  var displayUrl = 'takemebackbingo.com';
 
   var storyFile = null;         // fully-composed 1080x1920 story card
   var rawPhotoFile = null;      // raw cover photo as a fallback
