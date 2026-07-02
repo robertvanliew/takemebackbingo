@@ -16,12 +16,15 @@ const REPO    = process.env.GH_REPO   || "takemebackbingo";
 const BRANCH  = process.env.GH_BRANCH || "main";
 const SITE    = "https://takemebackbingo.com";
 
-const RAW_URL = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/content/events.json`;
+const EVENTS_URL = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/content/events.json`;
+const POSTS_URL  = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/content/posts.json`;
 
 module.exports = async (req, res) => {
   try {
-    const events = await loadEvents();
-    const items = buildItems(events);
+    // Load both feeds in parallel. If posts.json doesn't exist yet, treat
+    // it as empty so RSS still ships events.
+    const [events, posts] = await Promise.all([loadJson(EVENTS_URL, "events.json"), loadJson(POSTS_URL, "posts.json", true)]);
+    const items = buildItems(events, posts);
     const xml = renderFeed(items);
     res.setHeader("Content-Type", "application/rss+xml; charset=utf-8");
     res.setHeader("Cache-Control", "public, max-age=300, s-maxage=300");
@@ -31,29 +34,47 @@ module.exports = async (req, res) => {
   }
 };
 
-async function loadEvents() {
-  // We fetch the raw file from GitHub so this stays fresh even if Vercel
-  // is serving cached deploys. The content is public; no auth needed.
-  const r = await fetch(RAW_URL + "?t=" + Date.now(), { cache: "no-store" });
-  if (!r.ok) throw new Error(`Could not load events.json (HTTP ${r.status})`);
+async function loadJson(url, label, tolerate404 = false) {
+  const r = await fetch(url + "?t=" + Date.now(), { cache: "no-store" });
+  if (r.status === 404 && tolerate404) return [];
+  if (!r.ok) throw new Error(`Could not load ${label} (HTTP ${r.status})`);
   const list = await r.json();
-  if (!Array.isArray(list)) throw new Error("events.json is not an array");
+  if (!Array.isArray(list)) throw new Error(`${label} is not an array`);
   return list;
 }
 
-function buildItems(events) {
-  // Show upcoming events first (soonest first), then past (most recent first).
+function buildItems(events, posts) {
+  // Blog posts get their own item type so the renderer can format them
+  // differently (headline is post.title; guid is the post URL, not
+  // the events anchor). Events keep the existing shape.
+  const postItems  = posts.map(p => ({ kind: "post",  ...p }));
+  const eventItems = orderEvents(events).map(e => ({ kind: "event", ...e }));
+  // Sort combined feed by "date the reader cares about most":
+  //   - posts sort by publishedAt DESC
+  //   - events sort by startDate DESC
+  // Interleave: newest content wins the top slot regardless of type.
+  const combined = [...postItems, ...eventItems];
+  combined.sort((a, b) => rankDate(b) - rankDate(a));
+  return combined.slice(0, 20);
+}
+
+function orderEvents(events) {
   const upcoming = events.filter(e => e.section === "upcoming");
   const past     = events.filter(e => e.section === "past");
   upcoming.sort((a, b) => new Date(a.startDate || 0) - new Date(b.startDate || 0));
   past.sort((a, b) => new Date(b.startDate || 0) - new Date(a.startDate || 0));
-  // Cap total items — RSS readers rarely care about anything past 20.
-  return [...upcoming, ...past].slice(0, 20);
+  return [...upcoming, ...past];
 }
 
-function renderFeed(events) {
+function rankDate(item) {
+  if (item.kind === "post")  return new Date(item.publishedAt || 0).getTime();
+  if (item.kind === "event") return new Date(item.startDate    || 0).getTime();
+  return 0;
+}
+
+function renderFeed(feedItems) {
   const now = new Date().toUTCString();
-  const items = events.map(renderItem).join("\n");
+  const items = feedItems.map(renderItem).join("\n");
   return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0"
      xmlns:atom="http://www.w3.org/2005/Atom"
@@ -79,11 +100,16 @@ ${items}
 </rss>`;
 }
 
-function renderItem(e) {
+function renderItem(item) {
+  if (item.kind === "post") return renderPostItem(item);
+  return renderEventItem(item);
+}
+
+function renderEventItem(e) {
   const url = `${SITE}/events#${e.id}`;
   const title = `${e.title}${e.dateLabel ? " — " + e.dateLabel : ""}`;
   const pub = e.startDate ? new Date(e.startDate).toUTCString() : new Date().toUTCString();
-  const description = buildDescription(e);
+  const description = buildEventDescription(e);
   const imageUrl = e.flyer ? `${SITE}/${e.flyer.replace(/^\//, "")}` : `${SITE}/logos/logo.png`;
   return `    <item>
       <title>${xml(title)}</title>
@@ -91,6 +117,7 @@ function renderItem(e) {
       <guid isPermaLink="true">${xml(url)}</guid>
       <pubDate>${xml(pub)}</pubDate>
       <dc:creator>Take Me Back Bingo Nights</dc:creator>
+      <category>Event</category>
       <description>${xml(description)}</description>
       <content:encoded><![CDATA[<p><img src="${imageUrl}" alt="${xml(e.flyerAlt || e.title)}" /></p><p>${htmlSafe(description)}</p>${e.simpletix ? `<p><a href="${xml(e.simpletix)}">Buy tickets</a></p>` : ""}]]></content:encoded>
       <enclosure url="${xml(imageUrl)}" type="image/jpeg" length="0" />
@@ -98,7 +125,27 @@ function renderItem(e) {
     </item>`;
 }
 
-function buildDescription(e) {
+function renderPostItem(p) {
+  const url = `${SITE}/${(p.path || "blog/" + p.slug).replace(/^\//, "")}`;
+  const pub = p.publishedAt ? new Date(p.publishedAt).toUTCString() : new Date().toUTCString();
+  const imageUrl = p.coverImage ? `${SITE}/${p.coverImage.replace(/^\//, "")}` : `${SITE}/logos/logo.png`;
+  const excerpt = p.excerpt || "";
+  const category = (p.tags && p.tags[0]) || "Blog";
+  return `    <item>
+      <title>${xml(p.title)}</title>
+      <link>${xml(url)}</link>
+      <guid isPermaLink="true">${xml(url)}</guid>
+      <pubDate>${xml(pub)}</pubDate>
+      <dc:creator>${xml(p.author || "Take Me Back Bingo Nights")}</dc:creator>
+      <category>${xml(category)}</category>
+      <description>${xml(excerpt)}</description>
+      <content:encoded><![CDATA[<p><img src="${imageUrl}" alt="${xml(p.coverImageAlt || p.title)}" /></p><p>${htmlSafe(excerpt)}</p><p><a href="${xml(url)}">Read the full post →</a></p>]]></content:encoded>
+      <enclosure url="${xml(imageUrl)}" type="image/jpeg" length="0" />
+      <media:content url="${xml(imageUrl)}" medium="image" />
+    </item>`;
+}
+
+function buildEventDescription(e) {
   const parts = [];
   if (e.dateLabel)  parts.push(e.dateLabel);
   if (e.venueAddr)  parts.push(e.venueAddr);

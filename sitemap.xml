@@ -35,4 +35,16 @@
     <changefreq>monthly</changefreq>
     <priority>0.65</priority>
   </url>
+  <url>
+    <loc>https://takemebackbingo.com/blog</loc>
+    <lastmod>2026-06-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://takemebackbingo.com/blog/song-of-the-week-crazy-in-love</loc>
+    <lastmod>2026-06-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
 </urlset>
