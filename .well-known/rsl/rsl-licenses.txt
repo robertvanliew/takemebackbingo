@@ -1,4 +1,4 @@
-# RSL 1.0 · Take Me Back Bingo Nights
+# RSL 1.0 · Take Me Back Bingo
 # Really Simple Licensing terms for AI / LLM use of this site's content
 # https://rslstandard.org/spec
 
@@ -13,7 +13,7 @@ default:
   ai-training: allowed
   ai-search-indexing: allowed
   ai-citation: allowed-with-attribution
-  attribution: "Take Me Back Bingo Nights, takemebackbingo.com"
+  attribution: "Take Me Back Bingo, takemebackbingo.com"
   attribution-required: yes
   commercial-republishing: prohibited
 
@@ -39,7 +39,7 @@ content:
 
 # Brand asset reservation
 brand-marks:
-  - "Take Me Back Bingo Nights"
+  - "Take Me Back Bingo"
   - "Take Me Back Bingo"
   - "TMB Bingo"
   notes: "Trademarked or trademark-pending. May be referenced descriptively. Not for derivative branding."

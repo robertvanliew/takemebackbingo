@@ -82,7 +82,7 @@ function renderFeed(feedItems) {
      xmlns:dc="http://purl.org/dc/elements/1.1/"
      xmlns:media="http://search.yahoo.com/mrss/">
   <channel>
-    <title>Take Me Back Bingo Nights</title>
+    <title>Take Me Back Bingo</title>
     <link>${SITE}/</link>
     <atom:link href="${SITE}/rss.xml" rel="self" type="application/rss+xml" />
     <description>Hip-hop and R&#38;B live music bingo events, throwback nights, dance battles, and prizes across NJ and NY.</description>
@@ -92,7 +92,7 @@ function renderFeed(feedItems) {
     <ttl>60</ttl>
     <image>
       <url>${SITE}/logos/logo.png</url>
-      <title>Take Me Back Bingo Nights</title>
+      <title>Take Me Back Bingo</title>
       <link>${SITE}/</link>
     </image>
 ${items}
@@ -116,7 +116,7 @@ function renderEventItem(e) {
       <link>${xml(url)}</link>
       <guid isPermaLink="true">${xml(url)}</guid>
       <pubDate>${xml(pub)}</pubDate>
-      <dc:creator>Take Me Back Bingo Nights</dc:creator>
+      <dc:creator>Take Me Back Bingo</dc:creator>
       <category>Event</category>
       <description>${xml(description)}</description>
       <content:encoded><![CDATA[<p><img src="${imageUrl}" alt="${xml(e.flyerAlt || e.title)}" /></p><p>${htmlSafe(description)}</p>${e.simpletix ? `<p><a href="${xml(e.simpletix)}">Buy tickets</a></p>` : ""}]]></content:encoded>
@@ -136,7 +136,7 @@ function renderPostItem(p) {
       <link>${xml(url)}</link>
       <guid isPermaLink="true">${xml(url)}</guid>
       <pubDate>${xml(pub)}</pubDate>
-      <dc:creator>${xml(p.author || "Take Me Back Bingo Nights")}</dc:creator>
+      <dc:creator>${xml(p.author || "Take Me Back Bingo")}</dc:creator>
       <category>${xml(category)}</category>
       <description>${xml(excerpt)}</description>
       <content:encoded><![CDATA[<p><img src="${imageUrl}" alt="${xml(p.coverImageAlt || p.title)}" /></p><p>${htmlSafe(excerpt)}</p><p><a href="${xml(url)}">Read the full post →</a></p>]]></content:encoded>

@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex,nofollow" />
-<title>Bingo Card Generator · Take Me Back Bingo Nights Admin</title>
+<title>Bingo Card Generator · Take Me Back Bingo Admin</title>
 <link rel="icon" type="image/svg+xml" href="/logos/favicon.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -205,7 +205,7 @@
 <section class="gate" id="gate">
   <form class="gate__card" onsubmit="event.preventDefault(); tryLogin();">
     <h1 class="gate__logo">TMB ADMIN</h1>
-    <p class="gate__sub">Take Me Back Bingo Nights · Card Generator</p>
+    <p class="gate__sub">Take Me Back Bingo · Card Generator</p>
     <input type="password" id="pw" class="gate__input" placeholder="Password" autocomplete="current-password" autofocus />
     <button type="submit" class="gate__btn">Unlock</button>
     <p class="gate__err" id="gateErr"></p>
@@ -691,7 +691,6 @@ function renderCardEl(grid, opts) {
       <div class="bcard__head">
         <span class="bcard__brand-script">TAKE ME BACK</span>
         <span class="bcard__brand-block">BINGO</span>
-        <span class="bcard__brand-cursive">Nights</span>
       </div>
       <div class="bcard__event">${escapeHtml(eventName)}${dateStr ? " · " + dateStr : ""}</div>
       <div class="bcard__cols">
@@ -705,10 +704,10 @@ function renderCardEl(grid, opts) {
         }).join("")}
       </div>
       <div class="bcard__foot">
-        ${qrDataUrl ? `<img class="bcard__qr" src="${qrDataUrl}" alt="Scan to visit Take Me Back Bingo Nights" />` : ""}
+        ${qrDataUrl ? `<img class="bcard__qr" src="${qrDataUrl}" alt="Scan to visit Take Me Back Bingo" />` : ""}
         <div class="bcard__foot-text">
           <div>Yell <strong>&ldquo;TAKE ME BACK!&rdquo;</strong> to win</div>
-          <div><span class="bcard__handle">${escapeHtml(handleSafe)}</span> &middot; #TakeMeBackBingoNights</div>
+          <div><span class="bcard__handle">${escapeHtml(handleSafe)}</span> &middot; #TakeMeBackBingo</div>
         </div>
       </div>
     </div>
@@ -774,7 +773,7 @@ function renderPreview() {
     const pool = getCombinedSongPool();
     if (pool.length < 24) throw new Error("Pick more era pools — need at least 24 songs.");
     const cards = generateUniqueCards(pool, 3);
-    const eventName = document.getElementById("eventName").value || "Take Me Back Bingo Nights";
+    const eventName = document.getElementById("eventName").value || "Take Me Back Bingo";
     const eventDate = document.getElementById("eventDate").value;
     const qrUrl = document.getElementById("qrUrl").value || "https://takemebackbingo.com";
     const handle = document.getElementById("igHandle").value || "@takemebackbingo";
@@ -808,7 +807,7 @@ async function generatePdf() {
   status.textContent = "";
   bar.style.width = "0%";
 
-  const eventName = document.getElementById("eventName").value || "Take Me Back Bingo Nights";
+  const eventName = document.getElementById("eventName").value || "Take Me Back Bingo";
   const eventDate = document.getElementById("eventDate").value;
   const qrUrl = document.getElementById("qrUrl").value || "https://takemebackbingo.com";
   const handle = document.getElementById("igHandle").value || "@takemebackbingo";
@@ -929,7 +928,7 @@ async function generateAnswerKey() {
     const marginTop = 0.6, marginBot = 0.6;
     const textWidth = pageW - marginL - marginR;
     const lineH = 0.22;
-    const eventName = document.getElementById("eventName").value || "Take Me Back Bingo Nights";
+    const eventName = document.getElementById("eventName").value || "Take Me Back Bingo";
     const eventDate = document.getElementById("eventDate").value;
     const dateStr = eventDate ? formatDate(eventDate) : "";
 
