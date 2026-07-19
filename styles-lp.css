@@ -1,0 +1,232 @@
+/* Take Me Back Bingo · Landing page stylesheet.
+   Namespaced under .lp so it can't collide with the site-wide styles.css
+   variables — that was the readability bug on the first blog build. All
+   colors are hard-coded for the same reason. Shared across:
+   /hip-hop-bingo, /r-b-bingo, /bingo-woodbridge-nj,
+   /bachelorette-party-bingo, /birthday-party-bingo. */
+
+.lp { background: #141111; color: #f4ede1; }
+
+.lp__hero { max-width: 1100px; margin: 0 auto; padding: 60px 24px 40px; text-align: center; }
+.lp__hero-eyebrow {
+  font-family: 'Bungee', sans-serif;
+  font-size: 11px; letter-spacing: 3px;
+  color: #f1c33b; text-transform: uppercase;
+  margin: 0 0 24px;
+}
+.lp__hero-title {
+  font-family: 'Newsreader', Georgia, serif;
+  font-weight: 500; font-style: italic;
+  font-size: clamp(36px, 6vw, 68px);
+  line-height: 1.05; letter-spacing: -1px;
+  color: #f4ede1;
+  margin: 0 auto 20px;
+  max-width: 900px;
+}
+.lp__hero-title strong { font-style: normal; font-weight: 700; color: #f1c33b; }
+.lp__hero-deck {
+  font-family: 'Newsreader', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(18px, 2vw, 22px);
+  line-height: 1.5;
+  color: #b6ad9c;
+  max-width: 680px; margin: 0 auto 32px;
+}
+.lp__hero-cta {
+  display: inline-flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+  margin: 8px 0 4px;
+}
+.lp__btn {
+  display: inline-block;
+  padding: 16px 28px;
+  font-family: 'Bungee', sans-serif;
+  font-size: 12px; letter-spacing: 2.5px;
+  text-decoration: none;
+  text-transform: uppercase;
+  border: 0;
+  transition: transform 0.15s;
+}
+.lp__btn:hover { transform: translateY(-2px); }
+.lp__btn--primary { background: #f1c33b; color: #1a1408 !important; }
+.lp__btn--ghost { background: transparent; color: #f4ede1 !important; border: 1px solid #4a4038; }
+.lp__btn--ghost:hover { border-color: #f1c33b; color: #f1c33b !important; }
+
+.lp__quickmeta {
+  display: inline-flex;
+  gap: 14px; flex-wrap: wrap; justify-content: center;
+  margin: 32px 0 0;
+  font-family: 'Sora', sans-serif;
+  font-size: 11px; color: #9d9484;
+  letter-spacing: 2px; text-transform: uppercase;
+}
+.lp__quickmeta span { display: inline-flex; align-items: center; }
+.lp__quickmeta strong { color: #f4ede1; font-weight: 700; margin-left: 6px; }
+.lp__quickmeta-sep { color: #4a4038; }
+
+.lp__section {
+  max-width: 780px; margin: 0 auto;
+  padding: 60px 24px;
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 20px; line-height: 1.7; color: #f4ede1;
+}
+.lp__section > * + * { margin-top: 1.2em; }
+.lp__section p, .lp__section ul, .lp__section ol { margin: 0; color: #f4ede1; }
+
+.lp__section-eyebrow {
+  font-family: 'Bungee', sans-serif;
+  font-size: 11px; letter-spacing: 3px;
+  color: #f1c33b; text-transform: uppercase;
+  padding-top: 32px;
+  border-top: 1px solid #2b2525;
+  margin: 0 0 12px !important;
+}
+.lp__section-h {
+  font-family: 'Newsreader', Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  color: #f4ede1;
+  margin: 0 0 24px !important;
+}
+.lp__section a { color: #f1c33b; text-decoration: none; border-bottom: 1px solid rgba(241, 195, 59, 0.4); padding-bottom: 1px; }
+.lp__section a:hover { border-bottom-color: #f1c33b; }
+.lp__section strong { color: #f6e9c8; font-weight: 700; }
+.lp__section em { color: #f6e9c8; font-style: italic; }
+.lp__section ol, .lp__section ul { padding-left: 24px; }
+.lp__section ol li, .lp__section ul li { margin-bottom: 10px; }
+
+.lp__steps { list-style: none; padding: 0 !important; counter-reset: lp-step; }
+.lp__steps li {
+  counter-increment: lp-step;
+  padding: 24px 0 24px 88px;
+  border-top: 1px solid #2b2525;
+  position: relative;
+  margin-bottom: 0 !important;
+}
+.lp__steps li:last-child { border-bottom: 1px solid #2b2525; }
+.lp__steps li::before {
+  content: counter(lp-step, decimal-leading-zero);
+  position: absolute; left: 0; top: 22px;
+  font-family: 'Bungee', sans-serif;
+  color: #f1c33b;
+  font-size: 22px;
+  letter-spacing: 2px;
+}
+.lp__steps li strong {
+  display: block;
+  font-family: 'Newsreader', Georgia, serif;
+  font-weight: 700; font-size: 22px;
+  line-height: 1.25;
+  color: #f6e9c8;
+  margin-bottom: 6px;
+  letter-spacing: -0.2px;
+}
+
+.lp__tracks {
+  display: grid; gap: 20px;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 0 !important;
+  list-style: none !important;
+}
+.lp__tracks-block {
+  background: rgba(241,195,59,0.03);
+  border: 1px solid #2b2525;
+  border-left: 3px solid #f1c33b;
+  padding: 22px 20px;
+  font-family: 'Sora', sans-serif;
+  font-size: 14px; line-height: 1.5;
+}
+.lp__tracks-block h3 {
+  font-family: 'Bungee', sans-serif;
+  font-size: 10px; letter-spacing: 2.5px;
+  color: #f1c33b;
+  margin: 0 0 12px !important;
+  text-transform: uppercase;
+}
+.lp__tracks-block ul { list-style: none !important; padding: 0 !important; margin: 0 !important; }
+.lp__tracks-block li { padding: 4px 0 !important; margin: 0 !important; color: #f4ede1; }
+.lp__tracks-block em { color: #9d9484; font-style: normal; font-family: 'Sora', sans-serif; font-size: 12px; display: block; }
+
+.lp__eventcard {
+  background: #0e0c0c;
+  border: 1px solid #2b2525;
+  border-left: 3px solid #f1c33b;
+  padding: 32px;
+  margin: 30px 0 !important;
+}
+.lp__eventcard-eyebrow {
+  font-family: 'Bungee', sans-serif;
+  font-size: 10px; letter-spacing: 3px;
+  color: #f1c33b; text-transform: uppercase;
+  margin: 0 0 12px !important;
+}
+.lp__eventcard-title {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 28px; font-weight: 700;
+  line-height: 1.15;
+  color: #f4ede1;
+  margin: 0 0 12px !important;
+  letter-spacing: -0.4px;
+}
+.lp__eventcard-meta {
+  font-family: 'Sora', sans-serif;
+  font-size: 15px; line-height: 1.6;
+  color: #b6ad9c;
+  margin: 0 0 24px !important;
+}
+.lp__eventcard-meta strong { color: #f6e9c8; font-weight: 600; }
+
+.lp__faq { padding: 0 !important; list-style: none !important; }
+.lp__faq-item {
+  padding: 22px 0;
+  border-top: 1px solid #2b2525;
+  margin-bottom: 0 !important;
+}
+.lp__faq-item:last-child { border-bottom: 1px solid #2b2525; }
+.lp__faq-q {
+  font-family: 'Newsreader', Georgia, serif;
+  font-weight: 700; font-size: 22px;
+  line-height: 1.3;
+  color: #f6e9c8;
+  margin: 0 0 8px !important;
+  letter-spacing: -0.2px;
+}
+.lp__faq-a { margin: 0 !important; color: #b6ad9c; }
+
+.lp__closer {
+  max-width: 780px; margin: 0 auto;
+  padding: 60px 24px 80px; text-align: center;
+}
+.lp__closer-eyebrow {
+  font-family: 'Permanent Marker', cursive;
+  font-size: 22px;
+  color: #c1462e;
+  margin: 0 0 8px;
+  transform: rotate(-3deg);
+  display: inline-block;
+}
+.lp__closer-title {
+  font-family: 'Bungee', sans-serif;
+  font-size: clamp(28px, 4vw, 44px);
+  color: #f4ede1;
+  margin: 0 0 12px;
+  line-height: 1.1;
+  letter-spacing: 0.5px;
+}
+.lp__closer-sub {
+  font-family: 'Newsreader', Georgia, serif;
+  font-style: italic;
+  font-size: 18px;
+  color: #b6ad9c;
+  margin: 0 0 28px;
+}
+
+@media (max-width: 720px) {
+  .lp__tracks { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .lp__section { font-size: 18px; padding: 40px 20px; }
+  .lp__hero { padding: 40px 20px 24px; }
+  .lp__eventcard { padding: 24px 20px; }
+}
