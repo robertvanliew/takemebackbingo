@@ -1425,18 +1425,18 @@
 
 <!-- ============ NAV (mirrors index.html) ============ -->
 <header class="nav">
-  <a href="index.html" class="nav__logo" aria-label="Take Me Back Bingo home">
+  <a href="/" class="nav__logo" aria-label="Take Me Back Bingo home">
     <img src="logos/logo-yellow.png" alt="Take Me Back Bingo" class="nav__logo-img" />
   </a>
   <nav class="nav__links" id="primary-nav" aria-label="Primary">
-    <a href="play.html" aria-current="page">Play</a>
-    <a href="events.html">Events</a>
-    <a href="gallery.html">Gallery</a>
+    <a href="/play" aria-current="page">Play</a>
+    <a href="/events">Events</a>
+    <a href="/gallery">Gallery</a>
     <a href="/blog">Blog</a>
-    <a href="index.html#faq">FAQ</a>
-    <a href="index.html#contact">Contact</a>
+    <a href="/#faq">FAQ</a>
+    <a href="/#contact">Contact</a>
   </nav>
-  <a href="index.html#newsletter" class="btn btn--primary nav__cta" data-cta-when-live="buy" data-href-live="events.html" data-text-live="Buy Tickets">Get Notified</a>
+  <a href="/#newsletter" class="btn btn--primary nav__cta" data-cta-when-live="buy" data-href-live="/events" data-text-live="Buy Tickets">Get Notified</a>
   <button type="button" class="nav__toggle" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav" onclick="(function(b){var n=b.closest('.nav');var o=n.getAttribute('data-nav-open')==='true';n.setAttribute('data-nav-open',o?'false':'true');b.setAttribute('aria-expanded',o?'false':'true');b.setAttribute('aria-label',o?'Open menu':'Close menu');})(this)"><span class="nav__toggle-bars" aria-hidden="true"></span></button>
 </header>
 
@@ -1484,7 +1484,7 @@
       <!-- Tooltip surfaces from any data-coming-soon pill on hover/focus -->
       <div class="era-tooltip" id="eraTooltip" role="tooltip" hidden>
         <span>Stay tuned, </span>
-        <a href="index.html#contact" data-era-newsletter-link>drop your email to be notified</a>
+        <a href="/#contact" data-era-newsletter-link>drop your email to be notified</a>
       </div>
     </div>
 
@@ -1550,7 +1550,7 @@
           The real night gives you a lot more cards to mark, come catch one.
         </p>
         <div class="roundover__actions">
-          <a href="events.html" class="btn btn--primary btn--lg">
+          <a href="/events" class="btn btn--primary btn--lg">
             See upcoming nights
             <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
@@ -1561,7 +1561,7 @@
 
     <div class="play__cta-row">
       <button type="button" class="btn btn--ghost btn--lg" id="newCardBtn">New Card</button>
-      <a href="events.html" class="btn btn--primary btn--lg">
+      <a href="/events" class="btn btn--primary btn--lg">
         Buy Tickets
         <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
@@ -1595,7 +1595,7 @@
       private bookings (birthdays, bachelorettes, work parties, corporate
       events). Winners of the browser game unlock a real-ticket discount code
       that&rsquo;s good at our upcoming nights, including
-      <a href="events.html#evt-summer-jam-2026">Summer Jam at Lake Chateau
+      <a href="/events#evt-summer-jam-2026">Summer Jam at Lake Chateau
       Banquets in Woodbridge, NJ on Friday, June 26, 2026</a>.
     </p>
   </div>
@@ -1775,19 +1775,19 @@
           Designed by <a href="https://robertvanliew.com" target="_blank" rel="noopener">Robert Van Liew</a>
         </p>
         <p class="footer__legal">
-          <a href="index.html">Home</a>
+          <a href="/">Home</a>
           <span class="footer__dot">·</span>
-          <a href="events.html">Events</a>
+          <a href="/events">Events</a>
           <span class="footer__dot">·</span>
-          <a href="gallery.html">Gallery</a>
+          <a href="/gallery">Gallery</a>
           <span class="footer__dot">·</span>
           <a href="/blog">Blog</a>
           <span class="footer__dot">·</span>
-          <a href="legal.html#privacy">Privacy</a>
+          <a href="/legal#privacy">Privacy</a>
           <span class="footer__dot">·</span>
-          <a href="legal.html#terms">Terms</a>
+          <a href="/legal#terms">Terms</a>
           <span class="footer__dot">·</span>
-          <a href="legal.html#accessibility">Accessibility</a>
+          <a href="/legal#accessibility">Accessibility</a>
         </p>
       </div>
     </div>

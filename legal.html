@@ -74,18 +74,18 @@
 <body>
 
 <header class="nav">
-  <a href="index.html" class="nav__logo" aria-label="Take Me Back Bingo home">
+  <a href="/" class="nav__logo" aria-label="Take Me Back Bingo home">
     <img src="logos/logo-yellow.png" alt="Take Me Back Bingo" class="nav__logo-img" />
   </a>
   <nav class="nav__links" id="primary-nav" aria-label="Primary">
-    <a href="index.html#how">About</a>
-    <a href="index.html#how">How to Play</a>
-    <a href="play.html">Play</a>
-    <a href="events.html">Events</a>
-    <a href="gallery.html">Gallery</a>
-    <a href="index.html#contact">Contact</a>
+    <a href="/#how">About</a>
+    <a href="/#how">How to Play</a>
+    <a href="/play">Play</a>
+    <a href="/events">Events</a>
+    <a href="/gallery">Gallery</a>
+    <a href="/#contact">Contact</a>
   </nav>
-  <a href="index.html#newsletter" class="btn btn--primary nav__cta" data-cta-when-live="buy" data-href-live="events.html" data-text-live="Buy Tickets">Get Notified</a>
+  <a href="/#newsletter" class="btn btn--primary nav__cta" data-cta-when-live="buy" data-href-live="/events" data-text-live="Buy Tickets">Get Notified</a>
   <button type="button" class="nav__toggle" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav" onclick="(function(b){var n=b.closest('.nav');var o=n.getAttribute('data-nav-open')==='true';n.setAttribute('data-nav-open',o?'false':'true');b.setAttribute('aria-expanded',o?'false':'true');b.setAttribute('aria-label',o?'Open menu':'Close menu');})(this)"><span class="nav__toggle-bars" aria-hidden="true"></span></button>
 </header>
 
@@ -146,7 +146,7 @@
 
       <h3>Site Use</h3>
       <ul>
-        <li>The interactive game on the <a href="play.html">Play</a> page uses 30-second song previews from the iTunes Search API for demonstration purposes only. It is not an official broadcast or rebroadcast of copyrighted material.</li>
+        <li>The interactive game on the <a href="/play">Play</a> page uses 30-second song previews from the iTunes Search API for demonstration purposes only. It is not an official broadcast or rebroadcast of copyrighted material.</li>
         <li>You may not scrape, mirror, or republish this site or its assets without written permission.</li>
         <li>The site is provided "as is" with no warranty of uptime or availability.</li>
       </ul>
@@ -296,13 +296,13 @@
         <li>Sufficient color contrast on body text and primary actions.</li>
         <li>Keyboard navigation supported throughout. Tab order is logical and focus is visible.</li>
         <li>Alt text on meaningful images. Decorative images are marked as such so screen readers can skip them.</li>
-        <li>The interactive bingo game on the <a href="play.html">Play</a> page honors <code>prefers-reduced-motion</code>. Pulse and tilt animations are disabled if your system has reduced motion turned on.</li>
+        <li>The interactive bingo game on the <a href="/play">Play</a> page honors <code>prefers-reduced-motion</code>. Pulse and tilt animations are disabled if your system has reduced motion turned on.</li>
         <li>A voice "yell to win" feature is included as a fun extra; a button alternative is always available for players who cannot or do not want to use voice input.</li>
       </ul>
 
       <h3>At Events</h3>
       <ul>
-        <li>Venues are selected with step-free access where possible. Specific venue accessibility is listed on the <a href="events.html">Events page</a> for each night. If it's not listed, ask us before you buy.</li>
+        <li>Venues are selected with step-free access where possible. Specific venue accessibility is listed on the <a href="/events">Events page</a> for each night. If it's not listed, ask us before you buy.</li>
         <li>Hosts speak through a PA and song titles also appear on a visible screen so hearing-impaired players can follow along.</li>
         <li>We can pre-print large-format bingo cards if you let us know at least 48 hours before the event.</li>
         <li>Service animals are always welcome.</li>
@@ -337,17 +337,17 @@
           Designed by <a href="https://robertvanliew.com" target="_blank" rel="noopener">Robert Van Liew</a>
         </p>
         <p class="footer__legal">
-          <a href="index.html">Home</a>
+          <a href="/">Home</a>
           <span class="footer__dot">·</span>
-          <a href="events.html">Events</a>
+          <a href="/events">Events</a>
           <span class="footer__dot">·</span>
-          <a href="gallery.html">Gallery</a>
+          <a href="/gallery">Gallery</a>
           <span class="footer__dot">·</span>
-          <a href="legal.html#privacy">Privacy</a>
+          <a href="/legal#privacy">Privacy</a>
           <span class="footer__dot">·</span>
-          <a href="legal.html#terms">Terms</a>
+          <a href="/legal#terms">Terms</a>
           <span class="footer__dot">·</span>
-          <a href="legal.html#accessibility">Accessibility</a>
+          <a href="/legal#accessibility">Accessibility</a>
         </p>
       </div>
     </div>

@@ -74,19 +74,19 @@
 <body>
 
 <header class="nav">
-  <a href="index.html" class="nav__logo" aria-label="Take Me Back Bingo home">
+  <a href="/" class="nav__logo" aria-label="Take Me Back Bingo home">
     <img src="logos/logo-yellow.png" alt="Take Me Back Bingo" class="nav__logo-img" />
   </a>
   <nav class="nav__links" id="primary-nav" aria-label="Primary">
-    <a href="index.html#how">About</a>
-    <a href="index.html#how">How to Play</a>
-    <a href="play.html">Play</a>
-    <a href="events.html" aria-current="page">Events</a>
-    <a href="gallery.html">Gallery</a>
+    <a href="/#how">About</a>
+    <a href="/#how">How to Play</a>
+    <a href="/play">Play</a>
+    <a href="/events" aria-current="page">Events</a>
+    <a href="/gallery">Gallery</a>
     <a href="/blog">Blog</a>
-    <a href="index.html#contact">Contact</a>
+    <a href="/#contact">Contact</a>
   </nav>
-  <a href="#newsletter" class="btn btn--primary nav__cta" data-cta-when-live="buy" data-href-live="events.html" data-text-live="Buy Tickets">Get Notified</a>
+  <a href="#newsletter" class="btn btn--primary nav__cta" data-cta-when-live="buy" data-href-live="/events" data-text-live="Buy Tickets">Get Notified</a>
   <button type="button" class="nav__toggle" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav" onclick="(function(b){var n=b.closest('.nav');var o=n.getAttribute('data-nav-open')==='true';n.setAttribute('data-nav-open',o?'false':'true');b.setAttribute('aria-expanded',o?'false':'true');b.setAttribute('aria-label',o?'Open menu':'Close menu');})(this)"><span class="nav__toggle-bars" aria-hidden="true"></span></button>
 </header>
 
@@ -274,7 +274,7 @@
               DJ Nix In The Mix. Sold out the room.
             </p>
             <div class="event-card__cta-row">
-              <a class="btn btn--ghost btn--lg" href="gallery.html">
+              <a class="btn btn--ghost btn--lg" href="/gallery">
                 See the photos
                 <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </a>
@@ -346,7 +346,7 @@
               dance battle into the early hours. Photos live in the gallery.
             </p>
             <div class="event-card__cta-row">
-              <a class="btn btn--ghost btn--lg" href="gallery.html">
+              <a class="btn btn--ghost btn--lg" href="/gallery">
                 See the photos
                 <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </a>
@@ -433,7 +433,7 @@
         </p>
         <p class="footer__sub">Hip-Hop &amp; R&amp;B bingo, live in your city. Dance battles, prizes, throwbacks all night.</p>
         <div class="footer__cta-row">
-          <a href="#newsletter" class="btn btn--primary btn--lg" data-cta-when-live="buy" data-href-live="events.html" data-text-live="Buy Tickets">Get Notified</a>
+          <a href="#newsletter" class="btn btn--primary btn--lg" data-cta-when-live="buy" data-href-live="/events" data-text-live="Buy Tickets">Get Notified</a>
           <a href="#contact" class="btn btn--ghost btn--lg" data-open-inquiry data-inquiry-topic="Private booking - Other event">Book a Private Night</a>
         </div>
       </div>
@@ -442,12 +442,12 @@
       <div class="footer__col">
         <h4 class="footer__h">Explore</h4>
         <ul class="footer__list">
-          <li><a href="index.html#how">About</a></li>
-          <li><a href="index.html#how">How to Play</a></li>
-          <li><a href="events.html">Events</a></li>
-          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="/#how">About</a></li>
+          <li><a href="/#how">How to Play</a></li>
+          <li><a href="/events">Events</a></li>
+          <li><a href="/gallery">Gallery</a></li>
           <li><a href="/blog">Blog</a></li>
-          <li><a href="index.html#contact">Contact</a></li>
+          <li><a href="/#contact">Contact</a></li>
         </ul>
       </div>
       <div class="footer__col">
@@ -503,11 +503,11 @@
           Designed by <a href="https://robertvanliew.com" target="_blank" rel="noopener">Robert Van Liew</a>
         </p>
         <p class="footer__legal">
-          <a href="legal.html#privacy">Privacy</a>
+          <a href="/legal#privacy">Privacy</a>
           <span class="footer__dot">·</span>
-          <a href="legal.html#terms">Terms</a>
+          <a href="/legal#terms">Terms</a>
           <span class="footer__dot">·</span>
-          <a href="legal.html#accessibility">Accessibility</a>
+          <a href="/legal#accessibility">Accessibility</a>
         </p>
       </div>
     </div>
@@ -575,7 +575,7 @@
         </button>
         <p class="modal__hint">Or call/text <a href="tel:+17326467073">732.646.7073</a></p>
       </div>
-      <p class="modal__hint modal__caveat">Based in NY/NJ. Travel fees apply outside. Need tickets instead? <a href="events.html">See upcoming nights &rarr;</a></p>
+      <p class="modal__hint modal__caveat">Based in NY/NJ. Travel fees apply outside. Need tickets instead? <a href="/events">See upcoming nights &rarr;</a></p>
       <p class="modal__status" data-inquiry-status role="status"></p>
     </form>
   </div>
@@ -1104,7 +1104,7 @@
       parts.push(`<a class="btn btn--ghost btn--lg" href="#contact" data-open-inquiry data-inquiry-topic="Group of 6+" data-inquiry-context="${escAttr(ctx)}">Group of 6+?</a>`);
     } else if (isPast) {
       parts.push(`
-        <a class="btn btn--ghost btn--lg" href="gallery.html">
+        <a class="btn btn--ghost btn--lg" href="/gallery">
           See the photos
           <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>`);
