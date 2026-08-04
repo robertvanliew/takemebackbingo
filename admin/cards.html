@@ -242,7 +242,7 @@
         </div>
         <div class="field">
           <label for="qrUrl">QR Code Link</label>
-          <input type="text" id="qrUrl" value="https://takemebackbingo.com" placeholder="https://takemebackbingo.com" />
+          <input type="text" id="qrUrl" value="https://www.takemebackbingo.com" placeholder="https://www.takemebackbingo.com" />
         </div>
         <div class="field">
           <label for="igHandle">Social Handle</label>
@@ -775,7 +775,7 @@ function renderPreview() {
     const cards = generateUniqueCards(pool, 3);
     const eventName = document.getElementById("eventName").value || "Take Me Back Bingo";
     const eventDate = document.getElementById("eventDate").value;
-    const qrUrl = document.getElementById("qrUrl").value || "https://takemebackbingo.com";
+    const qrUrl = document.getElementById("qrUrl").value || "https://www.takemebackbingo.com";
     const handle = document.getElementById("igHandle").value || "@takemebackbingo";
     const qrDataUrl = generateQrDataUrl(qrUrl, 480);
     const wrap = document.getElementById("previewWrap");
@@ -809,7 +809,7 @@ async function generatePdf() {
 
   const eventName = document.getElementById("eventName").value || "Take Me Back Bingo";
   const eventDate = document.getElementById("eventDate").value;
-  const qrUrl = document.getElementById("qrUrl").value || "https://takemebackbingo.com";
+  const qrUrl = document.getElementById("qrUrl").value || "https://www.takemebackbingo.com";
   const handle = document.getElementById("igHandle").value || "@takemebackbingo";
   const count = Math.max(1, Math.min(500, parseInt(document.getElementById("cardCount").value, 10) || 1));
   const perPage = parseInt(document.getElementById("cardsPerPage").value, 10);

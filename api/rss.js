@@ -14,7 +14,7 @@
 const OWNER   = process.env.GH_OWNER  || "robertvanliew";
 const REPO    = process.env.GH_REPO   || "takemebackbingo";
 const BRANCH  = process.env.GH_BRANCH || "main";
-const SITE    = "https://takemebackbingo.com";
+const SITE    = "https://www.takemebackbingo.com";
 
 const EVENTS_URL = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/content/events.json`;
 const POSTS_URL  = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/content/posts.json`;

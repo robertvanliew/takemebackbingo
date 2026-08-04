@@ -1,5 +1,5 @@
 # Take Me Back Bingo · robots.txt
-# https://takemebackbingo.com/robots.txt
+# https://www.takemebackbingo.com/robots.txt
 
 # Allow all conventional crawlers full access to public pages.
 User-agent: *
@@ -48,4 +48,4 @@ User-agent: CCBot
 Allow: /
 
 # XML sitemap location for indexing.
-Sitemap: https://takemebackbingo.com/sitemap.xml
+Sitemap: https://www.takemebackbingo.com/sitemap.xml
