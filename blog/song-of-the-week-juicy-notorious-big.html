@@ -198,6 +198,37 @@
   }
   .mag__colophon-line { font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 14px; color: #9d9484; margin: 0 0 24px; line-height: 1.5; }
 
+  .mag__share-lead {
+    font-family: 'Sora', sans-serif; font-size: 11px; letter-spacing: 2px;
+    text-transform: uppercase; color: #9d9484; margin: 0 0 18px; font-weight: 600;
+  }
+  .mag__share {
+    display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+  }
+  .mag__share a, .mag__share button {
+    color: #9d9484 !important; background: transparent;
+    text-decoration: none !important; padding: 12px 20px;
+    border: 1px solid #2b2525 !important;
+    font-family: 'Sora', sans-serif; font-size: 11px;
+    letter-spacing: 2px; text-transform: uppercase; font-weight: 600;
+    cursor: pointer; transition: border-color 0.15s, color 0.15s, background 0.15s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .mag__share a:hover, .mag__share button:hover {
+    color: #f1c33b !important; border-color: #f1c33b !important;
+  }
+  .mag__share-primary {
+    color: #1a1408 !important; background: #f1c33b !important; border-color: #f1c33b !important;
+  }
+  .mag__share-primary:hover {
+    color: #1a1408 !important; background: #ffd45a !important; border-color: #ffd45a !important;
+  }
+  .mag__share-hint {
+    font-family: 'Newsreader', Georgia, serif; font-style: italic;
+    font-size: 13px; color: #9d9484; margin: 18px 0 0; line-height: 1.5;
+  }
+  .mag__share-hint strong { color: #f6e9c8; font-style: normal; font-weight: 700; }
+
   @media (max-width: 640px) {
     .mag__body { padding: 24px 20px 48px; font-size: 18px; }
     .mag__lede { font-size: 20px; }
@@ -339,6 +370,24 @@
 
   <footer class="mag__colophon">
     <p class="mag__colophon-line">Take Me Back Bingo is a live music bingo brand<br>from High Class Experience LLC. Woodbridge, NJ.</p>
+    <p class="mag__share-lead">Share the post</p>
+    <div class="mag__share">
+      <button type="button" class="mag__share-primary" id="magShareBtn"
+              data-share-title="Take Me Back Bingo — Song of the Week: Juicy"
+              data-share-text="Why 'Juicy' by The Notorious B.I.G. stops every music bingo room."
+              data-share-image="/photos/GSP_2436.jpg"
+              data-share-filename="take-me-back-bingo-juicy.jpg"
+              data-share-headline="Why 'Juicy' Still Stops Every Music Bingo Room">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        <span>Share to Story</span>
+      </button>
+      <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fwww.takemebackbingo.com%2Fblog%2Fsong-of-the-week-juicy-notorious-big&text=Why%20Biggie%27s%20%27Juicy%27%20stops%20every%20music%20bingo%20room" target="_blank" rel="noopener">X / Twitter</a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.takemebackbingo.com%2Fblog%2Fsong-of-the-week-juicy-notorious-big" target="_blank" rel="noopener">Facebook</a>
+      <a href="mailto:?subject=Song%20of%20the%20Week%3A%20Juicy%20by%20The%20Notorious%20B.I.G.&body=https%3A%2F%2Fwww.takemebackbingo.com%2Fblog%2Fsong-of-the-week-juicy-notorious-big">Email</a>
+    </div>
+    <p class="mag__share-hint" id="magShareHint">
+      <strong>On mobile:</strong> the share card has the headline and link baked in &mdash; ready to post as an Instagram, Facebook, or TikTok Story.
+    </p>
   </footer>
 
 </article>
@@ -408,5 +457,8 @@
 </script>
 
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+
+<!-- Story share composer (shared across all blog posts) -->
+<script src="/blog/story-share.js?v=1" defer></script>
 </body>
 </html>
