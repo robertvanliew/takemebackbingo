@@ -66,6 +66,19 @@
     opacity: 1 !important;
     transform: none !important;
   }
+  /* We render 4 buttons in the CTA row now (Buy Tickets · Add to Calendar
+     · Group of 6+ · Share). styles.css keeps the row flex-wrap:nowrap on
+     desktop, which was fine for 3 buttons but overflows the card with 4.
+     Force wrap for dynamically-rendered cards so buttons flow to a second
+     line instead of getting clipped at the card edge. */
+  #events-upcoming-list .event-card__cta-row,
+  #events-past-list  .event-card__cta-row {
+    flex-wrap: wrap;
+  }
+  #events-upcoming-list .event-card__cta-row .btn,
+  #events-past-list  .event-card__cta-row .btn {
+    flex: 0 1 auto;
+  }
   /* Add-to-calendar popover — same visual language as the share popover. */
   .cal { position: relative; display: inline-block; }
   .cal-pop {
