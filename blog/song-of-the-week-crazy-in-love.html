@@ -497,15 +497,23 @@
   }
   .mag__share a:hover,
   .mag__share button:hover { color: #f1c33b !important; border-color: #f1c33b !important; }
-  .mag__share-primary {
+  /* Compound selector so this beats `.mag__share button` on specificity —
+     otherwise the muted gray from the generic selector wins and the
+     Share to Story button text is invisible against the gold pill. */
+  .mag__share button.mag__share-primary,
+  .mag__share a.mag__share-primary {
     color: #1a1408 !important;
     background: #f1c33b !important;
     border-color: #f1c33b !important;
   }
-  .mag__share-primary:hover {
+  .mag__share button.mag__share-primary:hover,
+  .mag__share a.mag__share-primary:hover {
     color: #1a1408 !important;
     background: #ffd45a !important;
     border-color: #ffd45a !important;
+  }
+  .mag__share button.mag__share-primary svg {
+    color: #1a1408;
   }
   .mag__share-hint {
     font-family: 'Newsreader', Georgia, serif;
