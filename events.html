@@ -66,6 +66,23 @@
     opacity: 1 !important;
     transform: none !important;
   }
+  /* Add-to-calendar popover — same visual language as the share popover. */
+  .cal { position: relative; display: inline-block; }
+  .cal-pop {
+    position: absolute; top: calc(100% + 8px); left: 0; z-index: 20;
+    background: #1c1818; border: 1px solid #2b2525; border-radius: 10px;
+    padding: 6px; min-width: 220px; display: none;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+  }
+  .cal[data-open="true"] .cal-pop { display: block; }
+  .cal-pop__item {
+    display: block; width: 100%;
+    padding: 10px 14px; background: transparent; border: 0;
+    color: #f4ede1; text-align: left; text-decoration: none;
+    font-family: 'Sora', sans-serif; font-size: 14px;
+    border-radius: 6px; cursor: pointer;
+  }
+  .cal-pop__item:hover { background: #2b2525; color: #f1c33b; }
 </style>
 
 <!-- DATES-PENDING toggle (single source of truth for the "Buy Tickets" → newsletter
@@ -1051,6 +1068,87 @@
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') closeAllShares(null);
     });
+
+    // === Add to Calendar popover — delegated click handler ===
+    function closeAllCals(except) {
+      document.querySelectorAll('.cal[data-open="true"]').forEach(function (c) {
+        if (c === except) return;
+        c.setAttribute('data-open', 'false');
+        var b = c.querySelector('[data-cal-trigger]');
+        if (b) b.setAttribute('aria-expanded', 'false');
+      });
+    }
+    document.addEventListener('click', function (e) {
+      // ICS download click
+      var ics = e.target.closest('[data-cal-ics]');
+      if (ics) {
+        e.preventDefault();
+        var title = ics.getAttribute('data-cal-title') || 'Take Me Back Bingo';
+        var startISO = ics.getAttribute('data-cal-start');
+        var endISO   = ics.getAttribute('data-cal-end');
+        var location = ics.getAttribute('data-cal-location') || '';
+        var details  = ics.getAttribute('data-cal-details') || '';
+        function stamp(iso) {
+          try {
+            var d = new Date(iso + ':00-04:00');
+            var p = function (n) { return String(n).padStart(2, '0'); };
+            return d.getUTCFullYear() + p(d.getUTCMonth()+1) + p(d.getUTCDate()) + 'T' +
+                   p(d.getUTCHours()) + p(d.getUTCMinutes()) + '00Z';
+          } catch { return ''; }
+        }
+        var uid = 'tmb-' + Date.now() + '@takemebackbingo.com';
+        var dtstamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
+        var esc = function (s) { return String(s || '').replace(/([,;\\])/g, '\\$1').replace(/\n/g, '\\n'); };
+        var ical = [
+          'BEGIN:VCALENDAR',
+          'VERSION:2.0',
+          'PRODID:-//Take Me Back Bingo//EN',
+          'CALSCALE:GREGORIAN',
+          'BEGIN:VEVENT',
+          'UID:' + uid,
+          'DTSTAMP:' + dtstamp,
+          'DTSTART:' + stamp(startISO),
+          'DTEND:'   + stamp(endISO),
+          'SUMMARY:'  + esc(title),
+          'LOCATION:' + esc(location),
+          'DESCRIPTION:' + esc(details),
+          'END:VEVENT',
+          'END:VCALENDAR'
+        ].join('\r\n');
+        var blob = new Blob([ical], { type: 'text/calendar;charset=utf-8' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = title.replace(/[^a-zA-Z0-9]+/g, '-').toLowerCase() + '.ics';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+        closeAllCals(null);
+        return;
+      }
+      // Toggle popover on trigger click
+      var trg = e.target.closest('[data-cal-trigger]');
+      if (trg) {
+        e.preventDefault();
+        var cal = trg.closest('[data-cal]');
+        var open = cal.getAttribute('data-open') === 'true';
+        closeAllCals(cal);
+        if (open) {
+          cal.setAttribute('data-open', 'false');
+          trg.setAttribute('aria-expanded', 'false');
+        } else {
+          cal.setAttribute('data-open', 'true');
+          trg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Click outside — close all
+      if (!e.target.closest('[data-cal]')) closeAllCals(null);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeAllCals(null);
+    });
   })();
 </script>
 
@@ -1093,6 +1191,52 @@
       </div>`;
   }
 
+  // Format a Date to YYYYMMDDTHHMMSSZ for calendar URL/ICS use.
+  function toCalStamp(iso) {
+    // iso is like "2026-08-15T15:00" — treat as America/New_York (EDT UTC-4)
+    if (!iso) return "";
+    try {
+      const d = new Date(iso + ":00-04:00");
+      const pad = (n) => String(n).padStart(2, "0");
+      return d.getUTCFullYear() + pad(d.getUTCMonth() + 1) + pad(d.getUTCDate()) + "T" +
+             pad(d.getUTCHours()) + pad(d.getUTCMinutes()) + "00Z";
+    } catch { return ""; }
+  }
+  function calendarLinks(e) {
+    // Only offer calendar buttons for upcoming events (past events don't need them)
+    if (!e.startDate) return null;
+    const start = toCalStamp(e.startDate);
+    const end   = toCalStamp(e.endDate || e.startDate);
+    const title = `Take Me Back Bingo: ${e.title}`;
+    const location = e.venueAddr || e.venue || "";
+    const url = `https://www.takemebackbingo.com/events#${e.id}`;
+    const details = [
+      e.copy || "",
+      e.dj ? `\nDJ: ${e.dj}` : "",
+      e.host ? `\nHost: ${e.host}` : "",
+      e.simpletix ? `\nTickets: ${e.simpletix}` : `\nEvent page: ${url}`
+    ].filter(Boolean).join("");
+    const google = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${start}/${end}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`;
+    const outlook = `https://outlook.live.com/calendar/0/deeplink/compose?subject=${encodeURIComponent(title)}&startdt=${encodeURIComponent(e.startDate + ":00-04:00")}&enddt=${encodeURIComponent((e.endDate || e.startDate) + ":00-04:00")}&body=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}&path=/calendar/action/compose&rru=addevent`;
+    return { google: google, outlook: outlook, title: title, location: location, details: details, start: e.startDate, end: e.endDate || e.startDate };
+  }
+  function calendarButton(e) {
+    const cal = calendarLinks(e);
+    if (!cal) return "";
+    return `
+      <div class="cal" data-cal>
+        <button type="button" class="btn btn--ghost btn--lg" data-cal-trigger aria-haspopup="menu" aria-expanded="false" aria-label="Add to calendar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>Add to Calendar</span>
+        </button>
+        <div class="cal-pop" role="menu" data-cal-pop>
+          <a class="cal-pop__item" href="${escAttr(cal.google)}" target="_blank" rel="noopener" role="menuitem">Google Calendar</a>
+          <a class="cal-pop__item" href="${escAttr(cal.outlook)}" target="_blank" rel="noopener" role="menuitem">Outlook</a>
+          <button type="button" class="cal-pop__item" data-cal-ics data-cal-title="${escAttr(cal.title)}" data-cal-start="${escAttr(cal.start)}" data-cal-end="${escAttr(cal.end)}" data-cal-location="${escAttr(cal.location)}" data-cal-details="${escAttr(cal.details)}" role="menuitem">Apple Calendar / iCal (.ics)</button>
+        </div>
+      </div>`;
+  }
+
   function ctaRow(e, isPast) {
     const parts = [];
     if (!isPast && e.simpletix && e.status !== "soldout") {
@@ -1101,6 +1245,7 @@
           Buy Tickets
           <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12m0 0L8 3m5 5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>`);
+      parts.push(calendarButton(e));
       const ctx = `${e.dateLabel ? e.dateLabel + " · " : ""}${e.title}${e.venue ? " at " + e.venue : ""}`;
       parts.push(`<a class="btn btn--ghost btn--lg" href="#contact" data-open-inquiry data-inquiry-topic="Group of 6+" data-inquiry-context="${escAttr(ctx)}">Group of 6+?</a>`);
     } else if (isPast) {

@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex,nofollow" />
+<title>Review Request Tool · Take Me Back Bingo Admin</title>
+<link rel="icon" type="image/svg+xml" href="/logos/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #141111; --panel: #1c1818; --line: #2b2525;
+    --ink: #f4ede1; --muted: #b6ad9c; --gold: #f1c33b;
+    --cream: #f6e9c8; --red: #c1462e; --green: #6dd47e;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: Sora, system-ui, sans-serif; }
+  a { color: var(--gold); }
+
+  .gate { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+  .gate__card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 32px; width: 100%; max-width: 380px; text-align: center; }
+  .gate__logo { font-family: Bungee, sans-serif; font-size: 28px; letter-spacing: 1px; color: var(--gold); margin: 0 0 6px; }
+  .gate__sub { color: var(--muted); margin: 0 0 24px; font-size: 13px; }
+  .gate__input { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line); background: #0e0c0c; color: var(--ink); font-size: 15px; margin-bottom: 12px; }
+  .gate__btn { width: 100%; padding: 12px 14px; border: 0; border-radius: 10px; background: var(--gold); color: #1a1408; font-weight: 700; cursor: pointer; font-family: inherit; }
+  .gate__err { color: var(--red); font-size: 13px; margin: 8px 0 0; min-height: 18px; }
+
+  .shell { display: none; }
+  .shell.active { display: block; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-bottom: 1px solid var(--line); background: var(--panel); flex-wrap: wrap; gap: 12px; }
+  .topbar__brand { font-family: Bungee, sans-serif; color: var(--gold); font-size: 18px; letter-spacing: 1px; }
+  .topbar__brand small { color: var(--muted); font-family: Sora, sans-serif; font-size: 12px; margin-left: 10px; letter-spacing: 0; }
+  .topbar__nav { display: flex; gap: 6px; }
+  .topbar__nav a { color: var(--muted); text-decoration: none; padding: 8px 14px; border-radius: 8px; font-size: 14px; }
+  .topbar__nav a.active { background: var(--gold); color: #1a1408; font-weight: 700; }
+  .topbar__nav a:not(.active):hover { background: var(--line); color: var(--ink); }
+  .topbar__logout { background: transparent; border: 1px solid var(--line); color: var(--muted); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-family: inherit; }
+
+  .wrap { max-width: 780px; margin: 0 auto; padding: 32px 24px 80px; }
+  .h1 { font-family: Bungee, sans-serif; font-size: 32px; margin: 0 0 6px; letter-spacing: 0.5px; }
+  .lede { color: var(--muted); margin: 0 0 24px; font-size: 14px; line-height: 1.55; }
+
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 24px; margin-bottom: 20px; }
+  .card h2 { font-family: Bungee, sans-serif; font-size: 14px; margin: 0 0 14px; color: var(--gold); letter-spacing: 0.5px; text-transform: uppercase; }
+
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .field input, .field textarea {
+    width: 100%; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--line);
+    background: #0e0c0c; color: var(--ink); font-size: 14px; font-family: inherit;
+  }
+  .field textarea { min-height: 120px; line-height: 1.5; resize: vertical; }
+  .field__hint { color: var(--muted); font-size: 12px; margin-top: 6px; }
+
+  .btn { display: inline-block; padding: 12px 18px; border: 0; border-radius: 8px; background: var(--gold); color: #1a1408; font-weight: 700; cursor: pointer; font-family: inherit; font-size: 13px; letter-spacing: 0.3px; text-decoration: none; }
+  .btn--ghost { background: transparent; border: 1px solid var(--line); color: var(--ink); }
+  .btn--sm { padding: 8px 14px; font-size: 12px; }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+
+  .preview {
+    background: #0e0c0c; border: 1px solid var(--line); border-left: 3px solid var(--gold);
+    padding: 20px; margin-top: 16px; border-radius: 8px;
+    color: var(--ink); font-size: 15px; line-height: 1.55; white-space: pre-wrap; word-break: break-word;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+  }
+  .preview__label { font-family: Bungee, sans-serif; font-size: 10px; color: var(--gold); letter-spacing: 2px; margin-bottom: 10px; }
+
+  .status { font-size: 13px; margin-top: 12px; min-height: 18px; color: var(--muted); }
+  .status.ok { color: var(--green); }
+  .status.err { color: var(--red); }
+
+  .steps { padding-left: 20px; margin: 0; }
+  .steps li { margin-bottom: 10px; font-size: 14px; color: var(--muted); line-height: 1.55; }
+  .steps li strong { color: var(--ink); }
+</style>
+</head>
+<body>
+
+<section class="gate" id="gate">
+  <form class="gate__card" onsubmit="event.preventDefault(); tryLogin();">
+    <h1 class="gate__logo">TMB ADMIN</h1>
+    <p class="gate__sub">Review Request Tool</p>
+    <input type="password" id="pw" class="gate__input" placeholder="Password" autocomplete="current-password" autofocus />
+    <button type="submit" class="gate__btn">Unlock</button>
+    <p class="gate__err" id="gateErr"></p>
+  </form>
+</section>
+
+<div class="shell" id="shell">
+  <div class="topbar">
+    <div class="topbar__brand">TMB ADMIN <small>Review Requests</small></div>
+    <nav class="topbar__nav">
+      <a href="/admin/cards">Card Generator</a>
+      <a href="/admin/events">Events</a>
+      <a href="/admin/reviews" class="active">Reviews</a>
+    </nav>
+    <button class="topbar__logout" onclick="logout()">Lock</button>
+  </div>
+
+  <div class="wrap">
+    <h1 class="h1">Ask for a Google Review</h1>
+    <p class="lede">Every review moves your local ranking higher. Get 10 and watch your Map pack position climb. This tool builds a pre-filled text message you can send to a past attendee &mdash; SMS, WhatsApp, or copy-paste anywhere.</p>
+
+    <div class="card">
+      <h2>Your Google Review Link</h2>
+      <div class="field">
+        <label for="reviewUrl">Paste your GBP short review link</label>
+        <input type="url" id="reviewUrl" placeholder="https://g.page/r/..." />
+        <p class="field__hint">
+          Get it from your GBP: <a href="https://business.google.com" target="_blank" rel="noopener">business.google.com</a> &rarr; <strong>Ask for reviews</strong> &rarr; copy the short link. Save it here once and this tool remembers it.
+        </p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Message Template</h2>
+      <div class="field">
+        <label for="msgTemplate">The text you&rsquo;ll send</label>
+        <textarea id="msgTemplate">Hey {name}! Hope you had a great time at Take Me Back Bingo. Quick favor — could you leave us a Google review? 30 seconds, huge help for us. Direct link: {link}
+Thanks 🙏</textarea>
+        <p class="field__hint">Use <strong>&#123;name&#125;</strong> and <strong>&#123;link&#125;</strong> as placeholders. They&rsquo;ll auto-fill below when you enter someone&rsquo;s name.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Who You&rsquo;re Texting</h2>
+      <div class="field">
+        <label for="attendeeName">First name (optional)</label>
+        <input type="text" id="attendeeName" placeholder="Jamila" />
+        <p class="field__hint">Personal name = 3&times; higher response rate. Leave blank for a generic version.</p>
+      </div>
+      <div class="field">
+        <label for="attendeePhone">Their phone number (optional)</label>
+        <input type="tel" id="attendeePhone" placeholder="732-555-0100" />
+        <p class="field__hint">For direct SMS / WhatsApp links. Not saved anywhere.</p>
+      </div>
+
+      <div class="preview" id="preview">
+        <div class="preview__label">Preview</div>
+        <div id="previewText"></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn" onclick="copyMessage()">Copy Message</button>
+        <a class="btn btn--ghost" id="smsBtn" href="#">Send via SMS</a>
+        <a class="btn btn--ghost" id="waBtn" href="#" target="_blank" rel="noopener">Send via WhatsApp</a>
+      </div>
+      <div class="status" id="status"></div>
+    </div>
+
+    <div class="card">
+      <h2>How to Use This</h2>
+      <ol class="steps">
+        <li><strong>Save your GBP review link</strong> at the top &mdash; only need to do this once.</li>
+        <li><strong>Pick a past attendee</strong> from your phone contacts or Instagram DMs.</li>
+        <li><strong>Type their first name</strong> above &mdash; the message auto-personalizes.</li>
+        <li><strong>Click SMS or WhatsApp</strong> &mdash; opens your messaging app with the message pre-typed. Or click Copy Message to paste anywhere.</li>
+        <li><strong>Send it.</strong> Repeat for 10 past attendees this week.</li>
+      </ol>
+      <p class="lede" style="margin-top: 18px;">
+        <strong>Rule of thumb:</strong> reviews come easiest right after an event when the vibe is fresh. Send review requests within 48 hours of a night.
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const SESSION_KEY = "tmb_admin_unlocked";
+const PW_KEY = "tmb_admin_pw";
+const REVIEW_LINK_KEY = "tmb_review_link";
+const MSG_TEMPLATE_KEY = "tmb_msg_template";
+let RUNTIME_PW_HASH = null;
+
+async function sha256(s) {
+  const buf = new TextEncoder().encode(s);
+  const h = await crypto.subtle.digest("SHA-256", buf);
+  return Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+(async () => { RUNTIME_PW_HASH = await sha256("takemeback2026"); })();
+
+async function tryLogin() {
+  const pw = document.getElementById("pw").value;
+  const err = document.getElementById("gateErr");
+  err.textContent = "";
+  if (!pw) { err.textContent = "Enter the password."; return; }
+  const h = await sha256(pw);
+  if (h === RUNTIME_PW_HASH) {
+    sessionStorage.setItem(SESSION_KEY, "1");
+    sessionStorage.setItem(PW_KEY, pw);
+    showApp();
+  } else err.textContent = "Wrong password.";
+}
+function showApp() {
+  document.getElementById("gate").style.display = "none";
+  document.getElementById("shell").classList.add("active");
+  initApp();
+}
+function logout() {
+  sessionStorage.removeItem(SESSION_KEY);
+  sessionStorage.removeItem(PW_KEY);
+  location.reload();
+}
+if (sessionStorage.getItem(SESSION_KEY) === "1") {
+  const w = setInterval(() => { if (RUNTIME_PW_HASH) { clearInterval(w); showApp(); } }, 50);
+}
+
+function initApp() {
+  // Restore saved review link + template
+  const savedLink = localStorage.getItem(REVIEW_LINK_KEY);
+  if (savedLink) document.getElementById("reviewUrl").value = savedLink;
+  const savedTemplate = localStorage.getItem(MSG_TEMPLATE_KEY);
+  if (savedTemplate) document.getElementById("msgTemplate").value = savedTemplate;
+
+  // Auto-save + re-render on input
+  ["reviewUrl", "msgTemplate", "attendeeName", "attendeePhone"].forEach(id => {
+    document.getElementById(id).addEventListener("input", onChange);
+  });
+  onChange();
+}
+
+function onChange() {
+  const link = document.getElementById("reviewUrl").value.trim();
+  const template = document.getElementById("msgTemplate").value;
+  const name = document.getElementById("attendeeName").value.trim();
+  const phone = document.getElementById("attendeePhone").value.replace(/[^0-9+]/g, "");
+
+  // Persist
+  if (link) localStorage.setItem(REVIEW_LINK_KEY, link);
+  if (template) localStorage.setItem(MSG_TEMPLATE_KEY, template);
+
+  // Fill placeholders
+  const filled = template
+    .replace(/\{name\}/g, name || "there")
+    .replace(/\{link\}/g, link || "[YOUR REVIEW LINK]");
+
+  document.getElementById("previewText").textContent = filled;
+
+  const encoded = encodeURIComponent(filled);
+  // iOS uses & instead of ? for SMS body; Android accepts both
+  const smsHref = phone
+    ? `sms:${phone}?&body=${encoded}`
+    : `sms:?&body=${encoded}`;
+  const waHref = phone
+    ? `https://wa.me/${phone.replace(/^\+/, "")}?text=${encoded}`
+    : `https://wa.me/?text=${encoded}`;
+  document.getElementById("smsBtn").href = smsHref;
+  document.getElementById("waBtn").href = waHref;
+}
+
+async function copyMessage() {
+  const text = document.getElementById("previewText").textContent;
+  const st = document.getElementById("status");
+  try {
+    await navigator.clipboard.writeText(text);
+    st.className = "status ok"; st.textContent = "Copied! Paste anywhere — text, DM, Instagram, wherever.";
+    setTimeout(() => { st.textContent = ""; st.className = "status"; }, 3000);
+  } catch (e) {
+    st.className = "status err"; st.textContent = "Couldn't copy automatically. Select the preview text and copy manually.";
+  }
+}
+</script>
+</body>
+</html>

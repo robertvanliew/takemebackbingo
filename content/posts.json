@@ -14,5 +14,21 @@
     "readMinutes": 4,
     "author": "Take Me Back Bingo",
     "path": "blog/song-of-the-week-crazy-in-love"
+  },
+  {
+    "id": "song-of-the-week-juicy-notorious-big",
+    "slug": "song-of-the-week-juicy-notorious-big",
+    "title": "Song of the Week: Why 'Juicy' by The Notorious B.I.G. Stops Every Music Bingo Room",
+    "subtitle": "Christopher Wallace's 1994 debut single wasn't just an anthem — it was the autobiography. 32 years later, it changes the temperature of every music bingo room.",
+    "excerpt": "Biggie's 1994 debut single wasn't just an anthem — it was the autobiography. Here's the story behind 'Juicy' and why it hits harder than any other 90s hip-hop track on a bingo card.",
+    "publishedAt": "2026-08-04",
+    "updatedAt": "2026-08-04",
+    "coverImage": "photos/GSP_2436.jpg",
+    "coverImageAlt": "A Take Me Back Bingo dance floor mid-round",
+    "tags": ["Song of the Week", "90s Hip-Hop", "Notorious B.I.G."],
+    "era": "90s Hip-Hop",
+    "readMinutes": 4,
+    "author": "Take Me Back Bingo",
+    "path": "blog/song-of-the-week-juicy-notorious-big"
   }
 ]

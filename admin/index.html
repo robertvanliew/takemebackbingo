@@ -40,8 +40,9 @@
   .hero__h { font-family: Bungee, sans-serif; font-size: 44px; margin: 0 0 12px; letter-spacing: 0.5px; line-height: 1.1; }
   .hero__sub { color: var(--muted); font-size: 16px; margin: 0; line-height: 1.5; }
 
-  .tiles { max-width: 960px; margin: 0 auto; padding: 0 24px 80px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  @media (max-width: 720px) { .tiles { grid-template-columns: 1fr; } }
+  .tiles { max-width: 960px; margin: 0 auto; padding: 0 24px 80px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  @media (max-width: 900px) { .tiles { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .tiles { grid-template-columns: 1fr; } }
 
   .tile {
     background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
@@ -93,6 +94,13 @@
       <div class="tile__icon">🎟️</div>
       <h2 class="tile__h">Bingo Card Generator</h2>
       <p class="tile__sub">Generate printable bingo cards for any event. Pick the song eras, set the count, download a PDF ready for the printer.</p>
+      <div class="tile__arrow">→</div>
+    </a>
+
+    <a class="tile" href="/admin/reviews">
+      <div class="tile__icon">⭐</div>
+      <h2 class="tile__h">Review Requests</h2>
+      <p class="tile__sub">Send a pre-filled Google review request to past attendees. Personalized message, SMS or WhatsApp, one tap to send.</p>
       <div class="tile__arrow">→</div>
     </a>
   </div>
